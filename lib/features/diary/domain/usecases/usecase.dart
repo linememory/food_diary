@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 abstract class Usecase<Type, ParamType> {
-  Future<Type> call(Param<ParamType> params);
+  Future<Type> call(Param<ParamType> param);
 }
 
 class Param<Type> extends Equatable {

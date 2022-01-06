@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static late final Database? _database;
+  static Database? _database;
   static const String _databaseName = 'food_diary';
   static const int _databaseVersion = 1;
 
@@ -27,29 +27,22 @@ class DatabaseHelper {
   Future<Database> get database async => _database ??= await _initDatabase();
 
   Future<Database> _initDatabase() async {
-    String path = join((await getLibraryDirectory()).path, _databaseName);
+    String path =
+        join((await getApplicationSupportDirectory()).path, _databaseName);
     return await openDatabase(path,
         version: _databaseVersion, onCreate: _onCreate);
   }
 
   Future _onCreate(Database db, int version) async {
-    db.execute(
-        '''CREATE TABLE ? (? INTEGER PRIMARY KEY AUTOINCREMENT, ? TEXT NOT NULL, ? TEXT NOT NULL)''',
-        [
-          mealTableName,
-          mealIdColumn,
-          mealDateTimeColumn,
-          mealFoodsColumn,
-        ]);
-
-    db.execute(
-        '''CREATE TABLE ? (? INTEGER PRIMARY KEY AUTOINCREMENT, ? TEXT NOT NULL, ? TEXT NOT NULL)''',
-        [
-          symptomsTableName,
-          symptomsIdColumn,
-          symptomsDateTimeColumn,
-          symptomsSymptomColumn,
-        ]);
+    await db.execute('''CREATE TABLE $mealTableName (
+          $mealIdColumn INTEGER PRIMARY KEY AUTOINCREMENT, 
+          $mealDateTimeColumn INTEGER NOT NULL, 
+          $mealFoodsColumn TEXT NOT NULL
+          )''');
+    await db.execute('''CREATE TABLE $symptomsTableName (
+          $symptomsIdColumn INTEGER PRIMARY KEY AUTOINCREMENT, 
+          $symptomsDateTimeColumn INTEGER NOT NULL, 
+          $symptomsSymptomColumn TEXT NOT NULL)''');
   }
 
   Future deleteDB() async {

@@ -22,12 +22,13 @@ class MealDatasourceImpl implements MealDatasource {
         where: '${DatabaseHelper.mealDateTimeColumn} = ?',
         whereArgs: [mealToAdd.dateTime.microsecondsSinceEpoch]);
     if (query.isEmpty) {
-      return db.insert(DatabaseHelper.mealTableName, mealToAdd.toMap());
+      return await db.insert(DatabaseHelper.mealTableName, mealToAdd.toMap());
     } else {
       MealModel mealToUpdate = MealModel.fromMap(query.first);
       mealToUpdate.addFood(mealToAdd.foods);
       updateMeal(mealToUpdate);
-      return Future.value(query.first[DatabaseHelper.mealIdColumn] as int);
+      return await Future.value(
+          query.first[DatabaseHelper.mealIdColumn] as int);
     }
   }
 

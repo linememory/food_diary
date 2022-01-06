@@ -8,7 +8,7 @@ class AddMeal extends Usecase<bool, Meal> {
   AddMeal(this.mealRepository);
 
   @override
-  Future<bool> call(Param params) async {
-    return await mealRepository.addMeal(params.get["meal"]);
+  Future<bool> call(Param param) async {
+    return await mealRepository.addMeal(param.get);
   }
 }
