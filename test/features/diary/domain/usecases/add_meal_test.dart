@@ -23,7 +23,7 @@ void main() {
       // arrange
       when(() => mealRepository.addMeal(meal)).thenAnswer((_) async => true);
       // act
-      final result = await usecase(Param({"meal": meal}));
+      final result = await usecase(Param(meal));
       // assert
       expect(result, true);
       verify(() => mealRepository.addMeal(meal));

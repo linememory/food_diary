@@ -8,7 +8,7 @@ class UpdateMeal extends Usecase<bool, Meal> {
   UpdateMeal(this.mealRepository);
 
   @override
-  Future<bool> call(Param params) async {
-    return await mealRepository.updateMeal(params.get["meal"]);
+  Future<bool> call(Param param) async {
+    return await mealRepository.updateMeal(param.get);
   }
 }

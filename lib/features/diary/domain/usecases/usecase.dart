@@ -15,7 +15,7 @@ class Param<Type> extends Equatable {
   @override
   List<Object?> get props => [_param];
 
-  static Param noParams() {
+  static Param noParam() {
     return const Param({});
   }
 }

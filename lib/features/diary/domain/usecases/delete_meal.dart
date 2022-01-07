@@ -8,7 +8,7 @@ class DeleteMeal extends Usecase<bool, Meal> {
   DeleteMeal(this.mealRepository);
 
   @override
-  Future<bool> call(Param params) async {
-    return await mealRepository.deleteMeal(params.get["meal"]);
+  Future<bool> call(Param param) async {
+    return await mealRepository.deleteMeal(param.get);
   }
 }

@@ -22,7 +22,7 @@ void main() {
       // arrange
       when(() => mealRepository.updateMeal(meal)).thenAnswer((_) async => true);
       // act
-      final result = await usecase(Param({"meal": meal}));
+      final result = await usecase(Param(meal));
       // assert
       expect(result, true);
       verify(() => mealRepository.updateMeal(meal));
@@ -35,7 +35,7 @@ void main() {
       // arrange
       when(() => mealRepository.updateMeal(meal)).thenAnswer((_) async => false);
       // act
-      final result = await usecase(Param({"meal": meal}));
+      final result = await usecase(Param(meal));
       // assert
       expect(result, false);
       verify(() => mealRepository.updateMeal(meal));

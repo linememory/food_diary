@@ -23,7 +23,7 @@ void main() {
       // arrange
       when(() => mealRepository.getAllMeals()).thenAnswer((_) async => [meal]);
       // act
-      final result = await usecase(Param.noParams());
+      final result = await usecase(Param.noParam());
       // assert
       expect(result, [meal]);
       verify(() => mealRepository.getAllMeals());
@@ -34,7 +34,7 @@ void main() {
       // arrange
       when(() => mealRepository.getAllMeals()).thenAnswer((_) async => []);
       // act
-      final result = await usecase(Param.noParams());
+      final result = await usecase(Param.noParam());
       // assert
       expect(result, []);
       verify(() => mealRepository.getAllMeals());
