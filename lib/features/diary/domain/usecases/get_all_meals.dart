@@ -2,7 +2,7 @@ import 'package:food_diary/features/diary/domain/entities/meal.dart';
 import 'package:food_diary/features/diary/domain/repositories/meal_repository.dart';
 import 'package:food_diary/features/diary/domain/usecases/usecase.dart';
 
-class GetAllMeals implements Usecase<List<Meal>, Param> {
+class GetAllMeals implements Usecase<List<Meal>, dynamic> {
   final MealRepository mealRepository;
 
   GetAllMeals(this.mealRepository);
@@ -12,6 +12,3 @@ class GetAllMeals implements Usecase<List<Meal>, Param> {
     return await mealRepository.getAllMeals();
   }
 }
-
-
-
