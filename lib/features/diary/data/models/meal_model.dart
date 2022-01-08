@@ -22,4 +22,8 @@ class MealModel extends Meal {
   void addFood(List<String> foodToAdd) {
     foods.addAll(foodToAdd);
   }
+
+  static MealModel from(Meal meal) {
+    return MealModel(dateTime: meal.dateTime, foods: List.from(meal.foods));
+  }
 }
