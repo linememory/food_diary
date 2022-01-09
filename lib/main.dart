@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:food_diary/injection_container.dart';
 
 void main() {
+  init();
   runApp(const FoodDiary());
 }
 
