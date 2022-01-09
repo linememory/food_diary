@@ -52,16 +52,19 @@ void main() {
           addMeal: mockAddMeal,
           updateMeal: mockUpdateMeal,
           deleteMeal: mockDeleteMeal),
-      expect: () => <DiaryState>[const Loading([]), const Empty([])],
+      verify: (_) => verify(() => mockGetAllMeals(Param.noParam())),
+      expect: () =>
+          <DiaryState>[const DiaryLoadInProgress([]), const DiaryEmpty()],
     );
 
     group(('add meal to diary'), () {
       blocTest<DiaryBloc, DiaryState>(
         'emits [Loaded()] when AddMealToDiary is added.',
         build: () => bloc,
-        act: (bloc) => bloc.add(AddMealToDiary(MealFixture.meal())),
+        act: (bloc) => bloc.add(DiaryAddMeal(MealFixture.meal())),
+        verify: (_) => verify(() => mockAddMeal(Param(MealFixture.meal()))),
         expect: () => <DiaryState>[
-          Loaded([MealFixture.meal()])
+          DiaryLoadSuccess([MealFixture.meal()])
         ],
       );
 
@@ -70,9 +73,10 @@ void main() {
         build: () => bloc,
         setUp: () => when(() => mockAddMeal(any()))
             .thenAnswer((invocation) async => false),
-        act: (bloc) => bloc.add(AddMealToDiary(MealFixture.meal())),
+        act: (bloc) => bloc.add(DiaryAddMeal(MealFixture.meal())),
+        verify: (_) => verify(() => mockAddMeal(Param(MealFixture.meal()))),
         expect: () =>
-            <DiaryState>[const MealNotAdded([], "Meal could not be added")],
+            <DiaryState>[const DiaryAddFailure([], "Meal could not be added")],
       );
     });
 
@@ -82,22 +86,25 @@ void main() {
         build: () => bloc,
         skip: 1,
         act: (bloc) {
-          bloc.add(AddMealToDiary(MealFixture.meal()));
-          bloc.add(DeleteMealFromDiary(
+          bloc.add(DiaryAddMeal(MealFixture.meal()));
+          bloc.add(DiaryDeleteMeal(
               MealFixture.meal().dateTime.microsecondsSinceEpoch));
         },
-        expect: () => <DiaryState>[const Loaded([])],
+        verify: (_) => verify(() => mockDeleteMeal(Param(
+            Meal(dateTime: MealFixture.meal().dateTime, foods: const [])))),
+        expect: () => <DiaryState>[const DiaryLoadSuccess([])],
       );
 
       blocTest<DiaryBloc, DiaryState>(
         'emits [MealNotDeleted())] when DeleteMealFromDiary is added when meal is not in diary.',
         build: () => bloc,
         act: (bloc) {
-          bloc.add(DeleteMealFromDiary(
+          bloc.add(DiaryDeleteMeal(
               MealFixture.meal().dateTime.microsecondsSinceEpoch));
         },
+        verify: (_) => verifyNever(() => mockDeleteMeal(any())),
         expect: () =>
-            <DiaryState>[const MealNotDeleted([], "No meal to delete")],
+            <DiaryState>[const DiaryDeleteFailure([], "No meal to delete")],
       );
 
       blocTest<DiaryBloc, DiaryState>(
@@ -107,12 +114,14 @@ void main() {
             .thenAnswer((invocation) async => false),
         skip: 1,
         act: (bloc) {
-          bloc.add(AddMealToDiary(MealFixture.meal()));
-          bloc.add(DeleteMealFromDiary(
+          bloc.add(DiaryAddMeal(MealFixture.meal()));
+          bloc.add(DiaryDeleteMeal(
               MealFixture.meal().dateTime.microsecondsSinceEpoch));
         },
+        verify: (_) => verify(() => mockDeleteMeal(Param(
+            Meal(dateTime: MealFixture.meal().dateTime, foods: const [])))),
         expect: () => <DiaryState>[
-          MealNotDeleted([MealFixture.meal()], "Meal could not be deleted")
+          DiaryDeleteFailure([MealFixture.meal()], "Meal could not be deleted")
         ],
       );
     });
@@ -129,11 +138,12 @@ void main() {
           mealToUpdate.foods.removeAt(1);
         },
         act: (bloc) {
-          bloc.add(AddMealToDiary(MealFixture.meal()));
-          bloc.add(UpdateMealInDiary(mealToUpdate));
+          bloc.add(DiaryAddMeal(MealFixture.meal()));
+          bloc.add(DiaryUpdateMeal(mealToUpdate));
         },
+        verify: (_) => verify(() => mockUpdateMeal(Param(mealToUpdate))),
         expect: () => <DiaryState>[
-          Loaded([mealToUpdate])
+          DiaryLoadSuccess([mealToUpdate])
         ],
       );
 
@@ -141,10 +151,11 @@ void main() {
         'emits [] when UpdateMealInDiary is added while diary has no meals.',
         build: () => bloc,
         act: (bloc) {
-          bloc.add(UpdateMealInDiary(mealToUpdate));
+          bloc.add(DiaryUpdateMeal(mealToUpdate));
         },
+        verify: (_) => verifyNever(() => mockUpdateMeal(any())),
         expect: () =>
-            <DiaryState>[const MealNotUpdated([], "No meal to update")],
+            <DiaryState>[const DiaryUpdateFailure([], "No meal to update")],
       );
 
       blocTest<DiaryBloc, DiaryState>(
@@ -156,11 +167,12 @@ void main() {
               .thenAnswer((invocation) async => false);
         },
         act: (bloc) {
-          bloc.add(AddMealToDiary(MealFixture.meal()));
-          bloc.add(UpdateMealInDiary(mealToUpdate));
+          bloc.add(DiaryAddMeal(MealFixture.meal()));
+          bloc.add(DiaryUpdateMeal(mealToUpdate));
         },
+        verify: (_) => verify(() => mockUpdateMeal(Param(mealToUpdate))),
         expect: () => <DiaryState>[
-          MealNotUpdated([MealFixture.meal()], "Meal could not be updated")
+          DiaryUpdateFailure([MealFixture.meal()], "Meal could not be updated")
         ],
       );
     });

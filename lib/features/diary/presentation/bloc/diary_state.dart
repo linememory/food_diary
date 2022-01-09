@@ -8,40 +8,42 @@ abstract class DiaryState extends Equatable {
   List<Object> get props => [meals];
 }
 
-class Loading extends DiaryState {
-  const Loading(List<Meal> meals) : super(meals);
+class DiaryLoadInProgress extends DiaryState {
+  const DiaryLoadInProgress(List<Meal> meals) : super(meals);
 }
 
-class Loaded extends DiaryState {
-  const Loaded(List<Meal> meals) : super(meals);
+class DiaryLoadSuccess extends DiaryState {
+  const DiaryLoadSuccess(List<Meal> meals) : super(meals);
 }
 
-class Empty extends DiaryState {
+class DiaryEmpty extends DiaryState {
   final String message = "No meals tracked";
 
-  const Empty(List<Meal> meals) : super(meals);
+  const DiaryEmpty() : super(const []);
 
   @override
   List<Object> get props => [meals, message];
 }
 
-class Failure extends DiaryState {
+class DiaryFailure extends DiaryState {
   final String reason;
 
-  const Failure(List<Meal> meals, this.reason) : super(meals);
+  const DiaryFailure(List<Meal> meals, this.reason) : super(meals);
 
   @override
   List<Object> get props => [meals, reason];
 }
 
-class MealNotAdded extends Failure {
-  const MealNotAdded(List<Meal> meals, String reason) : super(meals, reason);
+class DiaryAddFailure extends DiaryFailure {
+  const DiaryAddFailure(List<Meal> meals, String reason) : super(meals, reason);
 }
 
-class MealNotUpdated extends Failure {
-  const MealNotUpdated(List<Meal> meals, String reason) : super(meals, reason);
+class DiaryUpdateFailure extends DiaryFailure {
+  const DiaryUpdateFailure(List<Meal> meals, String reason)
+      : super(meals, reason);
 }
 
-class MealNotDeleted extends Failure {
-  const MealNotDeleted(List<Meal> meals, String reason) : super(meals, reason);
+class DiaryDeleteFailure extends DiaryFailure {
+  const DiaryDeleteFailure(List<Meal> meals, String reason)
+      : super(meals, reason);
 }

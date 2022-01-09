@@ -21,29 +21,29 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
       required this.addMeal,
       required this.updateMeal,
       required this.deleteMeal})
-      : super(const Loading([])) {
-    on<GetDiaryMeals>((event, emit) async {
-      emit(Loading(state.meals));
+      : super(const DiaryLoadInProgress([])) {
+    on<DiaryGetMeals>((event, emit) async {
+      emit(DiaryLoadInProgress(state.meals));
       final meals = await getAllMeals(Param.noParam());
-      if (meals.isEmpty) {
-        emit(const Empty([]));
+      if (meals.isNotEmpty) {
+        emit(DiaryLoadSuccess(meals));
       } else {
-        emit(Loaded(meals));
+        emit(const DiaryEmpty());
       }
     });
 
-    on<AddMealToDiary>((event, emit) async {
+    on<DiaryAddMeal>((event, emit) async {
       bool isAdded = await addMeal(Param(event.meal));
       if (isAdded) {
         List<Meal> meals = List.from(state.meals);
         meals.insert(0, event.meal);
-        emit(Loaded(meals));
+        emit(DiaryLoadSuccess(meals));
       } else {
-        emit(MealNotAdded(state.meals, "Meal could not be added"));
+        emit(DiaryAddFailure(state.meals, "Meal could not be added"));
       }
     });
 
-    on<UpdateMealInDiary>((event, emit) async {
+    on<DiaryUpdateMeal>((event, emit) async {
       List<Meal> meals = List.from(state.meals);
       int index =
           meals.indexWhere((meal) => meal.dateTime == event.meal.dateTime);
@@ -51,22 +51,22 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
         bool isUpdated = await updateMeal(Param(event.meal));
         if (isUpdated) {
           meals[index] = event.meal;
-          emit(Loaded(meals));
+          emit(DiaryLoadSuccess(meals));
         } else {
-          emit(MealNotUpdated(state.meals, "Meal could not be updated"));
+          emit(DiaryUpdateFailure(state.meals, "Meal could not be updated"));
         }
       } else {
-        emit(MealNotUpdated(meals, "No meal to update"));
+        emit(DiaryUpdateFailure(meals, "No meal to update"));
       }
     });
 
-    on<DeleteMealFromDiary>((event, emit) async {
+    on<DiaryDeleteMeal>((event, emit) async {
       List<Meal> meals = List.from(state.meals);
       int index = meals.indexWhere((meal) =>
           meal.dateTime.microsecondsSinceEpoch == event.dateTimeMicroseconds);
 
       if (index < 0) {
-        emit(MealNotDeleted(state.meals, "No meal to delete"));
+        emit(DiaryDeleteFailure(state.meals, "No meal to delete"));
       } else {
         bool isDeleted = await deleteMeal(Param(Meal(
             dateTime:
@@ -74,13 +74,13 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
             foods: const [])));
         if (isDeleted) {
           meals.removeAt(index);
-          emit(Loaded(meals));
+          emit(DiaryLoadSuccess(meals));
         } else {
-          emit(MealNotDeleted(state.meals, "Meal could not be deleted"));
+          emit(DiaryDeleteFailure(state.meals, "Meal could not be deleted"));
         }
       }
     });
 
-    add(GetDiaryMeals());
+    add(DiaryGetMeals());
   }
 }
