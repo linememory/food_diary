@@ -8,9 +8,12 @@ class MealList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      children: _mealItems(context, meals),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: ListView(
+        shrinkWrap: true,
+        children: _mealItems(context, meals),
+      ),
     );
   }
 

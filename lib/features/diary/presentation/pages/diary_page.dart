@@ -19,8 +19,9 @@ class DiaryPage extends StatelessWidget {
   Widget buildBody(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: const Text("Food Diary"),
-        toolbarHeight: MediaQuery.of(context).size.height / 8,
+        toolbarHeight: MediaQuery.of(context).size.height / 12,
         leading: const Icon(Icons.fastfood),
         elevation: 5,
         actions: [
@@ -33,25 +34,45 @@ class DiaryPage extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: BlocBuilder<DiaryBloc, DiaryState>(
-          builder: (context, state) {
-            if (state is DiaryEmpty) {
-              return Center(
-                child: Text(state.message),
-              );
-            } else if (state is DiaryLoadInProgress) {
-              return const Padding(
-                padding: EdgeInsets.only(top: 20.0),
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            } else {
-              return MealList(meals: state.meals);
-            }
-          },
+        padding: const EdgeInsets.only(top: 0, right: 8, left: 8),
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Theme.of(context).colorScheme.background),
+          child: BlocBuilder<DiaryBloc, DiaryState>(
+            builder: (context, state) {
+              if (state is DiaryEmpty) {
+                return Center(
+                  child: Text(state.message),
+                );
+              } else if (state is DiaryLoadInProgress) {
+                return const Padding(
+                  padding: EdgeInsets.only(top: 20.0),
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              } else {
+                return MealList(meals: state.meals);
+              }
+            },
+          ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.fastfood_outlined), label: "Food Diary"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.bar_chart_sharp), label: "Evaluation"),
+        ],
+        onTap: (index) {},
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
+        backgroundColor: Theme.of(context).colorScheme.secondary,
       ),
     );
   }
