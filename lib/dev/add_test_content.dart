@@ -32,6 +32,7 @@ Future addTestContent({int mealsCount = 100}) async {
   Random rng = Random();
   int minFoods = 3;
   int maxFoods = 10;
+  DateTime dateTime = DateTime.now();
   for (var i = 0; i < mealsCount; i++) {
     List<String> foods = [];
     int foodCount = rng.nextInt(maxFoods - minFoods) + 3;
@@ -39,7 +40,8 @@ Future addTestContent({int mealsCount = 100}) async {
       foods.add(exampleFoods[rng.nextInt(exampleFoods.length)]);
     }
     AddMeal addMeal = sl();
-    await addMeal(Param(Meal(dateTime: DateTime.now(), foods: foods)));
+    dateTime = dateTime.add(const Duration(hours: 6));
+    await addMeal(Param(Meal(dateTime: dateTime, foods: foods)));
   }
 }
 
