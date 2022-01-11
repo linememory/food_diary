@@ -75,8 +75,10 @@ void main() {
             .thenAnswer((invocation) async => false),
         act: (bloc) => bloc.add(DiaryAddMeal(MealFixture.meal())),
         verify: (_) => verify(() => mockAddMeal(Param(MealFixture.meal()))),
-        expect: () =>
-            <DiaryState>[const DiaryAddFailure([], "Meal could not be added")],
+        expect: () => <DiaryState>[
+          const DiaryAddFailure([], "Meal could not be added"),
+          const DiaryEmpty()
+        ],
       );
     });
 
@@ -103,8 +105,10 @@ void main() {
               MealFixture.meal().dateTime.microsecondsSinceEpoch));
         },
         verify: (_) => verifyNever(() => mockDeleteMeal(any())),
-        expect: () =>
-            <DiaryState>[const DiaryDeleteFailure([], "No meal to delete")],
+        expect: () => <DiaryState>[
+          const DiaryDeleteFailure([], "No meal to delete"),
+          const DiaryEmpty()
+        ],
       );
 
       blocTest<DiaryBloc, DiaryState>(
@@ -121,7 +125,8 @@ void main() {
         verify: (_) => verify(() => mockDeleteMeal(Param(
             Meal(dateTime: MealFixture.meal().dateTime, foods: const [])))),
         expect: () => <DiaryState>[
-          DiaryDeleteFailure([MealFixture.meal()], "Meal could not be deleted")
+          DiaryDeleteFailure([MealFixture.meal()], "Meal could not be deleted"),
+          DiaryLoadSuccess([MealFixture.meal()])
         ],
       );
     });
@@ -154,8 +159,10 @@ void main() {
           bloc.add(DiaryUpdateMeal(mealToUpdate));
         },
         verify: (_) => verifyNever(() => mockUpdateMeal(any())),
-        expect: () =>
-            <DiaryState>[const DiaryUpdateFailure([], "No meal to update")],
+        expect: () => <DiaryState>[
+          const DiaryUpdateFailure([], "No meal to update"),
+          const DiaryEmpty()
+        ],
       );
 
       blocTest<DiaryBloc, DiaryState>(
@@ -172,7 +179,8 @@ void main() {
         },
         verify: (_) => verify(() => mockUpdateMeal(Param(mealToUpdate))),
         expect: () => <DiaryState>[
-          DiaryUpdateFailure([MealFixture.meal()], "Meal could not be updated")
+          DiaryUpdateFailure([MealFixture.meal()], "Meal could not be updated"),
+          DiaryLoadSuccess([MealFixture.meal()])
         ],
       );
     });

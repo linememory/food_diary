@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:food_diary/dev/add_test_content.dart';
 import 'package:food_diary/features/diary/domain/entities/meal.dart';
 import 'package:food_diary/features/diary/domain/usecases/add_meal.dart';
 import 'package:food_diary/features/diary/domain/usecases/delete_meal.dart';
@@ -39,7 +42,11 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
         meals.insert(0, event.meal);
         emit(DiaryLoadSuccess(meals));
       } else {
+        var stateType = state.runtimeType;
         emit(DiaryAddFailure(state.meals, "Meal could not be added"));
+        emit(stateType == DiaryEmpty
+            ? const DiaryEmpty()
+            : DiaryLoadSuccess(state.meals));
       }
     });
 
@@ -53,10 +60,18 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
           meals[index] = event.meal;
           emit(DiaryLoadSuccess(meals));
         } else {
+          var stateType = state.runtimeType;
           emit(DiaryUpdateFailure(state.meals, "Meal could not be updated"));
+          emit(stateType == DiaryEmpty
+              ? const DiaryEmpty()
+              : DiaryLoadSuccess(state.meals));
         }
       } else {
+        var stateType = state.runtimeType;
         emit(DiaryUpdateFailure(meals, "No meal to update"));
+        emit(stateType == DiaryEmpty
+            ? const DiaryEmpty()
+            : DiaryLoadSuccess(state.meals));
       }
     });
 
@@ -66,7 +81,11 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
           meal.dateTime.microsecondsSinceEpoch == event.dateTimeMicroseconds);
 
       if (index < 0) {
+        var stateType = state.runtimeType;
         emit(DiaryDeleteFailure(state.meals, "No meal to delete"));
+        emit(stateType == DiaryEmpty
+            ? const DiaryEmpty()
+            : DiaryLoadSuccess(state.meals));
       } else {
         bool isDeleted = await deleteMeal(Param(Meal(
             dateTime:
@@ -76,11 +95,28 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
           meals.removeAt(index);
           emit(DiaryLoadSuccess(meals));
         } else {
+          var stateType = state.runtimeType;
           emit(DiaryDeleteFailure(state.meals, "Meal could not be deleted"));
+          emit(stateType == DiaryEmpty
+              ? const DiaryEmpty()
+              : DiaryLoadSuccess(state.meals));
         }
       }
     });
 
+    assert(() {
+      () async {
+        await deleteTestContent();
+        await addTestContent();
+      }();
+      return true;
+    }());
     add(DiaryGetMeals());
+  }
+
+  @override
+  void onChange(Change<DiaryState> change) {
+    log(change.toString());
+    super.onChange(change);
   }
 }
