@@ -8,7 +8,7 @@ import 'package:food_diary/features/diary/domain/usecases/usecase.dart';
 
 import '../injection_container.dart';
 
-Future addTestContent({int mealsCount = 100}) async {
+Future addTestContent({int mealsCount = 10, int? seed}) async {
   final exampleFoods = [
     "Flour",
     "Beans",
@@ -29,7 +29,7 @@ Future addTestContent({int mealsCount = 100}) async {
     "Olives",
     "Oil",
   ];
-  Random rng = Random();
+  Random rng = Random(seed);
   int minFoods = 3;
   int maxFoods = 10;
   DateTime dateTime = DateTime.now();
@@ -50,6 +50,6 @@ Future deleteTestContent() async {
   DeleteMeal deleteMeal = sl();
   List<Meal> result = await getAllMeals(Param.noParam());
   for (var i = 0; i < result.length; i++) {
-    await deleteMeal(Param(result[i]));
+    await deleteMeal(Param(result[i].dateTime));
   }
 }

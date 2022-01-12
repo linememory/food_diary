@@ -20,12 +20,13 @@ void main() {
       Meal meal =
           Meal(dateTime: DateTime.now(), foods: const ["Test1", "Test2"]);
       // arrange
-      when(() => mealRepository.deleteMeal(meal)).thenAnswer((_) async => true);
+      when(() => mealRepository.deleteMeal(meal.dateTime))
+          .thenAnswer((_) async => true);
       // act
-      final result = await usecase(Param(meal));
+      final result = await usecase(Param(meal.dateTime));
       // assert
       expect(result, true);
-      verify(() => mealRepository.deleteMeal(meal));
+      verify(() => mealRepository.deleteMeal(meal.dateTime));
       verifyNoMoreInteractions(mealRepository);
     });
 
@@ -33,12 +34,13 @@ void main() {
       Meal meal =
           Meal(dateTime: DateTime.now(), foods: const ["Test1", "Test2"]);
       // arrange
-      when(() => mealRepository.deleteMeal(meal)).thenAnswer((_) async => false);
+      when(() => mealRepository.deleteMeal(meal.dateTime))
+          .thenAnswer((_) async => false);
       // act
-      final result = await usecase(Param(meal));
+      final result = await usecase(Param(meal.dateTime));
       // assert
       expect(result, false);
-      verify(() => mealRepository.deleteMeal(meal));
+      verify(() => mealRepository.deleteMeal(meal.dateTime));
       verifyNoMoreInteractions(mealRepository);
     });
   });

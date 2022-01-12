@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_diary/features/diary/domain/entities/meal.dart';
+import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:intl/intl.dart';
 
 class MealList extends StatelessWidget {
@@ -42,7 +44,7 @@ class DateItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = DateFormat('dd.mm.yyy');
+    final formatter = DateFormat('EEE, dd.mm.yyy');
     return Container(
       alignment: Alignment.center,
       margin: const EdgeInsets.symmetric(vertical: 1),
@@ -51,7 +53,10 @@ class DateItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         color: Theme.of(context).colorScheme.primary,
       ),
-      child: Text(formatter.format(dateTime)),
+      child: Text(
+        formatter.format(dateTime),
+        style: Theme.of(context).textTheme.subtitle1,
+      ),
     );
   }
 }
@@ -74,34 +79,106 @@ class MealListItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             color: Theme.of(context).colorScheme.secondary,
           ),
-          child: IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    formatter.format(time),
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
+          child: Column(
+            children: [
+              IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        formatter.format(time),
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                    ),
+                    const VerticalDivider(
+                      width: 10,
+                      thickness: 2,
+                    ),
+                    _foods(),
+                  ],
                 ),
-                const VerticalDivider(
-                  width: 10,
-                  thickness: 2,
+              ),
+              const SizedBox(
+                width: 100,
+                child: Divider(
+                  height: 10,
+                  thickness: 1,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: foods.map((food) => Text(food)).toList(),
-                  ),
-                ),
-              ],
-            ),
+              ),
+              EditButtons(time: time),
+            ],
           ),
         ),
       ],
+    );
+  }
+
+  Padding _foods() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: foods.map((food) => Text(food)).toList(),
+      ),
+    );
+  }
+}
+
+class EditButtons extends StatelessWidget {
+  final DateTime time;
+  const EditButtons({
+    Key? key,
+    required this.time,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(top: 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size(0, 0),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 5),
+            ),
+            onPressed: () {},
+            child: Text(
+              "Update",
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1!
+                  .copyWith(fontSize: 12, fontWeight: FontWeight.normal),
+            ),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size(0, 0),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 5),
+            ),
+            onPressed: () {
+              BlocProvider.of<DiaryBloc>(context)
+                  .add(DiaryDeleteMeal(time));
+            },
+            child: Text(
+              "Delete",
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1!
+                  .copyWith(fontSize: 12, fontWeight: FontWeight.normal),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

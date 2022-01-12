@@ -69,12 +69,13 @@ void main() {
   group('delete meal', () {
     test('should delete the given Meal', () async {
       // arrange
-      when(() => mealDatasource.deleteMeal(MealFixture.meal()))
+      when(() => mealDatasource.deleteMeal(MealFixture.meal().dateTime))
           .thenAnswer((_) async => 1);
       // act
-      final result = await mealRepository.deleteMeal(MealFixture.meal());
+      final result =
+          await mealRepository.deleteMeal(MealFixture.meal().dateTime);
       // assert
-      verify(() => mealDatasource.deleteMeal(MealFixture.meal()));
+      verify(() => mealDatasource.deleteMeal(MealFixture.meal().dateTime));
       expect(result, true);
     });
   });

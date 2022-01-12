@@ -28,12 +28,12 @@ class DiaryUpdateMeal extends DiaryEvent {
 }
 
 class DiaryDeleteMeal extends DiaryEvent {
-  final int dateTimeMicroseconds;
+  final DateTime dateTime;
 
   const DiaryDeleteMeal(
-    this.dateTimeMicroseconds,
+    this.dateTime,
   );
 
   @override
-  List<Object> get props => [dateTimeMicroseconds];
+  List<Object> get props => [dateTime];
 }

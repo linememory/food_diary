@@ -119,7 +119,7 @@ void main() {
       when(() => mockDatabasehelper.database)
           .thenAnswer((invocation) async => db!);
       // act
-      int result = await datasource.deleteMeal(mealsToAdd[0]);
+      int result = await datasource.deleteMeal(mealsToAdd[0].dateTime);
       // assert
       verify(() => mockDatabasehelper.database);
       expect(result, 1);
@@ -135,7 +135,7 @@ void main() {
       when(() => mockDatabasehelper.database)
           .thenAnswer((invocation) async => db!);
       // act
-      int result = await datasource.deleteMeal(MealFixture.meal());
+      int result = await datasource.deleteMeal(MealFixture.meal().dateTime);
       // assert
       verify(() => mockDatabasehelper.database);
       expect(result, 0);
@@ -154,7 +154,7 @@ void main() {
       when(() => mockDatabasehelper.database)
           .thenAnswer((invocation) async => db!);
       // act
-      int result = await datasource.deleteMeal(mealsToAdd[2]);
+      int result = await datasource.deleteMeal(mealsToAdd[2].dateTime);
       // assert
       verify(() => mockDatabasehelper.database);
       expect(result, 0);

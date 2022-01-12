@@ -6,6 +6,9 @@ abstract class DiaryState extends Equatable {
 
   @override
   List<Object> get props => [meals];
+
+  @override
+  String toString() => '$runtimeType (meals: ${meals.length})';
 }
 
 class DiaryLoadInProgress extends DiaryState {

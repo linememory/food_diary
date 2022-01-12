@@ -20,12 +20,13 @@ class MealRepositoryImpl implements MealRepository {
   }
 
   @override
-  Future<bool> deleteMeal(Meal meal) async {
-    return await datasource.deleteMeal(meal as MealModel) == 0 ? false : true;
+  Future<bool> deleteMeal(DateTime dateTime) async {
+    return await datasource.deleteMeal(dateTime) == 0 ? false : true;
   }
 
   @override
   Future<bool> updateMeal(Meal meal) async {
-    return await datasource.updateMeal(meal as MealModel) == 0 ? false : true;
+    MealModel mealModel = MealModel(dateTime: meal.dateTime, foods: meal.foods);
+    return await datasource.updateMeal(mealModel) == 0 ? false : true;
   }
 }

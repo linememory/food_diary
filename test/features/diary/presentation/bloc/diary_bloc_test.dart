@@ -8,6 +8,7 @@ import 'package:food_diary/features/diary/domain/usecases/get_all_meals.dart';
 import 'package:food_diary/features/diary/domain/usecases/update_meal.dart';
 import 'package:food_diary/features/diary/domain/usecases/usecase.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
+import 'package:food_diary/injection_container.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../fixtures/meal_fixtures.dart';
@@ -89,11 +90,10 @@ void main() {
         skip: 1,
         act: (bloc) {
           bloc.add(DiaryAddMeal(MealFixture.meal()));
-          bloc.add(DiaryDeleteMeal(
-              MealFixture.meal().dateTime.microsecondsSinceEpoch));
+          bloc.add(DiaryDeleteMeal(MealFixture.meal().dateTime));
         },
-        verify: (_) => verify(() => mockDeleteMeal(Param(
-            Meal(dateTime: MealFixture.meal().dateTime, foods: const [])))),
+        verify: (_) =>
+            verify(() => mockDeleteMeal(Param(MealFixture.meal().dateTime))),
         expect: () => <DiaryState>[const DiaryLoadSuccess([])],
       );
 
@@ -101,8 +101,7 @@ void main() {
         'emits [MealNotDeleted())] when DeleteMealFromDiary is added when meal is not in diary.',
         build: () => bloc,
         act: (bloc) {
-          bloc.add(DiaryDeleteMeal(
-              MealFixture.meal().dateTime.microsecondsSinceEpoch));
+          bloc.add(DiaryDeleteMeal(MealFixture.meal().dateTime));
         },
         verify: (_) => verifyNever(() => mockDeleteMeal(any())),
         expect: () => <DiaryState>[
@@ -119,11 +118,10 @@ void main() {
         skip: 1,
         act: (bloc) {
           bloc.add(DiaryAddMeal(MealFixture.meal()));
-          bloc.add(DiaryDeleteMeal(
-              MealFixture.meal().dateTime.microsecondsSinceEpoch));
+          bloc.add(DiaryDeleteMeal(MealFixture.meal().dateTime));
         },
-        verify: (_) => verify(() => mockDeleteMeal(Param(
-            Meal(dateTime: MealFixture.meal().dateTime, foods: const [])))),
+        verify: (_) =>
+            verify(() => mockDeleteMeal(Param(MealFixture.meal().dateTime))),
         expect: () => <DiaryState>[
           DiaryDeleteFailure([MealFixture.meal()], "Meal could not be deleted"),
           DiaryLoadSuccess([MealFixture.meal()])

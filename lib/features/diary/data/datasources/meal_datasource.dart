@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 abstract class MealDatasource {
   Future<List<MealModel>> getAllMeals();
   Future<int> addMeal(MealModel mealToAdd);
-  Future<int> deleteMeal(MealModel mealToDelete);
+  Future<int> deleteMeal(DateTime dateTime);
   Future<int> updateMeal(MealModel mealToUpdate);
 }
 
@@ -33,11 +33,17 @@ class MealDatasourceImpl implements MealDatasource {
   }
 
   @override
-  Future<int> deleteMeal(MealModel mealToDelete) async {
+  Future<int> deleteMeal(DateTime dateTime) async {
     Database db = await _databaseHelper.database;
-    return db.delete(DatabaseHelper.mealTableName,
+    var result = await db.query(DatabaseHelper.mealTableName,
         where: '${DatabaseHelper.mealDateTimeColumn} = ?',
-        whereArgs: [mealToDelete.dateTime.microsecondsSinceEpoch]);
+        whereArgs: [dateTime.microsecondsSinceEpoch]);
+
+    int res = await db.delete(DatabaseHelper.mealTableName,
+        where: '${DatabaseHelper.mealDateTimeColumn} = ?',
+        whereArgs: [dateTime.microsecondsSinceEpoch]);
+
+    return res;
   }
 
   @override
