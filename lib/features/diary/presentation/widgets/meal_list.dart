@@ -22,13 +22,11 @@ class MealList extends StatelessWidget {
   List<Widget> _mealItems(BuildContext context, List<Meal> meals) {
     List<Widget> items = [];
     Meal? previousMeal;
+    bool sameDay(DateTime a, DateTime b) =>
+        a.year == b.year && a.month == b.month && a.day == b.day;
     for (var meal in meals) {
-      int microsecondsPerDay = (24 * 60 * 60 * 1000000);
-
       if (previousMeal == null ||
-          meal.dateTime.microsecondsSinceEpoch ~/ microsecondsPerDay ==
-              previousMeal.dateTime.microsecondsSinceEpoch ~/
-                  microsecondsPerDay) {
+          !sameDay(meal.dateTime, previousMeal.dateTime)) {
         items.add(DateItem(dateTime: meal.dateTime));
       }
       items.add(MealListItem(time: meal.dateTime, foods: meal.foods));
@@ -44,7 +42,7 @@ class DateItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = DateFormat('EEE, dd.mm.yyy');
+    final formatter = DateFormat('EEE, dd.MM.yyy');
     return Container(
       alignment: Alignment.center,
       margin: const EdgeInsets.symmetric(vertical: 1),
@@ -166,8 +164,7 @@ class EditButtons extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 5),
             ),
             onPressed: () {
-              BlocProvider.of<DiaryBloc>(context)
-                  .add(DiaryDeleteMeal(time));
+              BlocProvider.of<DiaryBloc>(context).add(DiaryDeleteMeal(time));
             },
             child: Text(
               "Delete",
