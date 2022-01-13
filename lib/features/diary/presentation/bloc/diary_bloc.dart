@@ -2,14 +2,12 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:food_diary/dev/add_test_content.dart';
 import 'package:food_diary/features/diary/domain/entities/meal.dart';
 import 'package:food_diary/features/diary/domain/usecases/add_meal.dart';
 import 'package:food_diary/features/diary/domain/usecases/delete_meal.dart';
 import 'package:food_diary/features/diary/domain/usecases/get_all_meals.dart';
 import 'package:food_diary/features/diary/domain/usecases/update_meal.dart';
 import 'package:food_diary/features/diary/domain/usecases/usecase.dart';
-import 'package:food_diary/injection_container.dart';
 
 part 'diary_event.dart';
 part 'diary_state.dart';
@@ -41,7 +39,11 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
       bool isAdded = await addMeal(Param(event.meal));
       if (isAdded) {
         List<Meal> meals = List.from(state.meals);
-        meals.insert(0, event.meal);
+        meals.insert(
+            meals.indexWhere(
+                (element) => element.dateTime.isAfter(event.meal.dateTime)),
+            event.meal);
+        //meals.insert(0, event.meal);
         emit(DiaryLoadSuccess(meals));
       } else {
         var stateType = state.runtimeType;
