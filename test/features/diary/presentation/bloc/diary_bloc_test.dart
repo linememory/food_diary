@@ -8,7 +8,6 @@ import 'package:food_diary/features/diary/domain/usecases/get_all_meals.dart';
 import 'package:food_diary/features/diary/domain/usecases/update_meal.dart';
 import 'package:food_diary/features/diary/domain/usecases/usecase.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:food_diary/injection_container.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../fixtures/meal_fixtures.dart';
