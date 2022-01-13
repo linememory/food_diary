@@ -35,15 +35,10 @@ class MealDatasourceImpl implements MealDatasource {
   @override
   Future<int> deleteMeal(DateTime dateTime) async {
     Database db = await _databaseHelper.database;
-    var result = await db.query(DatabaseHelper.mealTableName,
+
+    return await db.delete(DatabaseHelper.mealTableName,
         where: '${DatabaseHelper.mealDateTimeColumn} = ?',
         whereArgs: [dateTime.microsecondsSinceEpoch]);
-
-    int res = await db.delete(DatabaseHelper.mealTableName,
-        where: '${DatabaseHelper.mealDateTimeColumn} = ?',
-        whereArgs: [dateTime.microsecondsSinceEpoch]);
-
-    return res;
   }
 
   @override
