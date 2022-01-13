@@ -13,6 +13,13 @@ class CustomTheme {
           ),
       backgroundColor: const Color(0xffEEEEEE),
       scaffoldBackgroundColor: const Color(0xffEEEEEE),
+      textTheme: const TextTheme().copyWith(
+        bodyText1: const TextStyle().copyWith(color: Colors.black87),
+        bodyText2: const TextStyle().copyWith(color: Colors.black87),
+        button: const TextStyle().copyWith(color: Colors.black87),
+        subtitle1: const TextStyle()
+            .copyWith(color: Colors.black54, fontWeight: FontWeight.bold),
+      ),
     );
   }
 
@@ -28,7 +35,13 @@ class CustomTheme {
           ),
       backgroundColor: const Color(0xff222222),
       scaffoldBackgroundColor: const Color(0xff222222),
-      //textTheme: TextTheme()
+      textTheme: const TextTheme().copyWith(
+        bodyText1: const TextStyle().copyWith(color: Colors.white60),
+        bodyText2: const TextStyle().copyWith(color: Colors.white60),
+        button: const TextStyle().copyWith(color: Colors.white60),
+        subtitle1: const TextStyle()
+            .copyWith(color: Colors.white70, fontWeight: FontWeight.bold),
+      ),
     );
   }
 }
