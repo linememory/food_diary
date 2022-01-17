@@ -1,10 +1,7 @@
 import 'dart:math';
 
+import 'package:food_diary/features/diary/application/diary_facade_service.dart';
 import 'package:food_diary/features/diary/domain/entities/meal.dart';
-import 'package:food_diary/features/diary/domain/usecases/add_meal.dart';
-import 'package:food_diary/features/diary/domain/usecases/delete_meal.dart';
-import 'package:food_diary/features/diary/domain/usecases/get_all_meals.dart';
-import 'package:food_diary/features/diary/domain/usecases/usecase.dart';
 
 import '../injection_container.dart';
 
@@ -39,17 +36,16 @@ Future addTestContent({int mealsCount = 10, int? seed}) async {
     for (var i = 0; i < foodCount; i++) {
       foods.add(exampleFoods[rng.nextInt(exampleFoods.length)]);
     }
-    AddMeal addMeal = sl();
+    DiaryFacadeService diaryFacadeService = sl();
     dateTime = dateTime.add(const Duration(hours: 6));
-    await addMeal(Param(Meal(dateTime: dateTime, foods: foods)));
+    await diaryFacadeService.addMeal(Meal(dateTime: dateTime, foods: foods));
   }
 }
 
 Future deleteTestContent() async {
-  GetAllMeals getAllMeals = sl();
-  DeleteMeal deleteMeal = sl();
-  List<Meal> result = await getAllMeals(Param.noParam());
+  DiaryFacadeService diaryFacadeService = sl();
+  List<Meal> result = await diaryFacadeService.getAllMeals();
   for (var i = 0; i < result.length; i++) {
-    await deleteMeal(Param(result[i].dateTime));
+    await diaryFacadeService.deleteMeal(result[i].dateTime);
   }
 }

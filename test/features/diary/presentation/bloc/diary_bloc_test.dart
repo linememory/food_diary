@@ -1,58 +1,38 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:food_diary/features/diary/application/diary_facade_service.dart';
 import 'package:food_diary/features/diary/data/models/meal_model.dart';
 import 'package:food_diary/features/diary/domain/entities/meal.dart';
-import 'package:food_diary/features/diary/domain/usecases/add_meal.dart';
-import 'package:food_diary/features/diary/domain/usecases/delete_meal.dart';
-import 'package:food_diary/features/diary/domain/usecases/get_all_meals.dart';
-import 'package:food_diary/features/diary/domain/usecases/update_meal.dart';
-import 'package:food_diary/features/diary/domain/usecases/usecase.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../fixtures/meal_fixtures.dart';
 
-class MockGetAllMeals extends Mock implements GetAllMeals {}
-
-class MockAddMeal extends Mock implements AddMeal {}
-
-class MockUpdateMeal extends Mock implements UpdateMeal {}
-
-class MockDeleteMeal extends Mock implements DeleteMeal {}
+class MockDiaryFacadeService extends Mock implements DiaryFacadeService {}
 
 void main() {
   late DiaryBloc bloc;
-  late MockGetAllMeals mockGetAllMeals;
-  late MockAddMeal mockAddMeal;
-  late MockUpdateMeal mockUpdateMeal;
-  late MockDeleteMeal mockDeleteMeal;
+  late MockDiaryFacadeService mockDiaryFacadeService;
 
   setUp(() {
-    registerFallbackValue(Param.noParam());
-    mockGetAllMeals = MockGetAllMeals();
-    mockAddMeal = MockAddMeal();
-    mockUpdateMeal = MockUpdateMeal();
-    mockDeleteMeal = MockDeleteMeal();
-    when(() => mockGetAllMeals(Param.noParam())).thenAnswer((_) async => []);
-    when(() => mockAddMeal(Param(MealFixture.meal())))
+    registerFallbackValue(Meal(dateTime: DateTime(0), foods: const []));
+    mockDiaryFacadeService = MockDiaryFacadeService();
+
+    when(() => mockDiaryFacadeService.getAllMeals())
+        .thenAnswer((_) async => []);
+    when(() => mockDiaryFacadeService.addMeal(MealFixture.meal()))
         .thenAnswer((_) async => true);
-    when(() => mockUpdateMeal(any())).thenAnswer((_) async => true);
-    when(() => mockDeleteMeal(any())).thenAnswer((_) async => true);
-    bloc = DiaryBloc(
-        getAllMeals: mockGetAllMeals,
-        addMeal: mockAddMeal,
-        updateMeal: mockUpdateMeal,
-        deleteMeal: mockDeleteMeal);
+    when(() => mockDiaryFacadeService.updateMeal(any()))
+        .thenAnswer((_) async => true);
+    when(() => mockDiaryFacadeService.deleteMeal(any()))
+        .thenAnswer((_) async => true);
+    bloc = DiaryBloc(diaryFacadeService: mockDiaryFacadeService);
   });
   group(('diary bloc'), () {
     blocTest<DiaryBloc, DiaryState>(
       'emits [Loading(), Empty())] at start.',
-      build: () => DiaryBloc(
-          getAllMeals: mockGetAllMeals,
-          addMeal: mockAddMeal,
-          updateMeal: mockUpdateMeal,
-          deleteMeal: mockDeleteMeal),
-      verify: (_) => verify(() => mockGetAllMeals(Param.noParam())),
+      build: () => DiaryBloc(diaryFacadeService: mockDiaryFacadeService),
+      verify: (_) => verify(() => mockDiaryFacadeService.getAllMeals()),
       expect: () =>
           <DiaryState>[const DiaryLoadInProgress([]), const DiaryEmpty()],
     );
@@ -62,7 +42,8 @@ void main() {
         'emits [Loaded()] when AddMealToDiary is added.',
         build: () => bloc,
         act: (bloc) => bloc.add(DiaryAddMeal(MealFixture.meal())),
-        verify: (_) => verify(() => mockAddMeal(Param(MealFixture.meal()))),
+        verify: (_) =>
+            verify(() => mockDiaryFacadeService.addMeal(MealFixture.meal())),
         expect: () => <DiaryState>[
           DiaryLoadSuccess([MealFixture.meal()])
         ],
@@ -71,10 +52,11 @@ void main() {
       blocTest<DiaryBloc, DiaryState>(
         'emits [MealNotAdded()] when AddMealToDiary is added and AddMeal usecase returns false.',
         build: () => bloc,
-        setUp: () => when(() => mockAddMeal(any()))
+        setUp: () => when(() => mockDiaryFacadeService.addMeal(any()))
             .thenAnswer((invocation) async => false),
         act: (bloc) => bloc.add(DiaryAddMeal(MealFixture.meal())),
-        verify: (_) => verify(() => mockAddMeal(Param(MealFixture.meal()))),
+        verify: (_) =>
+            verify(() => mockDiaryFacadeService.addMeal(MealFixture.meal())),
         expect: () => <DiaryState>[
           const DiaryAddFailure([], "Meal could not be added"),
           const DiaryEmpty()
@@ -91,9 +73,9 @@ void main() {
           bloc.add(DiaryAddMeal(MealFixture.meal()));
           bloc.add(DiaryDeleteMeal(MealFixture.meal().dateTime));
         },
-        verify: (_) =>
-            verify(() => mockDeleteMeal(Param(MealFixture.meal().dateTime))),
-        expect: () => <DiaryState>[const DiaryLoadSuccess([])],
+        verify: (_) => verify(() =>
+            mockDiaryFacadeService.deleteMeal(MealFixture.meal().dateTime)),
+        expect: () => <DiaryState>[const DiaryEmpty()],
       );
 
       blocTest<DiaryBloc, DiaryState>(
@@ -102,7 +84,8 @@ void main() {
         act: (bloc) {
           bloc.add(DiaryDeleteMeal(MealFixture.meal().dateTime));
         },
-        verify: (_) => verifyNever(() => mockDeleteMeal(any())),
+        verify: (_) =>
+            verifyNever(() => mockDiaryFacadeService.deleteMeal(any())),
         expect: () => <DiaryState>[
           const DiaryDeleteFailure([], "No meal to delete"),
           const DiaryEmpty()
@@ -112,15 +95,15 @@ void main() {
       blocTest<DiaryBloc, DiaryState>(
         'emits [MealNotDeleted())] when DeleteMealFromDiary is added and DeleteMeal repository returns false.',
         build: () => bloc,
-        setUp: () => when(() => mockDeleteMeal(any()))
+        setUp: () => when(() => mockDiaryFacadeService.deleteMeal(any()))
             .thenAnswer((invocation) async => false),
         skip: 1,
         act: (bloc) {
           bloc.add(DiaryAddMeal(MealFixture.meal()));
           bloc.add(DiaryDeleteMeal(MealFixture.meal().dateTime));
         },
-        verify: (_) =>
-            verify(() => mockDeleteMeal(Param(MealFixture.meal().dateTime))),
+        verify: (_) => verify(() =>
+            mockDiaryFacadeService.deleteMeal(MealFixture.meal().dateTime)),
         expect: () => <DiaryState>[
           DiaryDeleteFailure([MealFixture.meal()], "Meal could not be deleted"),
           DiaryLoadSuccess([MealFixture.meal()])
@@ -143,7 +126,8 @@ void main() {
           bloc.add(DiaryAddMeal(MealFixture.meal()));
           bloc.add(DiaryUpdateMeal(mealToUpdate));
         },
-        verify: (_) => verify(() => mockUpdateMeal(Param(mealToUpdate))),
+        verify: (_) =>
+            verify(() => mockDiaryFacadeService.updateMeal(mealToUpdate)),
         expect: () => <DiaryState>[
           DiaryLoadSuccess([mealToUpdate])
         ],
@@ -155,7 +139,8 @@ void main() {
         act: (bloc) {
           bloc.add(DiaryUpdateMeal(mealToUpdate));
         },
-        verify: (_) => verifyNever(() => mockUpdateMeal(any())),
+        verify: (_) =>
+            verifyNever(() => mockDiaryFacadeService.updateMeal(any())),
         expect: () => <DiaryState>[
           const DiaryUpdateFailure([], "No meal to update"),
           const DiaryEmpty()
@@ -167,14 +152,15 @@ void main() {
         build: () => bloc,
         skip: 1,
         setUp: () {
-          when(() => mockUpdateMeal(any()))
+          when(() => mockDiaryFacadeService.updateMeal(any()))
               .thenAnswer((invocation) async => false);
         },
         act: (bloc) {
           bloc.add(DiaryAddMeal(MealFixture.meal()));
           bloc.add(DiaryUpdateMeal(mealToUpdate));
         },
-        verify: (_) => verify(() => mockUpdateMeal(Param(mealToUpdate))),
+        verify: (_) =>
+            verify(() => mockDiaryFacadeService.updateMeal(mealToUpdate)),
         expect: () => <DiaryState>[
           DiaryUpdateFailure([MealFixture.meal()], "Meal could not be updated"),
           DiaryLoadSuccess([MealFixture.meal()])

@@ -2,31 +2,20 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:food_diary/features/diary/application/diary_facade_service.dart';
 import 'package:food_diary/features/diary/domain/entities/meal.dart';
-import 'package:food_diary/features/diary/domain/usecases/add_meal.dart';
-import 'package:food_diary/features/diary/domain/usecases/delete_meal.dart';
-import 'package:food_diary/features/diary/domain/usecases/get_all_meals.dart';
-import 'package:food_diary/features/diary/domain/usecases/update_meal.dart';
-import 'package:food_diary/features/diary/domain/usecases/usecase.dart';
 
 part 'diary_event.dart';
 part 'diary_state.dart';
 
 class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
-  final GetAllMeals getAllMeals;
-  final AddMeal addMeal;
-  final UpdateMeal updateMeal;
-  final DeleteMeal deleteMeal;
+  final DiaryFacadeService diaryFacadeService;
 
-  DiaryBloc(
-      {required this.getAllMeals,
-      required this.addMeal,
-      required this.updateMeal,
-      required this.deleteMeal})
+  DiaryBloc({required this.diaryFacadeService})
       : super(const DiaryLoadInProgress([])) {
     on<DiaryGetMeals>((event, emit) async {
       emit(DiaryLoadInProgress(state.meals));
-      final meals = await getAllMeals(Param.noParam());
+      final meals = await diaryFacadeService.getAllMeals();
       meals.sort((a, b) => a.dateTime.compareTo(b.dateTime));
       if (meals.isNotEmpty) {
         emit(DiaryLoadSuccess(meals));
@@ -36,13 +25,13 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
     });
 
     on<DiaryAddMeal>((event, emit) async {
-      bool isAdded = await addMeal(Param(event.meal));
+      bool isAdded = await diaryFacadeService.addMeal(event.meal);
       if (isAdded) {
         List<Meal> meals = List.from(state.meals);
-        meals.insert(
-            meals.indexWhere(
-                (element) => element.dateTime.isAfter(event.meal.dateTime)),
-            event.meal);
+        int index = meals.indexWhere(
+            (element) => element.dateTime.isAfter(event.meal.dateTime));
+        meals.insert(index > -1 ? index : 0, event.meal);
+
         //meals.insert(0, event.meal);
         emit(DiaryLoadSuccess(meals));
       } else {
@@ -59,7 +48,7 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
       int index =
           meals.indexWhere((meal) => meal.dateTime == event.meal.dateTime);
       if (index >= 0) {
-        bool isUpdated = await updateMeal(Param(event.meal));
+        bool isUpdated = await diaryFacadeService.updateMeal(event.meal);
         if (isUpdated) {
           meals[index] = event.meal;
           emit(DiaryLoadSuccess(meals));
@@ -90,7 +79,7 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
             ? const DiaryEmpty()
             : DiaryLoadSuccess(state.meals));
       } else {
-        bool isDeleted = await deleteMeal(Param(event.dateTime));
+        bool isDeleted = await diaryFacadeService.deleteMeal(event.dateTime);
         if (isDeleted) {
           meals.removeAt(index);
           emit(meals.isNotEmpty ? DiaryLoadSuccess(meals) : const DiaryEmpty());
