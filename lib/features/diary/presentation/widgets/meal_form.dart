@@ -62,10 +62,13 @@ class _MealFormState extends State<MealForm> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    List<String> foods = _controller.text.split(
-                      RegExp(r"[\n,;]+"),
-                    );
-                    widget.type == FormType.addMeal;
+                    List<String> foods = _controller.text
+                        .replaceAll(RegExp(r'[\n,;][\.]'), '\n')
+                        .split(
+                          RegExp(r"[\n,;]+"),
+                        )
+                        .map((e) => e.trim())
+                        .toList();
                     Navigator.pop(
                         context, Meal(dateTime: dateTime, foods: foods));
                   },
