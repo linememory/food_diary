@@ -9,12 +9,11 @@ abstract class MealFormEvent extends Equatable {
 
 class MealFormDateTimeChanged extends MealFormEvent {
   final DateTime dateTime;
-  final int id;
 
-  const MealFormDateTimeChanged(this.id, this.dateTime);
+  const MealFormDateTimeChanged(this.dateTime);
 
   @override
-  List<Object> get props => [id, dateTime];
+  List<Object> get props => [dateTime];
 }
 
 class MealFormNameChanged extends MealFormEvent {

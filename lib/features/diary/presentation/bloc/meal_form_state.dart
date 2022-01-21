@@ -2,7 +2,7 @@ part of 'meal_form_bloc.dart';
 
 abstract class MealFormState extends Equatable {
   const MealFormState(this.dateTime, this.foods);
-
+  
   final DateTime dateTime;
   final List<MealFormFoodItem> foods;
 

@@ -15,14 +15,13 @@ class MealFormBloc extends Bloc<MealFormEvent, MealFormState> {
   MealFormBloc(this.diaryFacadeService)
       : super(MealFormInitial(
             dateTime: DateTime.now(),
-            foods: const [MealFormFoodItem(0, "", Amount.small)])) {
+            foods: const [MealFormFoodItem("", Amount.small)])) {
     on<MealFormNameChanged>((event, emit) {
       List<MealFormFoodItem> foods =
           state.foods.map((item) => MealFormFoodItem.from(item)).toList();
-      foods[event.id] =
-          MealFormFoodItem(event.id, event.name, foods[event.id].amount);
+      foods[event.id] = MealFormFoodItem(event.name, foods[event.id].amount);
       if (event.id == state.foods.length - 1 && event.name.isNotEmpty) {
-        foods.add(MealFormFoodItem(foods.length, "", Amount.small));
+        foods.add(const MealFormFoodItem("", Amount.small));
       }
       emit(MealFormChanged(dateTime: state.dateTime, foods: foods));
     });
@@ -30,8 +29,7 @@ class MealFormBloc extends Bloc<MealFormEvent, MealFormState> {
     on<MealFormAmountChanged>((event, emit) {
       List<MealFormFoodItem> foods =
           state.foods.map((item) => MealFormFoodItem.from(item)).toList();
-      foods[event.id] =
-          MealFormFoodItem(event.id, foods[event.id].name, event.amount);
+      foods[event.id] = MealFormFoodItem(foods[event.id].name, event.amount);
       emit(MealFormChanged(dateTime: state.dateTime, foods: foods));
     });
 
@@ -43,8 +41,7 @@ class MealFormBloc extends Bloc<MealFormEvent, MealFormState> {
     on<MealFormUpdateMeal>((event, emit) async {
       emit(MealFormChanged(
           dateTime: event.dateTime,
-          foods: event.items
-            ..add(MealFormFoodItem(event.items.length, "", Amount.small))));
+          foods: event.items..add(const MealFormFoodItem("", Amount.small))));
     });
 
     on<MealFormSubmit>((event, emit) async {

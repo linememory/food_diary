@@ -31,8 +31,8 @@ class MealForm extends StatelessWidget {
               meal!.foods
                   .asMap()
                   .entries
-                  .map((entry) => MealFormFoodItem(
-                      entry.key, entry.value.name, entry.value.amount))
+                  .map((entry) =>
+                      MealFormFoodItem(entry.value.name, entry.value.amount))
                   .toList()));
         }
         return Scaffold(
@@ -44,14 +44,43 @@ class MealForm extends StatelessWidget {
             children: [
               Expanded(
                 child: BlocBuilder<MealFormBloc, MealFormState>(
+                  buildWhen: (previous, current) =>
+                      true, //current is MealFormSubmitted,
                   builder: (context, state) {
                     return Column(
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            DateFormat('EEE, dd.MM.yyy').format(state.dateTime),
-                            style: Theme.of(context).textTheme.subtitle1,
+                          child: GestureDetector(
+                            onTap: () async {
+                              final DateTime? pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: state.dateTime,
+                                  initialDatePickerMode: DatePickerMode.day,
+                                  firstDate: DateTime(2015),
+                                  lastDate: DateTime(2101));
+                              final TimeOfDay? pickedTime =
+                                  await showTimePicker(
+                                context: context,
+                                initialTime:
+                                    TimeOfDay.fromDateTime(state.dateTime),
+                              );
+                              // if (pickedDate != null) {
+                              //   DateTime dateTime = DateTime(
+                              //       pickedDate.year,
+                              //       pickedDate.month,
+                              //       pickedDate.day,
+                              //       pickedTime?.hour ?? 0,
+                              //       pickedTime?.minute ?? 0);
+                              //   BlocProvider.of<MealFormBloc>(context)
+                              //       .add(MealFormDateTimeChanged(dateTime));
+                              // }
+                            },
+                            child: Text(
+                              DateFormat('EEE, dd.MM.yyy')
+                                  .format(state.dateTime),
+                              style: Theme.of(context).textTheme.subtitle1,
+                            ),
                           ),
                         ),
                         Expanded(
@@ -70,7 +99,10 @@ class MealForm extends StatelessWidget {
                               ),
                               child: Column(
                                 children: state.foods
-                                    .map((e) => FoodEntry(food: e))
+                                    .asMap()
+                                    .entries
+                                    .map((e) =>
+                                        FoodEntry(id: e.key, food: e.value))
                                     .toList(),
                               ),
                             ),
@@ -115,8 +147,9 @@ class MealForm extends StatelessWidget {
 }
 
 class FoodEntry extends StatefulWidget {
-  FoodEntry({Key? key, required this.food}) : super(key: key);
+  FoodEntry({Key? key, required this.food, required this.id}) : super(key: key);
   final MealFormFoodItem food;
+  final int id;
   final TextEditingController controller = TextEditingController();
 
   @override
@@ -130,13 +163,14 @@ class _FoodEntryState extends State<FoodEntry> {
     widget.controller.selection = TextSelection(
         baseOffset: widget.food.name.length,
         extentOffset: widget.food.name.length);
+
     return Row(
       children: [
         Expanded(
           child: TextField(
             onChanged: (text) {
               BlocProvider.of<MealFormBloc>(context)
-                  .add(MealFormNameChanged(widget.food.id, text));
+                  .add(MealFormNameChanged(widget.id, text));
             },
             controller: widget.controller,
             decoration: const InputDecoration(
@@ -154,8 +188,8 @@ class _FoodEntryState extends State<FoodEntry> {
           child: DropdownButton<Amount>(
             value: widget.food.amount,
             onChanged: (Amount? amount) {
-              BlocProvider.of<MealFormBloc>(context).add(MealFormAmountChanged(
-                  widget.food.id, amount ?? Amount.small));
+              BlocProvider.of<MealFormBloc>(context).add(
+                  MealFormAmountChanged(widget.id, amount ?? Amount.small));
             },
             items: const [
               DropdownMenuItem<Amount>(
