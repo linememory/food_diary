@@ -12,8 +12,9 @@ part 'meal_form_state.dart';
 
 class MealFormBloc extends Bloc<MealFormEvent, MealFormState> {
   final DiaryFacadeService diaryFacadeService;
-  MealFormBloc(this.diaryFacadeService)
+  MealFormBloc(this.diaryFacadeService, int? id)
       : super(MealFormInitial(
+            id: id,
             dateTime: DateTime.now(),
             foods: const [MealFormFoodItem("", Amount.small)])) {
     on<MealFormNameChanged>((event, emit) {

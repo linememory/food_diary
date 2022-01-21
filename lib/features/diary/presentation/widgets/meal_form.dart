@@ -23,7 +23,7 @@ class MealForm extends StatelessWidget {
   Widget build(BuildContext context) {
     String buttonText = type == FormType.addMeal ? "Add" : "Update";
     return BlocProvider<MealFormBloc>(
-      create: (context) => sl(),
+      create: (context) => MealFormBloc(sl(), meal?.id),
       child: Builder(builder: (context) {
         if (meal != null) {
           BlocProvider.of<MealFormBloc>(context).add(MealFormUpdateMeal(

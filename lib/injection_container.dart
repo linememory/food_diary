@@ -18,7 +18,7 @@ void init() {
   sl.registerLazySingleton<MealRepository>(() => MealRepositoryImpl(sl()));
   sl.registerLazySingleton<MealDatasource>(() => MealDatasourceImpl(sl()));
 
-  sl.registerFactory(() => MealFormBloc(sl()));
+  //sl.registerFactory(() => MealFormBloc(sl()));
 
   //* Core
   sl.registerLazySingleton(() => DatabaseHelper());
