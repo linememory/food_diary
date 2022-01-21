@@ -15,7 +15,7 @@ class MealRepositoryImpl implements MealRepository {
 
   @override
   Future<bool> addMeal(Meal meal) async {
-    MealModel mealModel = MealModel(dateTime: meal.dateTime, foods: meal.foods);
+    MealModel mealModel = MealModel.from(meal);
     return await datasource.addMeal(mealModel) == 0 ? false : true;
   }
 
@@ -26,7 +26,7 @@ class MealRepositoryImpl implements MealRepository {
 
   @override
   Future<bool> updateMeal(Meal meal) async {
-    MealModel mealModel = MealModel(dateTime: meal.dateTime, foods: meal.foods);
+    MealModel mealModel = MealModel.from(meal);
     return await datasource.updateMeal(mealModel) == 0 ? false : true;
   }
 }

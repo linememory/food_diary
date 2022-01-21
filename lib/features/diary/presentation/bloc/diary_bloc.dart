@@ -97,7 +97,6 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
 
   @override
   void onChange(Change<DiaryState> change) {
-    //log(change.currentState)
     log(change.toString());
     super.onChange(change);
   }

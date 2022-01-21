@@ -120,9 +120,30 @@ class MealListItem extends StatelessWidget {
             .map(
               (food) => Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Text(
-                  food,
-                  overflow: TextOverflow.ellipsis,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            food.name,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+
+                        //Flexible(flex: 0, fit: FlexFit.tight, child: Container()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                              "${food.amount.name[0].toUpperCase()}${food.amount.name.substring(1)}"),
+                        ),
+                      ],
+                    ),
+                    const Divider(
+                      height: 2,
+                    ),
+                  ],
                 ),
               ),
             )
@@ -154,7 +175,7 @@ class EditButtons extends StatelessWidget {
           style: buttonStyle,
           child: _buttonText(context, "Update"),
           onPressed: () async {
-            Meal? mealToUpdate = await Navigator.push(
+            await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => MealForm(
@@ -162,10 +183,7 @@ class EditButtons extends StatelessWidget {
                         meal: meal,
                       )),
             );
-            if (mealToUpdate != null) {
-              BlocProvider.of<DiaryBloc>(context)
-                  .add(DiaryUpdateMeal(mealToUpdate));
-            }
+            BlocProvider.of<DiaryBloc>(context).add(DiaryGetMeals());
           },
         ),
         const SizedBox(

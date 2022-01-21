@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_diary/features/diary/domain/entities/meal.dart';
+import 'package:food_diary/features/diary/domain/value_objects/food.dart';
+import 'package:food_diary/features/diary/presentation/bloc/meal_form_bloc.dart';
+import 'package:food_diary/features/diary/presentation/bloc/misc/meal_form_food_item.dart';
+import 'package:food_diary/injection_container.dart';
 import 'package:intl/intl.dart';
 
 enum FormType {
@@ -7,7 +12,7 @@ enum FormType {
   updateMeal,
 }
 
-class MealForm extends StatefulWidget {
+class MealForm extends StatelessWidget {
   final FormType type;
   final Meal? meal;
 
@@ -15,76 +20,160 @@ class MealForm extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<MealForm> createState() => _MealFormState();
-}
-
-class _MealFormState extends State<MealForm> {
-  final TextEditingController _controller = TextEditingController();
-
-  @override
   Widget build(BuildContext context) {
-    _controller.text = widget.meal?.foods.join('\n') ?? "";
-    String buttonText = widget.type == FormType.addMeal ? "Add" : "Update";
-    DateTime dateTime = widget.meal?.dateTime ?? DateTime.now();
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 0,
-      ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                Text(
-                  DateFormat('EEE, dd.MM.yyy').format(dateTime),
-                  style: Theme.of(context).textTheme.headline5,
-                ),
-                TextField(
-                  controller: _controller,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)))),
-                  maxLines: 10,
-                  minLines: 4,
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
+    String buttonText = type == FormType.addMeal ? "Add" : "Update";
+    return BlocProvider<MealFormBloc>(
+      create: (context) => sl(),
+      child: Builder(builder: (context) {
+        if (meal != null) {
+          BlocProvider.of<MealFormBloc>(context).add(MealFormUpdateMeal(
+              meal!.dateTime,
+              meal!.foods
+                  .asMap()
+                  .entries
+                  .map((entry) => MealFormFoodItem(
+                      entry.key, entry.value.name, entry.value.amount))
+                  .toList()));
+        }
+        return Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 0,
+          ),
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: BlocBuilder<MealFormBloc, MealFormState>(
+                  builder: (context, state) {
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            DateFormat('EEE, dd.MM.yyy').format(state.dateTime),
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
+                        ),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Container(
+                              margin: const EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(10.0)),
+                                border: Border.all(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                  width: 2.0,
+                                ),
+                              ),
+                              child: Column(
+                                children: state.foods
+                                    .map((e) => FoodEntry(food: e))
+                                    .toList(),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
                   },
-                  child: const Text("Cancel"),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    List<String> foods = _controller.text
-                        .replaceAll(RegExp(r'[\n,;][\.]'), '\n')
-                        .split(
-                          RegExp(r"[\n,;]+"),
-                        )
-                        .map((e) => e.trim())
-                        .toList();
-                    Navigator.pop(
-                        context, Meal(dateTime: dateTime, foods: foods));
-                  },
-                  child: Text(buttonText),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Cancel"),
+                  ),
+                  BlocListener<MealFormBloc, MealFormState>(
+                    listener: (context, state) {
+                      if (state is MealFormSubmitted) {
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: ElevatedButton(
+                      onPressed: () {
+                        BlocProvider.of<MealFormBloc>(context)
+                            .add(MealFormSubmit());
+                      },
+                      child: Text(buttonText),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
+}
+
+class FoodEntry extends StatefulWidget {
+  FoodEntry({Key? key, required this.food}) : super(key: key);
+  final MealFormFoodItem food;
+  final TextEditingController controller = TextEditingController();
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  State<FoodEntry> createState() => _FoodEntryState();
+}
+
+class _FoodEntryState extends State<FoodEntry> {
+  @override
+  Widget build(BuildContext context) {
+    widget.controller.text = widget.food.name;
+    widget.controller.selection = TextSelection(
+        baseOffset: widget.food.name.length,
+        extentOffset: widget.food.name.length);
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            onChanged: (text) {
+              BlocProvider.of<MealFormBloc>(context)
+                  .add(MealFormNameChanged(widget.food.id, text));
+            },
+            controller: widget.controller,
+            decoration: const InputDecoration(
+              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+            ),
+            maxLines: 1,
+            minLines: 1,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: DropdownButton<Amount>(
+            value: widget.food.amount,
+            onChanged: (Amount? amount) {
+              BlocProvider.of<MealFormBloc>(context).add(MealFormAmountChanged(
+                  widget.food.id, amount ?? Amount.small));
+            },
+            items: const [
+              DropdownMenuItem<Amount>(
+                child: Text("Small"),
+                value: Amount.small,
+              ),
+              DropdownMenuItem<Amount>(
+                child: Text("Medium"),
+                value: Amount.medium,
+              ),
+              DropdownMenuItem<Amount>(
+                child: Text("High"),
+                value: Amount.high,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -4,7 +4,6 @@ import 'package:food_diary/features/diary/domain/entities/meal.dart';
 
 import '../../../../fixtures/meal_fixtures.dart';
 
-
 void main() {
   group('MealModel test', () {
     test('should be a subclass of Meal entity', () {
@@ -13,7 +12,8 @@ void main() {
     });
 
     test('should return a valid MealModel from a map', () {
-      var mealModelFromMap = MealModel.fromMap(MealFixture.mealMap());
+      var mealModelFromMap = MealModel.fromMap(
+          MealFixture.mealMap()..addAll({'foods': MealFixture.foodMap()}));
       // assert
       expect(mealModelFromMap, MealFixture.meal());
     });

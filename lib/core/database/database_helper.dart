@@ -7,14 +7,18 @@ class DatabaseHelper {
   static const String _databaseName = 'food_diary';
   static const int _databaseVersion = 1;
 
-  static const String mealTableName = 'meals';
-  static const String symptomsTableName = 'symptoms';
+  static const String idColumn = '_id';
 
-  static const String mealIdColumn = '_id';
+  static const String mealTableName = 'meals';
   static const String mealDateTimeColumn = 'date_time';
   static const String mealFoodsColumn = 'foods';
 
-  static const String symptomsIdColumn = '_id';
+  static const String foodTableName = 'foods';
+  static const String foodNameColumn = 'name';
+  static const String foodAmountColumn = 'amount';
+  static const String foodMealIdColumn = 'meal_id';
+
+  static const String symptomsTableName = 'symptoms';
   static const String symptomsDateTimeColumn = 'date_time';
   static const String symptomsSymptomColumn = 'symptom';
 
@@ -35,12 +39,17 @@ class DatabaseHelper {
 
   Future _onCreate(Database db, int version) async {
     await db.execute('''CREATE TABLE $mealTableName (
-          $mealIdColumn INTEGER PRIMARY KEY AUTOINCREMENT, 
-          $mealDateTimeColumn INTEGER NOT NULL, 
-          $mealFoodsColumn TEXT NOT NULL
+          $idColumn INTEGER PRIMARY KEY AUTOINCREMENT, 
+          $mealDateTimeColumn INTEGER NOT NULL
           )''');
+    await db.execute('''CREATE TABLE $foodTableName (
+          $idColumn INTEGER PRIMARY KEY AUTOINCREMENT, 
+          $foodNameColumn TEXT NOT NULL, 
+          $foodAmountColumn INTEGER NOT NULL,
+          $foodMealIdColumn INTEGER NOT NULL)''');
+
     await db.execute('''CREATE TABLE $symptomsTableName (
-          $symptomsIdColumn INTEGER PRIMARY KEY AUTOINCREMENT, 
+          $idColumn INTEGER PRIMARY KEY AUTOINCREMENT, 
           $symptomsDateTimeColumn INTEGER NOT NULL, 
           $symptomsSymptomColumn TEXT NOT NULL)''');
   }

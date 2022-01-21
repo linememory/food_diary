@@ -4,6 +4,8 @@ import 'package:food_diary/features/diary/domain/entities/meal.dart';
 import 'package:food_diary/features/diary/domain/repositories/meal_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../fixtures/meal_fixtures.dart';
+
 class MockMealRepository extends Mock implements MealRepository {}
 
 void main() {
@@ -17,8 +19,7 @@ void main() {
 
   group('get all meals', () {
     test("should return a list with all meals", () async {
-      Meal meal =
-          Meal(dateTime: DateTime.now(), foods: const ["Test1", "Test2"]);
+      Meal meal = MealFixture.meal();
       // arrange
       when(() => mealRepository.getAllMeals()).thenAnswer((_) async => [meal]);
       // act
@@ -43,8 +44,7 @@ void main() {
 
   group('add meal', () {
     test("should add the given meal and return true", () async {
-      Meal meal =
-          Meal(dateTime: DateTime.now(), foods: const ["Test1", "Test2"]);
+      Meal meal = MealFixture.meal();
       // arrange
       when(() => mealRepository.addMeal(meal)).thenAnswer((_) async => true);
       // act
@@ -58,8 +58,7 @@ void main() {
 
   group('update meal', () {
     test('should update the given meal and return true', () async {
-      Meal meal =
-          Meal(dateTime: DateTime.now(), foods: const ["Test1", "Test2"]);
+      Meal meal = MealFixture.meal();
       // arrange
       when(() => mealRepository.updateMeal(meal)).thenAnswer((_) async => true);
       // act
@@ -71,8 +70,7 @@ void main() {
     });
 
     test('should not update any meal and return false', () async {
-      Meal meal =
-          Meal(dateTime: DateTime.now(), foods: const ["Test1", "Test2"]);
+      Meal meal = MealFixture.meal();
       // arrange
       when(() => mealRepository.updateMeal(meal))
           .thenAnswer((_) async => false);
@@ -87,8 +85,7 @@ void main() {
 
   group('delete meal', () {
     test('should delete the given meal and return true', () async {
-      Meal meal =
-          Meal(dateTime: DateTime.now(), foods: const ["Test1", "Test2"]);
+      Meal meal = MealFixture.meal();
       // arrange
       when(() => mealRepository.deleteMeal(meal.dateTime))
           .thenAnswer((_) async => true);
@@ -101,8 +98,7 @@ void main() {
     });
 
     test('should not delete any meal and return false', () async {
-      Meal meal =
-          Meal(dateTime: DateTime.now(), foods: const ["Test1", "Test2"]);
+      Meal meal = MealFixture.meal();
       // arrange
       when(() => mealRepository.deleteMeal(meal.dateTime))
           .thenAnswer((_) async => false);

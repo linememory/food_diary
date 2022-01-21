@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_diary/dev/add_test_content.dart';
-import 'package:food_diary/features/diary/domain/entities/meal.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:food_diary/features/diary/presentation/widgets/meal_form.dart';
 import 'package:food_diary/features/diary/presentation/widgets/meal_list.dart';
@@ -98,13 +97,11 @@ class DiaryPage extends StatelessWidget {
         FloatingActionButton(
           heroTag: "MealAdd",
           onPressed: () async {
-            Meal? meal = await Navigator.push(
+            await Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const MealForm()),
             );
-            if (meal != null) {
-              BlocProvider.of<DiaryBloc>(context).add(DiaryAddMeal(meal));
-            }
+            BlocProvider.of<DiaryBloc>(context).add(DiaryGetMeals());
           },
           child: Row(children: const [
             Icon(Icons.add),
@@ -112,15 +109,15 @@ class DiaryPage extends StatelessWidget {
           ]),
           backgroundColor: Theme.of(context).colorScheme.secondary,
         ),
-        FloatingActionButton(
-          heroTag: "SymptomAdd",
-          onPressed: () {},
-          child: Row(children: const [
-            Icon(Icons.add),
-            Icon(Icons.sick),
-          ]),
-          backgroundColor: Theme.of(context).colorScheme.secondary,
-        ),
+        // FloatingActionButton(
+        //   heroTag: "SymptomAdd",
+        //   onPressed: () {},
+        //   child: Row(children: const [
+        //     Icon(Icons.add),
+        //     Icon(Icons.sick),
+        //   ]),
+        //   backgroundColor: Theme.of(context).colorScheme.secondary,
+        // ),
       ],
     );
   }
