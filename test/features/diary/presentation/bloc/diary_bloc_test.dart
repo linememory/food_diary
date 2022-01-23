@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:food_diary/features/diary/application/diary_facade_service.dart';
 import 'package:food_diary/features/diary/domain/entities/meal.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
+import 'package:food_diary/features/diary/presentation/bloc/misc/meal_item.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../fixtures/meal_fixtures.dart';
@@ -40,11 +41,12 @@ void main() {
       blocTest<DiaryBloc, DiaryState>(
         'emits [Loaded()] when AddMealToDiary is added.',
         build: () => bloc,
-        act: (bloc) => bloc.add(DiaryAddMeal(MealFixture.meal())),
+        act: (bloc) =>
+            bloc.add(DiaryAddMeal(MealItem.fromMealEntity(MealFixture.meal()))),
         verify: (_) =>
             verify(() => mockDiaryFacadeService.addMeal(MealFixture.meal())),
         expect: () => <DiaryState>[
-          DiaryLoadSuccess([MealFixture.meal()])
+          DiaryLoadSuccess([MealItem.fromMealEntity(MealFixture.meal())])
         ],
       );
 
@@ -53,7 +55,8 @@ void main() {
         build: () => bloc,
         setUp: () => when(() => mockDiaryFacadeService.addMeal(any()))
             .thenAnswer((invocation) async => false),
-        act: (bloc) => bloc.add(DiaryAddMeal(MealFixture.meal())),
+        act: (bloc) =>
+            bloc.add(DiaryAddMeal(MealItem.fromMealEntity(MealFixture.meal()))),
         verify: (_) =>
             verify(() => mockDiaryFacadeService.addMeal(MealFixture.meal())),
         expect: () => <DiaryState>[
@@ -69,7 +72,7 @@ void main() {
         build: () => bloc,
         skip: 1,
         act: (bloc) {
-          bloc.add(DiaryAddMeal(MealFixture.meal()));
+          bloc.add(DiaryAddMeal(MealItem.fromMealEntity(MealFixture.meal())));
           bloc.add(DiaryDeleteMeal(MealFixture.meal().id!));
         },
         verify: (_) => verify(
@@ -98,14 +101,15 @@ void main() {
             .thenAnswer((invocation) async => false),
         skip: 1,
         act: (bloc) {
-          bloc.add(DiaryAddMeal(MealFixture.meal()));
+          bloc.add(DiaryAddMeal(MealItem.fromMealEntity(MealFixture.meal())));
           bloc.add(DiaryDeleteMeal(MealFixture.meal().id!));
         },
         verify: (_) => verify(
             () => mockDiaryFacadeService.deleteMeal(MealFixture.meal().id!)),
         expect: () => <DiaryState>[
-          DiaryDeleteFailure([MealFixture.meal()], "Meal could not be deleted"),
-          DiaryLoadSuccess([MealFixture.meal()])
+          DiaryDeleteFailure([MealItem.fromMealEntity(MealFixture.meal())],
+              "Meal could not be deleted"),
+          DiaryLoadSuccess([MealItem.fromMealEntity(MealFixture.meal())])
         ],
       );
     });
@@ -122,13 +126,13 @@ void main() {
           mealToUpdate.foods.removeAt(1);
         },
         act: (bloc) {
-          bloc.add(DiaryAddMeal(MealFixture.meal()));
-          bloc.add(DiaryUpdateMeal(mealToUpdate));
+          bloc.add(DiaryAddMeal(MealItem.fromMealEntity(MealFixture.meal())));
+          bloc.add(DiaryUpdateMeal(MealItem.fromMealEntity(mealToUpdate)));
         },
         verify: (_) =>
             verify(() => mockDiaryFacadeService.updateMeal(mealToUpdate)),
         expect: () => <DiaryState>[
-          DiaryLoadSuccess([mealToUpdate])
+          DiaryLoadSuccess([MealItem.fromMealEntity(mealToUpdate)])
         ],
       );
 
@@ -136,7 +140,7 @@ void main() {
         'emits [] when UpdateMealInDiary is added while diary has no meals.',
         build: () => bloc,
         act: (bloc) {
-          bloc.add(DiaryUpdateMeal(mealToUpdate));
+          bloc.add(DiaryUpdateMeal(MealItem.fromMealEntity(mealToUpdate)));
         },
         verify: (_) =>
             verifyNever(() => mockDiaryFacadeService.updateMeal(any())),
@@ -155,14 +159,15 @@ void main() {
               .thenAnswer((invocation) async => false);
         },
         act: (bloc) {
-          bloc.add(DiaryAddMeal(MealFixture.meal()));
-          bloc.add(DiaryUpdateMeal(mealToUpdate));
+          bloc.add(DiaryAddMeal(MealItem.fromMealEntity(MealFixture.meal())));
+          bloc.add(DiaryUpdateMeal(MealItem.fromMealEntity(mealToUpdate)));
         },
         verify: (_) =>
             verify(() => mockDiaryFacadeService.updateMeal(mealToUpdate)),
         expect: () => <DiaryState>[
-          DiaryUpdateFailure([MealFixture.meal()], "Meal could not be updated"),
-          DiaryLoadSuccess([MealFixture.meal()])
+          DiaryUpdateFailure([MealItem.fromMealEntity(MealFixture.meal())],
+              "Meal could not be updated"),
+          DiaryLoadSuccess([MealItem.fromMealEntity(MealFixture.meal())])
         ],
       );
     });
