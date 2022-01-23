@@ -47,7 +47,7 @@ class MealFormRemoveFood extends MealFormEvent {
 
 class MealFormUpdateMeal extends MealFormEvent {
   final DateTime dateTime;
-  final List<MealFormFoodItem> items;
+  final List<FoodItem> items;
 
   const MealFormUpdateMeal(this.dateTime, this.items);
 

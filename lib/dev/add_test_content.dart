@@ -49,6 +49,6 @@ Future deleteTestContent() async {
   DiaryFacadeService diaryFacadeService = sl();
   List<Meal> result = await diaryFacadeService.getAllMeals();
   for (var i = 0; i < result.length; i++) {
-    await diaryFacadeService.deleteMeal(result[i].dateTime);
+    await diaryFacadeService.deleteMeal(result[i].id!);
   }
 }

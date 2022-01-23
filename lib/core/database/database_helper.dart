@@ -7,7 +7,7 @@ class DatabaseHelper {
   static const String _databaseName = 'food_diary';
   static const int _databaseVersion = 1;
 
-  static const String idColumn = '_id';
+  static const String idColumn = 'id';
 
   static const String mealTableName = 'meals';
   static const String mealDateTimeColumn = 'date_time';
@@ -22,6 +22,7 @@ class DatabaseHelper {
   static const String symptomsDateTimeColumn = 'date_time';
   static const String symptomsSymptomColumn = 'symptom';
 
+
   DatabaseHelper._internal();
   static final DatabaseHelper _instance = DatabaseHelper._internal();
   factory DatabaseHelper() {
@@ -33,8 +34,10 @@ class DatabaseHelper {
   Future<Database> _initDatabase() async {
     String path =
         join((await getApplicationSupportDirectory()).path, _databaseName);
-    return await openDatabase(path,
+    Database db = await openDatabase(path,
         version: _databaseVersion, onCreate: _onCreate);
+    await db.execute('PRAGMA foreign_keys = ON');
+    return db;
   }
 
   Future _onCreate(Database db, int version) async {
@@ -46,7 +49,9 @@ class DatabaseHelper {
           $idColumn INTEGER PRIMARY KEY AUTOINCREMENT, 
           $foodNameColumn TEXT NOT NULL, 
           $foodAmountColumn INTEGER NOT NULL,
-          $foodMealIdColumn INTEGER NOT NULL)''');
+          $foodMealIdColumn INTEGER NOT NULL,
+          FOREIGN KEY ($foodMealIdColumn) REFERENCES $mealTableName ($idColumn)                  
+           ON DELETE CASCADE ON UPDATE CASCADE)''');
 
     await db.execute('''CREATE TABLE $symptomsTableName (
           $idColumn INTEGER PRIMARY KEY AUTOINCREMENT, 

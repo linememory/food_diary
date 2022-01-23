@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:food_diary/features/diary/data/datasources/meal_datasource.dart';
+import 'package:food_diary/features/diary/data/models/meal_dto.dart';
 import 'package:food_diary/features/diary/data/repositories/meal_repository_impl.dart';
 import 'package:food_diary/features/diary/domain/entities/meal.dart';
 import 'package:mocktail/mocktail.dart';
@@ -20,8 +21,9 @@ void main() {
   group('get all meals', () {
     test('should return a list of all Meals', () async {
       // arrange
+      MealDTO mealDto = MealDTO.fromMealEntity(MealFixture.meal());
       when(() => mealDatasource.getAllMeals())
-          .thenAnswer((_) async => [MealFixture.meal()]);
+          .thenAnswer((_) async => [mealDto]);
       // act
       final List<Meal> result = await mealRepository.getAllMeals();
       // assert
@@ -43,12 +45,13 @@ void main() {
   group('add meal', () {
     test('should add the given Meal', () async {
       // arrange
-      when(() => mealDatasource.addMeal(MealFixture.meal()))
+      MealDTO mealDto = MealDTO.fromMealEntity(MealFixture.meal());
+      when(() => mealDatasource.addMeal(mealDto))
           .thenAnswer((_) async => 1);
       // act
       final result = await mealRepository.addMeal(MealFixture.meal());
       // assert
-      verify(() => mealDatasource.addMeal(MealFixture.meal()));
+      verify(() => mealDatasource.addMeal(mealDto));
       expect(result, true);
     });
   });
@@ -56,12 +59,13 @@ void main() {
   group('update meal', () {
     test('should update the given meal', () async {
       // arrange
-      when(() => mealDatasource.updateMeal(MealFixture.meal()))
+      MealDTO mealDto = MealDTO.fromMealEntity(MealFixture.meal());
+      when(() => mealDatasource.updateMeal(mealDto))
           .thenAnswer((_) async => 1);
       // act
       final result = await mealRepository.updateMeal(MealFixture.meal());
       // assert
-      verify(() => mealDatasource.updateMeal(MealFixture.meal()));
+      verify(() => mealDatasource.updateMeal(mealDto));
       expect(result, true);
     });
   });
@@ -69,13 +73,12 @@ void main() {
   group('delete meal', () {
     test('should delete the given Meal', () async {
       // arrange
-      when(() => mealDatasource.deleteMeal(MealFixture.meal().dateTime))
+      when(() => mealDatasource.deleteMeal(MealFixture.meal().id!))
           .thenAnswer((_) async => 1);
       // act
-      final result =
-          await mealRepository.deleteMeal(MealFixture.meal().dateTime);
+      final result = await mealRepository.deleteMeal(MealFixture.meal().id!);
       // assert
-      verify(() => mealDatasource.deleteMeal(MealFixture.meal().dateTime));
+      verify(() => mealDatasource.deleteMeal(MealFixture.meal().id!));
       expect(result, true);
     });
   });

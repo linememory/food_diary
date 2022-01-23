@@ -28,12 +28,12 @@ class DiaryUpdateMeal extends DiaryEvent {
 }
 
 class DiaryDeleteMeal extends DiaryEvent {
-  final DateTime dateTime;
+  final int id;
 
   const DiaryDeleteMeal(
-    this.dateTime,
+    this.id,
   );
 
   @override
-  List<Object> get props => [dateTime];
+  List<Object> get props => [id];
 }

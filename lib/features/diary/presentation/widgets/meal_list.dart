@@ -155,10 +155,9 @@ class MealListItem extends StatelessWidget {
 
 class EditButtons extends StatelessWidget {
   final Meal meal;
-  const EditButtons({
-    Key? key,
+  EditButtons({Key? key, 
     required this.meal,
-  }) : super(key: key);
+  }): assert(meal.id != null), super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -193,8 +192,7 @@ class EditButtons extends StatelessWidget {
           style: buttonStyle,
           child: _buttonText(context, "Delete"),
           onPressed: () {
-            BlocProvider.of<DiaryBloc>(context)
-                .add(DiaryDeleteMeal(meal.dateTime));
+            BlocProvider.of<DiaryBloc>(context).add(DiaryDeleteMeal(meal.id!));
           },
         ),
       ],

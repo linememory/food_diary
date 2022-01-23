@@ -5,32 +5,32 @@ import 'package:equatable/equatable.dart';
 import 'package:food_diary/features/diary/application/diary_facade_service.dart';
 import 'package:food_diary/features/diary/domain/entities/meal.dart';
 import 'package:food_diary/features/diary/domain/value_objects/food.dart';
-import 'package:food_diary/features/diary/presentation/bloc/misc/meal_form_food_item.dart';
+import 'package:food_diary/features/diary/presentation/bloc/misc/food_item.dart';
 
 part 'meal_form_event.dart';
 part 'meal_form_state.dart';
 
 class MealFormBloc extends Bloc<MealFormEvent, MealFormState> {
   final DiaryFacadeService diaryFacadeService;
-  MealFormBloc(this.diaryFacadeService, int? id)
+  final int? mealId;
+  MealFormBloc(this.diaryFacadeService, this.mealId)
       : super(MealFormInitial(
-            id: id,
             dateTime: DateTime.now(),
-            foods: const [MealFormFoodItem("", Amount.small)])) {
+            foods: const [FoodItem("", Amount.small)])) {
     on<MealFormNameChanged>((event, emit) {
-      List<MealFormFoodItem> foods =
-          state.foods.map((item) => MealFormFoodItem.from(item)).toList();
-      foods[event.id] = MealFormFoodItem(event.name, foods[event.id].amount);
+      List<FoodItem> foods =
+          state.foods.map((item) => FoodItem.from(item)).toList();
+      foods[event.id] = FoodItem(event.name, foods[event.id].amount);
       if (event.id == state.foods.length - 1 && event.name.isNotEmpty) {
-        foods.add(const MealFormFoodItem("", Amount.small));
+        foods.add(const FoodItem("", Amount.small));
       }
       emit(MealFormChanged(dateTime: state.dateTime, foods: foods));
     });
 
     on<MealFormAmountChanged>((event, emit) {
-      List<MealFormFoodItem> foods =
-          state.foods.map((item) => MealFormFoodItem.from(item)).toList();
-      foods[event.id] = MealFormFoodItem(foods[event.id].name, event.amount);
+      List<FoodItem> foods =
+          state.foods.map((item) => FoodItem.from(item)).toList();
+      foods[event.id] = FoodItem(foods[event.id].name, event.amount);
       emit(MealFormChanged(dateTime: state.dateTime, foods: foods));
     });
 
@@ -42,7 +42,7 @@ class MealFormBloc extends Bloc<MealFormEvent, MealFormState> {
     on<MealFormUpdateMeal>((event, emit) async {
       emit(MealFormChanged(
           dateTime: event.dateTime,
-          foods: event.items..add(const MealFormFoodItem("", Amount.small))));
+          foods: event.items..add(const FoodItem("", Amount.small))));
     });
 
     on<MealFormSubmit>((event, emit) async {
@@ -62,7 +62,7 @@ class MealFormBloc extends Bloc<MealFormEvent, MealFormState> {
     super.onChange(change);
   }
 
-  List<Food> _foodsToAdd(List<MealFormFoodItem> foodsToAdd) {
+  List<Food> _foodsToAdd(List<FoodItem> foodsToAdd) {
     List<Food> foods = [];
     for (var foodItem in foodsToAdd) {
       if (foodItem.name.isNotEmpty) {

@@ -31,8 +31,6 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
         int index = meals.indexWhere(
             (element) => element.dateTime.isAfter(event.meal.dateTime));
         meals.insert(index > -1 ? index : 0, event.meal);
-
-        //meals.insert(0, event.meal);
         emit(DiaryLoadSuccess(meals));
       } else {
         var stateType = state.runtimeType;
@@ -44,14 +42,13 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
     });
 
     on<DiaryUpdateMeal>((event, emit) async {
-      List<Meal> meals = List.from(state.meals);
-      int index =
-          meals.indexWhere((meal) => meal.dateTime == event.meal.dateTime);
+      List<Meal> meals = state.meals.map((e) => Meal.from(e)).toList();
+      int index = meals.indexWhere((meal) => meal.id == event.meal.id);
       if (index >= 0) {
         bool isUpdated = await diaryFacadeService.updateMeal(event.meal);
         if (isUpdated) {
           meals[index] = event.meal;
-          emit(DiaryLoadSuccess(meals));
+          emit(DiaryLoadSuccess(List.from(meals)));
         } else {
           var stateType = state.runtimeType;
           emit(DiaryUpdateFailure(state.meals, "Meal could not be updated"));
@@ -70,7 +67,7 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
 
     on<DiaryDeleteMeal>((event, emit) async {
       List<Meal> meals = List.from(state.meals);
-      int index = meals.indexWhere((meal) => meal.dateTime == event.dateTime);
+      int index = meals.indexWhere((meal) => meal.id == event.id);
 
       if (index < 0) {
         var stateType = state.runtimeType;
@@ -79,7 +76,7 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
             ? const DiaryEmpty()
             : DiaryLoadSuccess(state.meals));
       } else {
-        bool isDeleted = await diaryFacadeService.deleteMeal(event.dateTime);
+        bool isDeleted = await diaryFacadeService.deleteMeal(event.id);
         if (isDeleted) {
           meals.removeAt(index);
           emit(meals.isNotEmpty ? DiaryLoadSuccess(meals) : const DiaryEmpty());

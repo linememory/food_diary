@@ -18,7 +18,7 @@ class DiaryFacadeService {
     return await mealRepository.updateMeal(meal);
   }
 
-  Future<bool> deleteMeal(DateTime dateTime) async {
-    return await mealRepository.deleteMeal(dateTime);
+  Future<bool> deleteMeal(int id) async {
+    return await mealRepository.deleteMeal(id);
   }
 }

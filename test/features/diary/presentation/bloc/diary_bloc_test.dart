@@ -1,7 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:food_diary/features/diary/application/diary_facade_service.dart';
-import 'package:food_diary/features/diary/data/models/meal_model.dart';
 import 'package:food_diary/features/diary/domain/entities/meal.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:mocktail/mocktail.dart';
@@ -71,10 +70,10 @@ void main() {
         skip: 1,
         act: (bloc) {
           bloc.add(DiaryAddMeal(MealFixture.meal()));
-          bloc.add(DiaryDeleteMeal(MealFixture.meal().dateTime));
+          bloc.add(DiaryDeleteMeal(MealFixture.meal().id!));
         },
-        verify: (_) => verify(() =>
-            mockDiaryFacadeService.deleteMeal(MealFixture.meal().dateTime)),
+        verify: (_) => verify(
+            () => mockDiaryFacadeService.deleteMeal(MealFixture.meal().id!)),
         expect: () => <DiaryState>[const DiaryEmpty()],
       );
 
@@ -82,7 +81,7 @@ void main() {
         'emits [MealNotDeleted())] when DeleteMealFromDiary is added when meal is not in diary.',
         build: () => bloc,
         act: (bloc) {
-          bloc.add(DiaryDeleteMeal(MealFixture.meal().dateTime));
+          bloc.add(DiaryDeleteMeal(MealFixture.meal().id!));
         },
         verify: (_) =>
             verifyNever(() => mockDiaryFacadeService.deleteMeal(any())),
@@ -100,10 +99,10 @@ void main() {
         skip: 1,
         act: (bloc) {
           bloc.add(DiaryAddMeal(MealFixture.meal()));
-          bloc.add(DiaryDeleteMeal(MealFixture.meal().dateTime));
+          bloc.add(DiaryDeleteMeal(MealFixture.meal().id!));
         },
-        verify: (_) => verify(() =>
-            mockDiaryFacadeService.deleteMeal(MealFixture.meal().dateTime)),
+        verify: (_) => verify(
+            () => mockDiaryFacadeService.deleteMeal(MealFixture.meal().id!)),
         expect: () => <DiaryState>[
           DiaryDeleteFailure([MealFixture.meal()], "Meal could not be deleted"),
           DiaryLoadSuccess([MealFixture.meal()])
@@ -119,7 +118,7 @@ void main() {
         build: () => bloc,
         skip: 1,
         setUp: () {
-          mealToUpdate = MealModel.from(MealFixture.meal());
+          mealToUpdate = MealFixture.meal().copyWith();
           mealToUpdate.foods.removeAt(1);
         },
         act: (bloc) {
@@ -148,7 +147,7 @@ void main() {
       );
 
       blocTest<DiaryBloc, DiaryState>(
-        'emits [] when UpdateMealInDiary is added and UpdateMeal usecase returns false.',
+        'emits [] when UpdateMealInDiary is added and UpdateMeal returns false.',
         build: () => bloc,
         skip: 1,
         setUp: () {

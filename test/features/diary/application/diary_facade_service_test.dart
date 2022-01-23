@@ -87,26 +87,26 @@ void main() {
     test('should delete the given meal and return true', () async {
       Meal meal = MealFixture.meal();
       // arrange
-      when(() => mealRepository.deleteMeal(meal.dateTime))
+      when(() => mealRepository.deleteMeal(meal.id!))
           .thenAnswer((_) async => true);
       // act
-      final result = await diaryFacadeService.deleteMeal(meal.dateTime);
+      final result = await diaryFacadeService.deleteMeal(meal.id!);
       // assert
       expect(result, true);
-      verify(() => mealRepository.deleteMeal(meal.dateTime));
+      verify(() => mealRepository.deleteMeal(meal.id!));
       verifyNoMoreInteractions(mealRepository);
     });
 
     test('should not delete any meal and return false', () async {
       Meal meal = MealFixture.meal();
       // arrange
-      when(() => mealRepository.deleteMeal(meal.dateTime))
+      when(() => mealRepository.deleteMeal(meal.id!))
           .thenAnswer((_) async => false);
       // act
-      final result = await diaryFacadeService.deleteMeal(meal.dateTime);
+      final result = await diaryFacadeService.deleteMeal(meal.id!);
       // assert
       expect(result, false);
-      verify(() => mealRepository.deleteMeal(meal.dateTime));
+      verify(() => mealRepository.deleteMeal(meal.id!));
       verifyNoMoreInteractions(mealRepository);
     });
   });
