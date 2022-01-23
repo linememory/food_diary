@@ -10,6 +10,14 @@ class FoodItem extends Equatable {
       : name = item.name,
         amount = item.amount;
 
+  FoodItem.fromFoodEntity(Food food)
+      : name = food.name,
+        amount = food.amount;
+
+  Food toFoodEntity() {
+    return Food(name: name, amount: amount);
+  }
+
   @override
   List<Object?> get props => [name, amount];
 }

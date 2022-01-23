@@ -10,7 +10,7 @@ abstract class DiaryEvent extends Equatable {
 class DiaryGetMeals extends DiaryEvent {}
 
 class DiaryAddMeal extends DiaryEvent {
-  final Meal meal;
+  final MealItem meal;
 
   const DiaryAddMeal(this.meal);
 
@@ -19,7 +19,7 @@ class DiaryAddMeal extends DiaryEvent {
 }
 
 class DiaryUpdateMeal extends DiaryEvent {
-  final Meal meal;
+  final MealItem meal;
 
   const DiaryUpdateMeal(this.meal);
 

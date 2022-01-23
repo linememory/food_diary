@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_diary/features/diary/domain/entities/meal.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
+import 'package:food_diary/features/diary/presentation/bloc/misc/meal_item.dart';
 import 'package:food_diary/features/diary/presentation/widgets/meal_form.dart';
 import 'package:intl/intl.dart';
 
 class MealList extends StatelessWidget {
-  final List<Meal> meals;
+  final List<MealItem> meals;
   const MealList({Key? key, required this.meals}) : super(key: key);
 
   @override
@@ -20,9 +21,9 @@ class MealList extends StatelessWidget {
     );
   }
 
-  List<Widget> _mealItems(BuildContext context, List<Meal> meals) {
+  List<Widget> _mealItems(BuildContext context, List<MealItem> meals) {
     List<Widget> items = [];
-    Meal? previousMeal;
+    MealItem? previousMeal;
     bool sameDay(DateTime a, DateTime b) =>
         a.year == b.year && a.month == b.month && a.day == b.day;
     for (var meal in meals) {
@@ -62,7 +63,7 @@ class DateItem extends StatelessWidget {
 
 class MealListItem extends StatelessWidget {
   MealListItem({Key? key, required this.meal}) : super(key: key);
-  final Meal meal;
+  final MealItem meal;
 
   final formatter = DateFormat('HH:mm');
   @override
@@ -154,10 +155,12 @@ class MealListItem extends StatelessWidget {
 }
 
 class EditButtons extends StatelessWidget {
-  final Meal meal;
-  EditButtons({Key? key, 
+  final MealItem meal;
+  EditButtons({
+    Key? key,
     required this.meal,
-  }): assert(meal.id != null), super(key: key);
+  })  : assert(meal.id != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

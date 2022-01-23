@@ -33,3 +33,13 @@ class MealFormSubmitted extends MealFormState {
     required List<FoodItem> foods,
   }) : super(id: id, dateTime: dateTime, foods: foods);
 }
+
+class MealFormSubmitFailed extends MealFormState {
+  final String message;
+  const MealFormSubmitFailed({
+    int? id,
+    required DateTime dateTime,
+    required List<FoodItem> foods,
+    required this.message,
+  }) : super(id: id, dateTime: dateTime, foods: foods);
+}

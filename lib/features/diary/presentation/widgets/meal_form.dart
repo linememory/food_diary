@@ -4,6 +4,7 @@ import 'package:food_diary/features/diary/domain/entities/meal.dart';
 import 'package:food_diary/features/diary/domain/value_objects/food.dart';
 import 'package:food_diary/features/diary/presentation/bloc/meal_form_bloc.dart';
 import 'package:food_diary/features/diary/presentation/bloc/misc/food_item.dart';
+import 'package:food_diary/features/diary/presentation/bloc/misc/meal_item.dart';
 import 'package:food_diary/injection_container.dart';
 import 'package:intl/intl.dart';
 
@@ -14,7 +15,7 @@ enum FormType {
 
 class MealForm extends StatelessWidget {
   final FormType type;
-  final Meal? meal;
+  final MealItem? meal;
 
   const MealForm({Key? key, this.type = FormType.addMeal, this.meal})
       : super(key: key);
@@ -23,125 +24,125 @@ class MealForm extends StatelessWidget {
   Widget build(BuildContext context) {
     String buttonText = type == FormType.addMeal ? "Add" : "Update";
     return BlocProvider<MealFormBloc>(
-      create: (context) => MealFormBloc(sl(), meal?.id),
-      child: Builder(builder: (context) {
-        if (meal != null) {
-          BlocProvider.of<MealFormBloc>(context).add(MealFormUpdateMeal(
-              meal!.dateTime,
-              meal!.foods
-                  .asMap()
-                  .entries
-                  .map((entry) =>
-                      FoodItem(entry.value.name, entry.value.amount))
-                  .toList()));
-        }
-        return Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 0,
-          ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: BlocBuilder<MealFormBloc, MealFormState>(
-                  buildWhen: (previous, current) =>
-                      true, //current is MealFormSubmitted,
-                  builder: (context, state) {
-                    return Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: () async {
-                              final DateTime? pickedDate = await showDatePicker(
+      create: (context) => MealFormBloc(sl(), meal),
+      child: BlocListener<MealFormBloc, MealFormState>(
+        listener: (context, state) {
+          if (state is MealFormSubmitFailed) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.message)));
+          }
+        },
+        child: Builder(builder: (context) {
+          return Scaffold(
+            appBar: AppBar(
+              toolbarHeight: 0,
+            ),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: BlocBuilder<MealFormBloc, MealFormState>(
+                    buildWhen: (previous, current) =>
+                        true, //current is MealFormSubmitted,
+                    builder: (context, state) {
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap: () async {
+                                final DateTime? pickedDate =
+                                    await showDatePicker(
+                                        context: context,
+                                        initialDate: state.dateTime,
+                                        initialDatePickerMode:
+                                            DatePickerMode.day,
+                                        firstDate: DateTime(2015),
+                                        lastDate: DateTime(2101));
+                                final TimeOfDay? pickedTime =
+                                    await showTimePicker(
                                   context: context,
-                                  initialDate: state.dateTime,
-                                  initialDatePickerMode: DatePickerMode.day,
-                                  firstDate: DateTime(2015),
-                                  lastDate: DateTime(2101));
-                              final TimeOfDay? pickedTime =
-                                  await showTimePicker(
-                                context: context,
-                                initialTime:
-                                    TimeOfDay.fromDateTime(state.dateTime),
-                              );
-                              // if (pickedDate != null) {
-                              //   DateTime dateTime = DateTime(
-                              //       pickedDate.year,
-                              //       pickedDate.month,
-                              //       pickedDate.day,
-                              //       pickedTime?.hour ?? 0,
-                              //       pickedTime?.minute ?? 0);
-                              //   BlocProvider.of<MealFormBloc>(context)
-                              //       .add(MealFormDateTimeChanged(dateTime));
-                              // }
-                            },
-                            child: Text(
-                              DateFormat('EEE, dd.MM.yyy')
-                                  .format(state.dateTime),
-                              style: Theme.of(context).textTheme.subtitle1,
+                                  initialTime:
+                                      TimeOfDay.fromDateTime(state.dateTime),
+                                );
+                                // if (pickedDate != null) {
+                                //   DateTime dateTime = DateTime(
+                                //       pickedDate.year,
+                                //       pickedDate.month,
+                                //       pickedDate.day,
+                                //       pickedTime?.hour ?? 0,
+                                //       pickedTime?.minute ?? 0);
+                                //   BlocProvider.of<MealFormBloc>(context)
+                                //       .add(MealFormDateTimeChanged(dateTime));
+                                // }
+                              },
+                              child: Text(
+                                DateFormat('EEE, dd.MM.yyy')
+                                    .format(state.dateTime),
+                                style: Theme.of(context).textTheme.subtitle1,
+                              ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Container(
-                              margin: const EdgeInsets.all(10),
-                              padding: const EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(10.0)),
-                                border: Border.all(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                  width: 2.0,
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Container(
+                                margin: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10.0)),
+                                  border: Border.all(
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                    width: 2.0,
+                                  ),
+                                ),
+                                child: Column(
+                                  children: state.foods
+                                      .asMap()
+                                      .entries
+                                      .map((e) =>
+                                          FoodEntry(id: e.key, food: e.value))
+                                      .toList(),
                                 ),
                               ),
-                              child: Column(
-                                children: state.foods
-                                    .asMap()
-                                    .entries
-                                    .map((e) =>
-                                        FoodEntry(id: e.key, food: e.value))
-                                    .toList(),
-                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
+                        ],
+                      );
+                    },
+                  ),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Cancel"),
-                  ),
-                  BlocListener<MealFormBloc, MealFormState>(
-                    listener: (context, state) {
-                      if (state is MealFormSubmitted) {
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: ElevatedButton(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
                       onPressed: () {
-                        BlocProvider.of<MealFormBloc>(context)
-                            .add(MealFormSubmit());
+                        Navigator.pop(context);
                       },
-                      child: Text(buttonText),
+                      child: const Text("Cancel"),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      }),
+                    BlocListener<MealFormBloc, MealFormState>(
+                      listener: (context, state) {
+                        if (state is MealFormSubmitted) {
+                          Navigator.pop(context);
+                        } else if (state is MealFormSubmitFailed) {}
+                      },
+                      child: ElevatedButton(
+                        onPressed: () {
+                          BlocProvider.of<MealFormBloc>(context)
+                              .add(MealFormSubmit());
+                        },
+                        child: Text(buttonText),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        }),
+      ),
     );
   }
 }

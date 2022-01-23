@@ -6,17 +6,21 @@ import 'package:food_diary/features/diary/application/diary_facade_service.dart'
 import 'package:food_diary/features/diary/domain/entities/meal.dart';
 import 'package:food_diary/features/diary/domain/value_objects/food.dart';
 import 'package:food_diary/features/diary/presentation/bloc/misc/food_item.dart';
+import 'package:food_diary/features/diary/presentation/bloc/misc/meal_item.dart';
 
 part 'meal_form_event.dart';
 part 'meal_form_state.dart';
 
 class MealFormBloc extends Bloc<MealFormEvent, MealFormState> {
   final DiaryFacadeService diaryFacadeService;
-  final int? mealId;
-  MealFormBloc(this.diaryFacadeService, this.mealId)
+  final MealItem? mealItem;
+  //final int? mealId;
+  MealFormBloc(this.diaryFacadeService, this.mealItem)
       : super(MealFormInitial(
-            dateTime: DateTime.now(),
-            foods: const [FoodItem("", Amount.small)])) {
+            dateTime: mealItem?.dateTime ?? DateTime.now(),
+            foods: List.generate(
+                mealItem?.foods.length ?? 0, (index) => mealItem!.foods[index])
+              ..add(const FoodItem("", Amount.small)))) {
     on<MealFormNameChanged>((event, emit) {
       List<FoodItem> foods =
           state.foods.map((item) => FoodItem.from(item)).toList();
@@ -39,18 +43,29 @@ class MealFormBloc extends Bloc<MealFormEvent, MealFormState> {
           dateTime: event.dateTime, foods: List.from(state.foods)));
     });
 
-    on<MealFormUpdateMeal>((event, emit) async {
-      emit(MealFormChanged(
-          dateTime: event.dateTime,
-          foods: event.items..add(const FoodItem("", Amount.small))));
-    });
+    // on<MealFormUpdateMeal>((event, emit) async {
+    //   emit(MealFormChanged(
+    //       dateTime: event.dateTime,
+    //       foods: event.items..add(const FoodItem("", Amount.small))));
+    // });
 
     on<MealFormSubmit>((event, emit) async {
-      Meal meal =
-          Meal(dateTime: state.dateTime, foods: _foodsToAdd(state.foods));
-      await diaryFacadeService.addMeal(meal);
-      emit(MealFormSubmitted(
-          dateTime: state.dateTime, foods: List.from(state.foods)));
+      if (isValid(state.foods)) {
+        Meal meal = Meal(
+            id: mealItem?.id,
+            dateTime: state.dateTime,
+            foods: _foodsToAdd(state.foods));
+        await diaryFacadeService.addMeal(meal);
+        emit(MealFormSubmitted(
+            dateTime: state.dateTime, foods: List.from(state.foods)));
+      } else {
+        emit(MealFormSubmitFailed(
+            dateTime: state.dateTime,
+            foods: state.foods,
+            message: "Form not valid"));
+
+        //emit(MealFormInitial(dateTime: state.dateTime, foods: state.foods));
+      }
     });
 
     on<MealFormEvent>((event, emit) {});
@@ -70,5 +85,14 @@ class MealFormBloc extends Bloc<MealFormEvent, MealFormState> {
       }
     }
     return foods;
+  }
+
+  bool isValid(List<FoodItem> foods) {
+    for (var food in foods) {
+      if (food.name.isNotEmpty) {
+        return true;
+      }
+    }
+    return false;
   }
 }

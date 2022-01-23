@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:food_diary/features/diary/application/diary_facade_service.dart';
 import 'package:food_diary/features/diary/domain/entities/meal.dart';
+import 'package:food_diary/features/diary/presentation/bloc/misc/meal_item.dart';
 
 part 'diary_event.dart';
 part 'diary_state.dart';
@@ -15,7 +16,9 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
       : super(const DiaryLoadInProgress([])) {
     on<DiaryGetMeals>((event, emit) async {
       emit(DiaryLoadInProgress(state.meals));
-      final meals = await diaryFacadeService.getAllMeals();
+      List<MealItem> meals = (await diaryFacadeService.getAllMeals())
+          .map((e) => MealItem.fromMealEntity(e))
+          .toList();
       meals.sort((a, b) => a.dateTime.compareTo(b.dateTime));
       if (meals.isNotEmpty) {
         emit(DiaryLoadSuccess(meals));
@@ -25,9 +28,10 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
     });
 
     on<DiaryAddMeal>((event, emit) async {
-      bool isAdded = await diaryFacadeService.addMeal(event.meal);
+      bool isAdded =
+          await diaryFacadeService.addMeal(event.meal.toMealEntity());
       if (isAdded) {
-        List<Meal> meals = List.from(state.meals);
+        List<MealItem> meals = List.from(state.meals);
         int index = meals.indexWhere(
             (element) => element.dateTime.isAfter(event.meal.dateTime));
         meals.insert(index > -1 ? index : 0, event.meal);
@@ -42,10 +46,11 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
     });
 
     on<DiaryUpdateMeal>((event, emit) async {
-      List<Meal> meals = state.meals.map((e) => Meal.from(e)).toList();
+      List<MealItem> meals = state.meals.map((e) => MealItem.from(e)).toList();
       int index = meals.indexWhere((meal) => meal.id == event.meal.id);
       if (index >= 0) {
-        bool isUpdated = await diaryFacadeService.updateMeal(event.meal);
+        bool isUpdated =
+            await diaryFacadeService.updateMeal(event.meal.toMealEntity());
         if (isUpdated) {
           meals[index] = event.meal;
           emit(DiaryLoadSuccess(List.from(meals)));
@@ -66,7 +71,7 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
     });
 
     on<DiaryDeleteMeal>((event, emit) async {
-      List<Meal> meals = List.from(state.meals);
+      List<MealItem> meals = List.from(state.meals);
       int index = meals.indexWhere((meal) => meal.id == event.id);
 
       if (index < 0) {

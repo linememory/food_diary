@@ -33,11 +33,13 @@ class MealDatasourceImpl implements MealDatasource {
   @override
   Future<int> addMeal(MealDTO mealToAdd) async {
     Database db = await _databaseHelper.database;
-
     final query = await db.query(DatabaseHelper.mealTableName,
         where:
             '${DatabaseHelper.idColumn} = ? OR ${DatabaseHelper.mealDateTimeColumn} = ?',
-        whereArgs: [mealToAdd.id, mealToAdd.dateTime.microsecondsSinceEpoch]);
+        whereArgs: [
+          mealToAdd.id ?? -1,
+          mealToAdd.dateTime.microsecondsSinceEpoch
+        ]);
 
     if (query.isEmpty) {
       Map<String, dynamic> mealMap = mealToAdd.toMap()..remove('id');

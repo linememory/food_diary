@@ -45,14 +45,14 @@ class MealFormRemoveFood extends MealFormEvent {
   List<Object> get props => [id];
 }
 
-class MealFormUpdateMeal extends MealFormEvent {
-  final DateTime dateTime;
-  final List<FoodItem> items;
+// class MealFormUpdateMeal extends MealFormEvent {
+//   final DateTime dateTime;
+//   final List<FoodItem> items;
 
-  const MealFormUpdateMeal(this.dateTime, this.items);
+//   const MealFormUpdateMeal(this.dateTime, this.items);
 
-  @override
-  List<Object> get props => [items];
-}
+//   @override
+//   List<Object> get props => [items];
+// }
 
 class MealFormSubmit extends MealFormEvent {}
