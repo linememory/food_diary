@@ -16,27 +16,27 @@ extension ParseToString on Type {
 
 class BowelMovement extends Equatable {
   const BowelMovement({
-    required this.name,
+    required this.note,
     required this.stoolType,
   });
 
   BowelMovement.from(BowelMovement food)
-      : name = food.name,
+      : note = food.note,
         stoolType = food.stoolType;
 
-  final String name;
+  final String note;
   final StoolType stoolType;
 
   BowelMovement copyWith({
-    String? name,
+    String? note,
     StoolType? stoolType,
   }) {
     return BowelMovement(
-      name: name ?? this.name,
+      note: note ?? this.note,
       stoolType: stoolType ?? this.stoolType,
     );
   }
 
   @override
-  List<Object?> get props => [name, stoolType];
+  List<Object?> get props => [note, stoolType];
 }
