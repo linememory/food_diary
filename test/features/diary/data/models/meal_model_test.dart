@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:food_diary/features/diary/data/models/meal_dto.dart';
-import 'package:food_diary/features/diary/domain/entities/meal.dart';
 
 import '../../../../fixtures/meal_fixtures.dart';
 

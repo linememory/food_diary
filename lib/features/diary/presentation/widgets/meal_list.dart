@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_diary/features/diary/domain/entities/meal.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:food_diary/features/diary/presentation/bloc/misc/meal_item.dart';
 import 'package:food_diary/features/diary/presentation/widgets/meal_form.dart';

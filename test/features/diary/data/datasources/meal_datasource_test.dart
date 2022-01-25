@@ -3,7 +3,6 @@ import 'package:food_diary/core/database/database_helper.dart';
 import 'package:food_diary/features/diary/data/datasources/meal_datasource.dart';
 import 'package:food_diary/features/diary/data/models/food_dto.dart';
 import 'package:food_diary/features/diary/data/models/meal_dto.dart';
-import 'package:food_diary/features/diary/domain/entities/meal.dart';
 import 'package:food_diary/features/diary/domain/value_objects/food.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sqflite/sqflite.dart';

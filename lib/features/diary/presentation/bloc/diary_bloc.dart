@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:food_diary/features/diary/application/diary_facade_service.dart';
-import 'package:food_diary/features/diary/domain/entities/meal.dart';
 import 'package:food_diary/features/diary/presentation/bloc/misc/meal_item.dart';
 
 part 'diary_event.dart';
