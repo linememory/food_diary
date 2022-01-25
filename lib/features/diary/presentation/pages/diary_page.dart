@@ -38,7 +38,7 @@ class DiaryPage extends StatelessWidget {
     );
   }
 
-  Widget _diaryBlocBuilder(context, state) {
+  Widget _diaryBlocBuilder(context, DiaryState state) {
     if (state is DiaryEmpty) {
       return Center(
         child: Text(state.message),
