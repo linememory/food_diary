@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_diary/features/diary/domain/value_objects/food.dart';
 import 'package:food_diary/features/diary/presentation/bloc/meal_form_bloc.dart';
-import 'package:food_diary/features/diary/presentation/bloc/misc/food_item.dart';
 import 'package:food_diary/features/diary/presentation/bloc/misc/meal_item.dart';
 import 'package:food_diary/injection_container.dart';
 import 'package:intl/intl.dart';

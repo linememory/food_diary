@@ -1,113 +1,116 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:food_diary/features/diary/application/diary_facade_service.dart';
-import 'package:food_diary/features/diary/domain/entities/meal.dart';
-import 'package:food_diary/features/diary/domain/repositories/meal_repository.dart';
+import 'package:food_diary/features/diary/domain/entities/diary_entry.dart';
+import 'package:food_diary/features/diary/domain/repositories/diary_entry_reposity.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../../fixtures/meal_fixtures.dart';
+import '../../../fixtures/entry_fixtures.dart';
 
-class MockMealRepository extends Mock implements MealRepository {}
+class MockDiaryEntryRepository extends Mock implements DiaryEntryRepository {}
 
 void main() {
   late DiaryFacadeService diaryFacadeService;
-  late MockMealRepository mealRepository;
+  late MockDiaryEntryRepository diaryEntryRepository;
 
   setUpAll(() {
-    mealRepository = MockMealRepository();
-    diaryFacadeService = DiaryFacadeService(mealRepository);
+    diaryEntryRepository = MockDiaryEntryRepository();
+    diaryFacadeService = DiaryFacadeService(diaryEntryRepository);
   });
 
-  group('get all meals', () {
-    test("should return a list with all meals", () async {
-      Meal meal = MealFixture.meal();
+  group('get all entries', () {
+    test("should return a list with all entries", () async {
+      List<DiaryEntry> entries = EntryFixture.getEntries(2);
       // arrange
-      when(() => mealRepository.getAllMeals()).thenAnswer((_) async => [meal]);
+      when(() => diaryEntryRepository.getAll())
+          .thenAnswer((_) async => entries);
       // act
-      final result = await diaryFacadeService.getAllMeals();
+      final result = await diaryFacadeService.getAllDiaryEvents();
       // assert
-      expect(result, [meal]);
-      verify(() => mealRepository.getAllMeals());
-      verifyNoMoreInteractions(mealRepository);
+      expect(result, entries);
+      verify(() => diaryEntryRepository.getAll());
+      verifyNoMoreInteractions(diaryEntryRepository);
     });
 
     test("should return an empty list", () async {
       // arrange
-      when(() => mealRepository.getAllMeals()).thenAnswer((_) async => []);
+      when(() => diaryEntryRepository.getAll()).thenAnswer((_) async => []);
       // act
-      final result = await diaryFacadeService.getAllMeals();
+      final result = await diaryFacadeService.getAllDiaryEvents();
       // assert
       expect(result, []);
-      verify(() => mealRepository.getAllMeals());
-      verifyNoMoreInteractions(mealRepository);
+      verify(() => diaryEntryRepository.getAll());
+      verifyNoMoreInteractions(diaryEntryRepository);
     });
   });
 
-  group('add meal', () {
-    test("should add the given meal and return true", () async {
-      Meal meal = MealFixture.meal();
+  group('add entry', () {
+    test("should add the given entry and return true", () async {
+      DiaryEntry meal = EntryFixture.getMealEntries(1).first;
       // arrange
-      when(() => mealRepository.addMeal(meal)).thenAnswer((_) async => true);
-      // act
-      final result = await diaryFacadeService.addMeal(meal);
-      // assert
-      expect(result, true);
-      verify(() => mealRepository.addMeal(meal));
-      verifyNoMoreInteractions(mealRepository);
-    });
-  });
-
-  group('update meal', () {
-    test('should update the given meal and return true', () async {
-      Meal meal = MealFixture.meal();
-      // arrange
-      when(() => mealRepository.updateMeal(meal)).thenAnswer((_) async => true);
-      // act
-      final result = await diaryFacadeService.updateMeal(meal);
-      // assert
-      expect(result, true);
-      verify(() => mealRepository.updateMeal(meal));
-      verifyNoMoreInteractions(mealRepository);
-    });
-
-    test('should not update any meal and return false', () async {
-      Meal meal = MealFixture.meal();
-      // arrange
-      when(() => mealRepository.updateMeal(meal))
-          .thenAnswer((_) async => false);
-      // act
-      final result = await diaryFacadeService.updateMeal(meal);
-      // assert
-      expect(result, false);
-      verify(() => mealRepository.updateMeal(meal));
-      verifyNoMoreInteractions(mealRepository);
-    });
-  });
-
-  group('delete meal', () {
-    test('should delete the given meal and return true', () async {
-      Meal meal = MealFixture.meal();
-      // arrange
-      when(() => mealRepository.deleteMeal(meal.id!))
+      when(() => diaryEntryRepository.upsert(meal))
           .thenAnswer((_) async => true);
       // act
-      final result = await diaryFacadeService.deleteMeal(meal.id!);
+      final result = await diaryFacadeService.addDiaryEntry(meal);
       // assert
       expect(result, true);
-      verify(() => mealRepository.deleteMeal(meal.id!));
-      verifyNoMoreInteractions(mealRepository);
+      verify(() => diaryEntryRepository.upsert(meal));
+      verifyNoMoreInteractions(diaryEntryRepository);
+    });
+  });
+
+  group('update entry', () {
+    test('should update the given entry and return true', () async {
+      DiaryEntry meal = EntryFixture.getMealEntries(1).first;
+      // arrange
+      when(() => diaryEntryRepository.upsert(meal))
+          .thenAnswer((_) async => true);
+      // act
+      final result = await diaryFacadeService.updateDiaryEntry(meal);
+      // assert
+      expect(result, true);
+      verify(() => diaryEntryRepository.upsert(meal));
+      verifyNoMoreInteractions(diaryEntryRepository);
     });
 
-    test('should not delete any meal and return false', () async {
-      Meal meal = MealFixture.meal();
+    test('should not update any entry and return false', () async {
+      DiaryEntry meal = EntryFixture.getMealEntries(1).first;
       // arrange
-      when(() => mealRepository.deleteMeal(meal.id!))
+      when(() => diaryEntryRepository.upsert(meal))
           .thenAnswer((_) async => false);
       // act
-      final result = await diaryFacadeService.deleteMeal(meal.id!);
+      final result = await diaryFacadeService.updateDiaryEntry(meal);
       // assert
       expect(result, false);
-      verify(() => mealRepository.deleteMeal(meal.id!));
-      verifyNoMoreInteractions(mealRepository);
+      verify(() => diaryEntryRepository.upsert(meal));
+      verifyNoMoreInteractions(diaryEntryRepository);
+    });
+  });
+
+  group('delete entry', () {
+    test('should delete the given entry and return true', () async {
+      DiaryEntry meal = EntryFixture.getMealEntries(1).first;
+      // arrange
+      when(() => diaryEntryRepository.delete(any()))
+          .thenAnswer((_) async => true);
+      // act
+      final result = await diaryFacadeService.deleteDiaryEntry(meal.id!);
+      // assert
+      expect(result, true);
+      verify(() => diaryEntryRepository.delete(any()));
+      verifyNoMoreInteractions(diaryEntryRepository);
+    });
+
+    test('should not delete any entry and return false', () async {
+      DiaryEntry meal = EntryFixture.getMealEntries(1).first;
+      // arrange
+      when(() => diaryEntryRepository.delete(meal.id!))
+          .thenAnswer((_) async => false);
+      // act
+      final result = await diaryFacadeService.deleteDiaryEntry(meal.id!);
+      // assert
+      expect(result, false);
+      verify(() => diaryEntryRepository.delete(meal.id!));
+      verifyNoMoreInteractions(diaryEntryRepository);
     });
   });
 }

@@ -15,6 +15,9 @@ extension ParseToString on Type {
 }
 
 class BowelMovement extends Equatable {
+  final String note;
+  final StoolType stoolType;
+
   const BowelMovement({
     required this.note,
     required this.stoolType,
@@ -23,9 +26,6 @@ class BowelMovement extends Equatable {
   BowelMovement.from(BowelMovement food)
       : note = food.note,
         stoolType = food.stoolType;
-
-  final String note;
-  final StoolType stoolType;
 
   BowelMovement copyWith({
     String? note,

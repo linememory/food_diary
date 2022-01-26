@@ -5,52 +5,52 @@ class SymptomDTO extends Equatable {
   final int? id;
   final String description;
   final int intensity;
-  final int eventId;
+  final int entryId;
   const SymptomDTO({
     this.id,
     required this.description,
     required this.intensity,
-    required this.eventId,
+    required this.entryId,
   });
 
   SymptomDTO copyWith({
     int? id,
     String? description,
     int? intensity,
-    int? eventId,
+    int? entryId,
   }) {
     return SymptomDTO(
         id: id ?? this.id,
         description: description ?? this.description,
         intensity: intensity ?? this.intensity,
-        eventId: eventId ?? this.eventId);
+        entryId: entryId ?? this.entryId);
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'description': description,
       'intensity': intensity,
-      'event_id': eventId,
+      'entry_id': entryId,
     };
   }
 
   factory SymptomDTO.fromMap(Map<String, dynamic> map) {
     return SymptomDTO(
-      id: map['id']?.toInt(),
+      id: map['id'],
       description: map['description'],
       intensity: map['intensity'],
-      eventId: map['event_id'],
+      entryId: map['entry_id'],
     );
   }
 
-  SymptomDTO.fromSymptomEntity(
-      {required this.eventId, required Symptom symptom})
-      : id = null,
+  SymptomDTO.fromEntity({
+    required this.entryId,
+    required Symptom symptom,
+  })  : id = null,
         description = symptom.name,
         intensity = symptom.intensity.index;
 
-  Symptom toSymptomEntity() {
+  Symptom toEntity() {
     return Symptom(name: description, intensity: Intensity.values[intensity]);
   }
 
@@ -59,5 +59,5 @@ class SymptomDTO extends Equatable {
       'SymptomDTO(id: $id, description: $description, intensity: $intensity)';
 
   @override
-  List<Object?> get props => [id, description, intensity];
+  List<Object?> get props => [description, intensity, entryId];
 }

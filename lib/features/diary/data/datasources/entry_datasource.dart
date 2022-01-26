@@ -1,58 +1,61 @@
 import 'package:food_diary/core/database/database_helper.dart';
-import 'package:food_diary/features/diary/data/models/event_dto.dart';
+import 'package:food_diary/features/diary/data/models/entry_dto.dart';
 import 'package:sqflite/sqflite.dart';
 
-abstract class EventDatasource {
-  Future<List<EventDTO>> getAll();
-  Future<int> upsert(EventDTO event);
+abstract class EntryDatasource {
+  Future<List<EntryDTO>> getAll();
+  Future<int> upsert(EntryDTO entry);
   Future<int> delete(int id);
 }
 
-class EventDatasourceImpl extends EventDatasource {
-  final DatabaseHelper2 _databaseHelper;
+class EntryDatasourceImpl extends EntryDatasource {
+  final DatabaseHelper _databaseHelper;
 
   bool isInit = false;
 
-  static const String tableName = 'events';
+  static const String tableName = 'entries';
   static const String idColumn = 'id';
   static const String dateTimeColumn = 'date_time';
   static const String typeColumn = 'type';
 
-  EventDatasourceImpl(this._databaseHelper);
+  EntryDatasourceImpl(this._databaseHelper);
 
   @override
-  Future<List<EventDTO>> getAll() async {
+  Future<List<EntryDTO>> getAll() async {
     _init();
     Database db = await _databaseHelper.database;
-    return (await db.query(tableName)).map((e) => EventDTO.fromMap(e)).toList();
+    return (await db.query(tableName)).map((e) => EntryDTO.fromMap(e)).toList();
   }
 
   @override
-  Future<int> upsert(EventDTO event) async {
+  Future<int> upsert(EntryDTO entry) async {
     _init();
     Database db = await _databaseHelper.database;
-    if (event.id != null) {
+    if (entry.id != null) {
       final result = await db
-          .query(tableName, where: '$idColumn = ?', whereArgs: [event.id]);
+          .query(tableName, where: '$idColumn = ?', whereArgs: [entry.id]);
       if (result.isNotEmpty) {
-        await db.update(tableName, event.toMap());
+        await db.update(tableName, entry.toMap()..remove(idColumn),
+            where: '$idColumn = ?', whereArgs: [entry.id]);
+
+            
         return result.first[idColumn] as int;
       } else {
-        return await db.insert(tableName, event.toMap());
+        return await db.insert(tableName, entry.toMap());
       }
     } else {
       final result = await db.query(tableName,
           where: '$dateTimeColumn = ?',
-          whereArgs: [event.dateTime.microsecondsSinceEpoch]);
+          whereArgs: [entry.dateTime.microsecondsSinceEpoch]);
       for (var item in result) {
-        if (item[dateTimeColumn] == event.dateTime.microsecondsSinceEpoch &&
-            item[typeColumn] == event.type.index) {
-          await db.update(tableName, event.toMap(),
-              where: '$dateTimeColumn = ?', whereArgs: [event.dateTime]);
+        if (item[dateTimeColumn] == entry.dateTime.microsecondsSinceEpoch &&
+            item[typeColumn] == entry.type.index) {
+          await db.update(tableName, entry.toMap(),
+              where: '$dateTimeColumn = ?', whereArgs: [entry.dateTime]);
           return item[idColumn] as int;
         }
       }
-      return await db.insert(tableName, event.toMap());
+      return await db.insert(tableName, entry.toMap());
     }
   }
 

@@ -7,30 +7,30 @@ abstract class DiaryEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class DiaryGetMeals extends DiaryEvent {}
+class DiaryGetEntries extends DiaryEvent {}
 
-class DiaryAddMeal extends DiaryEvent {
-  final MealItem meal;
+class DiaryAddEntry extends DiaryEvent {
+  final EntryItem entry;
 
-  const DiaryAddMeal(this.meal);
-
-  @override
-  List<Object> get props => [meal];
-}
-
-class DiaryUpdateMeal extends DiaryEvent {
-  final MealItem meal;
-
-  const DiaryUpdateMeal(this.meal);
+  const DiaryAddEntry(this.entry);
 
   @override
-  List<Object> get props => [meal];
+  List<Object> get props => [entry];
 }
 
-class DiaryDeleteMeal extends DiaryEvent {
+class DiaryUpdateEntry extends DiaryEvent {
+  final EntryItem entry;
+
+  const DiaryUpdateEntry(this.entry);
+
+  @override
+  List<Object> get props => [entry];
+}
+
+class DiaryDeleteEntry extends DiaryEvent {
   final int id;
 
-  const DiaryDeleteMeal(
+  const DiaryDeleteEntry(
     this.id,
   );
 

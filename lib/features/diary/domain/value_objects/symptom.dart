@@ -11,6 +11,9 @@ extension ParseToString on Intensity {
 }
 
 class Symptom extends Equatable {
+  final String name;
+  final Intensity intensity;
+
   const Symptom({
     required this.name,
     required this.intensity,
@@ -19,9 +22,6 @@ class Symptom extends Equatable {
   Symptom.from(Symptom food)
       : name = food.name,
         intensity = food.intensity;
-
-  final String name;
-  final Intensity intensity;
 
   Symptom copyWith({
     String? name,

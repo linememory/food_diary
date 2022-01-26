@@ -1,72 +1,65 @@
+import 'package:equatable/equatable.dart';
 import 'package:food_diary/features/diary/domain/value_objects/food.dart';
 
-class FoodDTO {
-  int? id;
-  String name;
-  Amount amount;
-  int? mealId;
+class FoodDTO extends Equatable {
+  final int? id;
+  final String name;
+  final int amount;
+  final int? entryId;
 
-  FoodDTO({
+  const FoodDTO({
     this.id,
     required this.name,
     required this.amount,
-    required this.mealId,
+    required this.entryId,
   });
 
   FoodDTO copyWith({
     int? id,
     String? name,
-    Amount? amount,
-    int? mealId,
+    int? amount,
+    int? entryId,
   }) {
     return FoodDTO(
       id: id ?? this.id,
       name: name ?? this.name,
       amount: amount ?? this.amount,
-      mealId: mealId ?? this.mealId,
+      entryId: entryId ?? this.entryId,
     );
   }
 
-  FoodDTO.fromFoodEntity(Food food, this.mealId)
-      : name = food.name,
-        amount = food.amount;
+  FoodDTO.fromEntity({
+    required this.entryId,
+    required Food food,
+  })  : id = null,
+        name = food.name,
+        amount = food.amount.index;
 
-  Food toFoodEntity() {
-    return Food(name: name, amount: amount);
+  Food toEntity() {
+    return Food(name: name, amount: Amount.values[amount]);
   }
 
-  Map<String, dynamic> toMap({int? mealId}) {
+  Map<String, dynamic> toMap({int? entryId}) {
     return {
-      'id': id,
       'name': name,
-      'amount': amount.index,
-      'meal_id': mealId ?? this.mealId,
+      'amount': amount,
+      'entry_id': entryId ?? this.entryId,
     };
   }
 
   factory FoodDTO.fromMap(Map<String, dynamic> map) {
     return FoodDTO(
-      id: map['id']?.toInt(),
-      name: map['name'] ?? '',
-      amount: Amount.values[map['amount']],
-      mealId: map['meal_id'],
+      id: map['id'],
+      name: map['name'],
+      amount: map['amount'],
+      entryId: map['entry_id'],
     );
   }
 
   @override
   String toString() =>
-      'FoodDTO(id: $id, name: $name, amount: $amount, mealId: $mealId)';
+      'FoodDTO(id: $id, name: $name, amount: $amount, entryId: $entryId)';
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is FoodDTO &&
-        other.name == name &&
-        other.amount == amount &&
-        other.mealId == mealId;
-  }
-
-  @override
-  int get hashCode => name.hashCode ^ amount.hashCode ^ mealId.hashCode;
+  List<Object?> get props => [name, amount, entryId];
 }

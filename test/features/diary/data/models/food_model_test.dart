@@ -1,9 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:food_diary/features/diary/data/models/food_dto.dart';
-import 'package:food_diary/features/diary/domain/value_objects/food.dart';
 
 void main() {
-  FoodDTO foodDto = FoodDTO(name: "Test", amount: Amount.small, mealId: 0);
+  FoodDTO foodDto = const FoodDTO(name: "Test", amount: 0, entryId: 0);
   Map<String, dynamic> foodMap = const {
     'id': null,
     'name': "Test",

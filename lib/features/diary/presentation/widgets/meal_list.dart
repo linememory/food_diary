@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
+import 'package:food_diary/features/diary/presentation/bloc/misc/entry_item.dart';
 import 'package:food_diary/features/diary/presentation/bloc/misc/meal_item.dart';
 import 'package:food_diary/features/diary/presentation/widgets/meal_form.dart';
 import 'package:intl/intl.dart';
 
 class MealList extends StatelessWidget {
-  final List<MealItem> meals;
-  const MealList({Key? key, required this.meals}) : super(key: key);
+  final List<EntryItem> entries;
+  const MealList({Key? key, required this.entries}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,23 +16,25 @@ class MealList extends StatelessWidget {
       borderRadius: BorderRadius.circular(20),
       child: ListView(
         shrinkWrap: true,
-        children: _mealItems(context, meals),
+        children: _entryItems(context, entries),
       ),
     );
   }
 
-  List<Widget> _mealItems(BuildContext context, List<MealItem> meals) {
+  List<Widget> _entryItems(BuildContext context, List<EntryItem> entries) {
     List<Widget> items = [];
-    MealItem? previousMeal;
+    EntryItem? previousEntry;
     bool sameDay(DateTime a, DateTime b) =>
         a.year == b.year && a.month == b.month && a.day == b.day;
-    for (var meal in meals) {
-      if (previousMeal == null ||
-          !sameDay(meal.dateTime, previousMeal.dateTime)) {
-        items.add(DateItem(dateTime: meal.dateTime));
+    for (var entry in entries) {
+      if (previousEntry == null ||
+          !sameDay(entry.dateTime, previousEntry.dateTime)) {
+        items.add(DateItem(dateTime: entry.dateTime));
       }
-      items.add(MealListItem(meal: meal));
-      previousMeal = meal;
+      if (entry is MealItem) {
+        items.add(MealListItem(meal: entry));
+      }
+      previousEntry = entry;
     }
     return items;
   }
@@ -184,7 +187,7 @@ class EditButtons extends StatelessWidget {
                         meal: meal,
                       )),
             );
-            BlocProvider.of<DiaryBloc>(context).add(DiaryGetMeals());
+            BlocProvider.of<DiaryBloc>(context).add(DiaryGetEntries());
           },
         ),
         const SizedBox(
@@ -194,7 +197,7 @@ class EditButtons extends StatelessWidget {
           style: buttonStyle,
           child: _buttonText(context, "Delete"),
           onPressed: () {
-            BlocProvider.of<DiaryBloc>(context).add(DiaryDeleteMeal(meal.id!));
+            BlocProvider.of<DiaryBloc>(context).add(DiaryDeleteEntry(meal.id!));
           },
         ),
       ],

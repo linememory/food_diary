@@ -51,7 +51,7 @@ class DiaryPage extends StatelessWidget {
         ),
       );
     } else {
-      return MealList(meals: state.meals);
+      return MealList(entries: state.entries);
     }
   }
 
@@ -70,14 +70,14 @@ class DiaryPage extends StatelessWidget {
         IconButton(
           onPressed: () async {
             await addTestContent(seed: 0);
-            BlocProvider.of<DiaryBloc>(context).add(DiaryGetMeals());
+            BlocProvider.of<DiaryBloc>(context).add(DiaryGetEntries());
           },
           icon: const Icon(Icons.add),
         ),
         IconButton(
           onPressed: () async {
             await deleteTestContent();
-            BlocProvider.of<DiaryBloc>(context).add(DiaryGetMeals());
+            BlocProvider.of<DiaryBloc>(context).add(DiaryGetEntries());
           },
           icon: const Icon(Icons.delete),
         ),
@@ -101,7 +101,7 @@ class DiaryPage extends StatelessWidget {
               context,
               MaterialPageRoute(builder: (context) => const MealForm()),
             );
-            BlocProvider.of<DiaryBloc>(context).add(DiaryGetMeals());
+            BlocProvider.of<DiaryBloc>(context).add(DiaryGetEntries());
           },
           child: Row(children: const [
             Icon(Icons.add),

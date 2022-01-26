@@ -1,24 +1,23 @@
-import 'package:food_diary/features/diary/domain/entities/meal.dart';
-import 'package:food_diary/features/diary/domain/repositories/meal_repository.dart';
+import 'package:food_diary/features/diary/domain/entities/diary_entry.dart';
+import 'package:food_diary/features/diary/domain/repositories/diary_entry_reposity.dart';
 
 class DiaryFacadeService {
-  DiaryFacadeService(this.mealRepository);
+  DiaryFacadeService(this.diaryEventRepository);
+  final DiaryEntryRepository diaryEventRepository;
 
-  final MealRepository mealRepository;
-
-  Future<List<Meal>> getAllMeals() async {
-    return await mealRepository.getAllMeals();
+  Future<List<DiaryEntry>> getAllDiaryEvents() async {
+    return await diaryEventRepository.getAll();
   }
 
-  Future<bool> addMeal(Meal meal) async {
-    return await mealRepository.addMeal(meal);
+  Future<bool> addDiaryEntry(DiaryEntry entry) async {
+    return await diaryEventRepository.upsert(entry);
   }
 
-  Future<bool> updateMeal(Meal meal) async {
-    return await mealRepository.updateMeal(meal);
+  Future<bool> updateDiaryEntry(DiaryEntry entry) async {
+    return await diaryEventRepository.upsert(entry);
   }
 
-  Future<bool> deleteMeal(int id) async {
-    return await mealRepository.deleteMeal(id);
+  Future<bool> deleteDiaryEntry(int entryId) async {
+    return await diaryEventRepository.delete(entryId);
   }
 }
