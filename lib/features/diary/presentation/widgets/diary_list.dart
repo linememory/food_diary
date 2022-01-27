@@ -19,12 +19,12 @@ class DiaryList extends StatelessWidget {
       borderRadius: BorderRadius.circular(20),
       child: ListView(
         shrinkWrap: true,
-        children: _entryItems(context, entries),
+        children: _entryListItems(context, entries),
       ),
     );
   }
 
-  List<Widget> _entryItems(BuildContext context, List<DiaryEntry> entries) {
+  List<Widget> _entryListItems(BuildContext context, List<DiaryEntry> entries) {
     List<Widget> items = [];
     DiaryEntry? previousEntry;
     bool sameDay(DateTime a, DateTime b) =>
@@ -35,11 +35,63 @@ class DiaryList extends StatelessWidget {
         items.add(_DateItem(dateTime: entry.dateTime));
       }
       items.add(_EntryItem(
-        meal: entry,
+        content: _EntryContent(
+          timeOfDay: TimeOfDay.fromDateTime(entry.dateTime),
+          content: _entryContentList(context, entry),
+          alignTimeRight: entry is MealEntry ? true : false,
+        ),
+        buttons: _EditButtons(
+          entryItem: entry,
+        ),
       ));
       previousEntry = entry;
     }
     return items;
+  }
+
+  List<Widget> _entryContentList(BuildContext context, DiaryEntry entry) {
+    if (entry is MealEntry) {
+      return entry.foods
+          .map((food) => _ItemLine(
+                left: food.name,
+                right:
+                    "${food.amount.name[0].toUpperCase()}${food.amount.name.substring(1)}",
+              ))
+          .toList();
+    } else if (entry is SymptomEntry) {
+      return entry.symptoms
+          .map((symptom) => _ItemLine(
+              left: symptom.name,
+              right:
+                  "${symptom.intensity.name[0].toUpperCase()}${symptom.intensity.name.substring(1)}"))
+          .toList();
+    } else if (entry is BowelMovementEntry) {
+      return [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(entry.bowelMovement.stoolType.name),
+              const SizedBox(
+                height: 20,
+                child: VerticalDivider(
+                  width: 5,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  entry.bowelMovement.note,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )
+            ],
+          ),
+        ),
+      ];
+    } else {
+      return [];
+    }
   }
 }
 
@@ -67,9 +119,11 @@ class _DateItem extends StatelessWidget {
 }
 
 class _EntryItem extends StatelessWidget {
-  const _EntryItem({Key? key, required this.meal}) : super(key: key);
+  const _EntryItem({Key? key, required this.buttons, required this.content})
+      : super(key: key);
 
-  final DiaryEntry meal;
+  final Widget buttons;
+  final Widget content;
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +136,7 @@ class _EntryItem extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _EntryContent(entry: meal),
+          content,
           const SizedBox(
             width: 100,
             child: Divider(
@@ -90,7 +144,7 @@ class _EntryItem extends StatelessWidget {
               thickness: 1,
             ),
           ),
-          _EditButtons(entryItem: meal),
+          buttons,
         ],
       ),
     );
@@ -160,9 +214,16 @@ class _EditButtons extends StatelessWidget {
 }
 
 class _EntryContent extends StatelessWidget {
-  const _EntryContent({Key? key, required this.entry}) : super(key: key);
+  const _EntryContent(
+      {Key? key,
+      this.alignTimeRight = false,
+      required this.content,
+      required this.timeOfDay})
+      : super(key: key);
 
-  final DiaryEntry entry;
+  final bool alignTimeRight;
+  final List<Widget> content;
+  final TimeOfDay timeOfDay;
 
   final VerticalDivider divider = const VerticalDivider(
     width: 10,
@@ -179,90 +240,31 @@ class _EntryContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (entry is MealEntry) {
+    if (alignTimeRight) {
       return IntrinsicHeight(
         child: Row(
-          children: _mealEntry(entry as MealEntry),
-        ),
-      );
-    } else if (entry is SymptomEntry) {
-      return IntrinsicHeight(
-        child: Row(
-          children: _symptomEntry(entry as SymptomEntry),
-        ),
-      );
-    } else if (entry is BowelMovementEntry) {
-      return IntrinsicHeight(
-        child: Row(
-          children: _bowelMovementEntry(entry as BowelMovementEntry),
+          children: [
+            _EntryTime(
+              time: timeOfDay,
+            ),
+            divider,
+            _itemList(content),
+          ],
         ),
       );
     } else {
-      return Container();
-    }
-  }
-
-  List<Widget> _mealEntry(MealEntry meal) {
-    return [
-      _EntryTime(
-        time: TimeOfDay.fromDateTime(meal.dateTime),
-      ),
-      divider,
-      _itemList(meal.foods
-          .map((food) => _ItemLine(
-                left: food.name,
-                right:
-                    "${food.amount.name[0].toUpperCase()}${food.amount.name.substring(1)}",
-              ))
-          .toList()),
-    ];
-  }
-
-  List<Widget> _symptomEntry(SymptomEntry symptomEntry) {
-    return [
-      _itemList(symptomEntry.symptoms
-          .map((symptom) => _ItemLine(
-              left: symptom.name,
-              right:
-                  "${symptom.intensity.name[0].toUpperCase()}${symptom.intensity.name.substring(1)}"))
-          .toList()),
-      divider,
-      _EntryTime(
-        time: TimeOfDay.fromDateTime(symptomEntry.dateTime),
-      ),
-    ];
-  }
-
-  List<Widget> _bowelMovementEntry(BowelMovementEntry bowelMovementEntry) {
-    return [
-      _itemList([
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(bowelMovementEntry.bowelMovement.stoolType.name),
-              const SizedBox(
-                height: 20,
-                child: VerticalDivider(
-                  width: 5,
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  bowelMovementEntry.bowelMovement.note,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              )
-            ],
-          ),
+      return IntrinsicHeight(
+        child: Row(
+          children: [
+            _itemList(content),
+            divider,
+            _EntryTime(
+              time: timeOfDay,
+            ),
+          ],
         ),
-      ]),
-      divider,
-      _EntryTime(
-        time: TimeOfDay.fromDateTime(bowelMovementEntry.dateTime),
-      ),
-    ];
+      );
+    }
   }
 }
 
