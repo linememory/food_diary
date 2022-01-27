@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_diary/features/diary/domain/entities/bowel_movement_entry.dart';
 import 'package:food_diary/features/diary/domain/entities/diary_entry.dart';
 import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
 import 'package:food_diary/features/diary/domain/entities/symptom_entry.dart';
+import 'package:food_diary/features/diary/domain/value_objects/food.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:food_diary/features/diary/presentation/widgets/entry_form.dart';
 import 'package:intl/intl.dart';
@@ -30,22 +32,20 @@ class DiaryList extends StatelessWidget {
     for (var entry in entries) {
       if (previousEntry == null ||
           !sameDay(entry.dateTime, previousEntry.dateTime)) {
-        items.add(DateItem(dateTime: entry.dateTime));
+        items.add(_DateItem(dateTime: entry.dateTime));
       }
-      if (entry is MealEntry) {
-        items.add(MealListItem(meal: entry));
-      } else if (entry is SymptomEntry) {
-        items.add(SymptomListItem(symptoms: entry));
-      }
+      items.add(_EntryItem(
+        meal: entry,
+      ));
       previousEntry = entry;
     }
     return items;
   }
 }
 
-class DateItem extends StatelessWidget {
+class _DateItem extends StatelessWidget {
   final DateTime dateTime;
-  const DateItem({Key? key, required this.dateTime}) : super(key: key);
+  const _DateItem({Key? key, required this.dateTime}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -66,20 +66,11 @@ class DateItem extends StatelessWidget {
   }
 }
 
-class EntryItem2 extends StatelessWidget {
-  const EntryItem2({Key? key}) : super(key: key);
+class _EntryItem extends StatelessWidget {
+  const _EntryItem({Key? key, required this.meal}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
+  final DiaryEntry meal;
 
-class MealListItem extends StatelessWidget {
-  MealListItem({Key? key, required this.meal}) : super(key: key);
-  final MealEntry meal;
-
-  final formatter = DateFormat('HH:mm');
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -91,7 +82,7 @@ class MealListItem extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _dateAndFoods(context),
+          _EntryContent(entry: meal),
           const SizedBox(
             width: 100,
             child: Divider(
@@ -99,171 +90,16 @@ class MealListItem extends StatelessWidget {
               thickness: 1,
             ),
           ),
-          EditButtons(entryItem: meal),
+          _EditButtons(entryItem: meal),
         ],
-      ),
-    );
-  }
-
-  IntrinsicHeight _dateAndFoods(BuildContext context) {
-    return IntrinsicHeight(
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Text(
-              formatter.format(meal.dateTime),
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-          ),
-          const VerticalDivider(
-            width: 10,
-            thickness: 2,
-          ),
-          _foods(),
-        ],
-      ),
-    );
-  }
-
-  Widget _foods() {
-    return Flexible(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: meal.foods
-            .map(
-              (food) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            food.name,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-
-                        //Flexible(flex: 0, fit: FlexFit.tight, child: Container()),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                              "${food.amount.name[0].toUpperCase()}${food.amount.name.substring(1)}"),
-                        ),
-                      ],
-                    ),
-                    const Divider(
-                      height: 2,
-                    ),
-                  ],
-                ),
-              ),
-            )
-            .toList(),
       ),
     );
   }
 }
 
-class SymptomListItem extends StatelessWidget {
-  SymptomListItem({Key? key, required this.symptoms}) : super(key: key);
-  final SymptomEntry symptoms;
-
-  final formatter = DateFormat('HH:mm');
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 1),
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Theme.of(context).colorScheme.secondary,
-      ),
-      child: Column(
-        children: [
-          _dateAndFoods(context),
-          const SizedBox(
-            width: 100,
-            child: Divider(
-              height: 10,
-              thickness: 1,
-            ),
-          ),
-          EditButtons(entryItem: symptoms),
-        ],
-      ),
-    );
-  }
-
-  IntrinsicHeight _dateAndFoods(BuildContext context) {
-    return IntrinsicHeight(
-      child: Row(
-        children: [
-          _symptoms(),
-          const VerticalDivider(
-            width: 10,
-            thickness: 2,
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Text(
-              formatter.format(symptoms.dateTime),
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _symptoms() {
-    return Flexible(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: symptoms.symptoms
-            .map(
-              (symptom) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            symptom.name,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-
-                        //Flexible(flex: 0, fit: FlexFit.tight, child: Container()),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                              "${symptom.intensity.name[0].toUpperCase()}${symptom.intensity.name.substring(1)}"),
-                        ),
-                      ],
-                    ),
-                    const Divider(
-                      height: 2,
-                    ),
-                  ],
-                ),
-              ),
-            )
-            .toList(),
-      ),
-    );
-  }
-}
-
-class EditButtons extends StatelessWidget {
+class _EditButtons extends StatelessWidget {
   final DiaryEntry entryItem;
-  EditButtons({
+  _EditButtons({
     Key? key,
     required this.entryItem,
   })  : assert(entryItem.id != null),
@@ -319,6 +155,173 @@ class EditButtons extends StatelessWidget {
           .textTheme
           .bodyText1!
           .copyWith(fontSize: 12, fontWeight: FontWeight.normal),
+    );
+  }
+}
+
+class _EntryContent extends StatelessWidget {
+  const _EntryContent({Key? key, required this.entry}) : super(key: key);
+
+  final DiaryEntry entry;
+
+  final VerticalDivider divider = const VerticalDivider(
+    width: 10,
+    thickness: 2,
+  );
+
+  Widget _itemList(List<Widget> children) => Flexible(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: children,
+        ),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    if (entry is MealEntry) {
+      return IntrinsicHeight(
+        child: Row(
+          children: _mealEntry(entry as MealEntry),
+        ),
+      );
+    } else if (entry is SymptomEntry) {
+      return IntrinsicHeight(
+        child: Row(
+          children: _symptomEntry(entry as SymptomEntry),
+        ),
+      );
+    } else if (entry is BowelMovementEntry) {
+      return IntrinsicHeight(
+        child: Row(
+          children: _bowelMovementEntry(entry as BowelMovementEntry),
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  List<Widget> _mealEntry(MealEntry meal) {
+    return [
+      _EntryTime(
+        time: TimeOfDay.fromDateTime(meal.dateTime),
+      ),
+      divider,
+      _itemList(meal.foods
+          .map((food) => _ItemLine(
+                left: food.name,
+                right:
+                    "${food.amount.name[0].toUpperCase()}${food.amount.name.substring(1)}",
+              ))
+          .toList()),
+    ];
+  }
+
+  List<Widget> _symptomEntry(SymptomEntry symptomEntry) {
+    return [
+      _itemList(symptomEntry.symptoms
+          .map((symptom) => _ItemLine(
+              left: symptom.name,
+              right:
+                  "${symptom.intensity.name[0].toUpperCase()}${symptom.intensity.name.substring(1)}"))
+          .toList()),
+      divider,
+      _EntryTime(
+        time: TimeOfDay.fromDateTime(symptomEntry.dateTime),
+      ),
+    ];
+  }
+
+  List<Widget> _bowelMovementEntry(BowelMovementEntry bowelMovementEntry) {
+    return [
+      _itemList([
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(bowelMovementEntry.bowelMovement.stoolType.name),
+              const SizedBox(
+                height: 20,
+                child: VerticalDivider(
+                  width: 5,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  bowelMovementEntry.bowelMovement.note,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )
+            ],
+          ),
+        ),
+      ]),
+      divider,
+      _EntryTime(
+        time: TimeOfDay.fromDateTime(bowelMovementEntry.dateTime),
+      ),
+    ];
+  }
+}
+
+class _ItemLine extends StatelessWidget {
+  const _ItemLine({
+    Key? key,
+    required this.left,
+    required this.right,
+  }) : super(key: key);
+
+  final String left;
+  final String right;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  left,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(right),
+              ),
+            ],
+          ),
+          const Divider(
+            height: 2,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EntryTime extends StatelessWidget {
+  const _EntryTime({
+    Key? key,
+    required this.time,
+  }) : super(key: key);
+
+  final TimeOfDay time;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Text(
+        time.format(context).toString(),
+        style: Theme.of(context).textTheme.subtitle1,
+      ),
     );
   }
 }
