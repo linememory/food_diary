@@ -3,14 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:food_diary/features/diary/application/diary_facade_service.dart';
-import 'package:food_diary/features/diary/domain/entities/bowel_movement_entry.dart';
 import 'package:food_diary/features/diary/domain/entities/diary_entry.dart';
-import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
-import 'package:food_diary/features/diary/domain/entities/symptom_entry.dart';
-import 'package:food_diary/features/diary/presentation/bloc/misc/bowel_movement_item.dart';
-import 'package:food_diary/features/diary/presentation/bloc/misc/entry_item.dart';
-import 'package:food_diary/features/diary/presentation/bloc/misc/meal_item.dart';
-import 'package:food_diary/features/diary/presentation/bloc/misc/symptom_item.dart';
 
 part 'diary_event.dart';
 part 'diary_state.dart';
@@ -22,9 +15,7 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
       : super(const DiaryLoadInProgress([])) {
     on<DiaryGetEntries>((event, emit) async {
       emit(DiaryLoadInProgress(state.entries));
-      List<EntryItem> meals = (await diaryFacadeService.getAllDiaryEvents())
-          .map((e) => fromEntity(e))
-          .toList();
+      List<DiaryEntry> meals = (await diaryFacadeService.getAllDiaryEvents());
       meals.sort((a, b) => a.dateTime.compareTo(b.dateTime));
       if (meals.isNotEmpty) {
         emit(DiaryLoadSuccess(meals));
@@ -34,10 +25,9 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
     });
 
     on<DiaryAddEntry>((event, emit) async {
-      bool isAdded =
-          await diaryFacadeService.addDiaryEntry(event.entry.toEntity());
+      bool isAdded = await diaryFacadeService.addDiaryEntry(event.entry);
       if (isAdded) {
-        List<EntryItem> entries = List.from(state.entries);
+        List<DiaryEntry> entries = List.from(state.entries);
         int index = entries.indexWhere(
             (element) => element.dateTime.isAfter(event.entry.dateTime));
         entries.insert(index > -1 ? index : 0, event.entry);
@@ -52,11 +42,10 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
     });
 
     on<DiaryUpdateEntry>((event, emit) async {
-      List<EntryItem> entries = state.entries;
+      List<DiaryEntry> entries = state.entries;
       int index = entries.indexWhere((meal) => meal.id == event.entry.id);
       if (index >= 0) {
-        bool isUpdated =
-            await diaryFacadeService.updateDiaryEntry(event.entry.toEntity());
+        bool isUpdated = await diaryFacadeService.updateDiaryEntry(event.entry);
         if (isUpdated) {
           entries[index] = event.entry;
           emit(DiaryLoadSuccess(List.from(entries)));
@@ -77,8 +66,8 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
     });
 
     on<DiaryDeleteEntry>((event, emit) async {
-      List<MealItem> meals = List.from(state.entries);
-      int index = meals.indexWhere((meal) => meal.id == event.id);
+      List<DiaryEntry> entries = List.from(state.entries);
+      int index = entries.indexWhere((meal) => meal.id == event.id);
 
       if (index < 0) {
         var stateType = state.runtimeType;
@@ -89,8 +78,10 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
       } else {
         bool isDeleted = await diaryFacadeService.deleteDiaryEntry(event.id);
         if (isDeleted) {
-          meals.removeAt(index);
-          emit(meals.isNotEmpty ? DiaryLoadSuccess(meals) : const DiaryEmpty());
+          entries.removeAt(index);
+          emit(entries.isNotEmpty
+              ? DiaryLoadSuccess(entries)
+              : const DiaryEmpty());
         } else {
           var stateType = state.runtimeType;
           emit(DiaryDeleteFailure(state.entries, "Meal could not be deleted"));
@@ -107,17 +98,5 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
   void onChange(Change<DiaryState> change) {
     log(change.toString());
     super.onChange(change);
-  }
-
-  EntryItem fromEntity(DiaryEntry entry) {
-    if (entry is MealEntry) {
-      return MealItem.fromEntity(entry);
-    } else if (entry is SymptomEntry) {
-      return SymptomsItem.fromEntity(entry);
-    } else if (entry is BowelMovementEntry) {
-      return BowelMovementItem.fromEntity(entry);
-    } else {
-      throw Exception("Not a valid entry");
-    }
   }
 }

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_diary/features/diary/domain/entities/diary_entry.dart';
+import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
+import 'package:food_diary/features/diary/domain/entities/symptom_entry.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:food_diary/features/diary/presentation/bloc/misc/entry_item.dart';
-import 'package:food_diary/features/diary/presentation/bloc/misc/meal_item.dart';
-import 'package:food_diary/features/diary/presentation/bloc/misc/symptom_item.dart';
 import 'package:food_diary/features/diary/presentation/widgets/entry_form.dart';
 import 'package:intl/intl.dart';
 
 class DiaryList extends StatelessWidget {
-  final List<EntryItem> entries;
+  final List<DiaryEntry> entries;
   const DiaryList({Key? key, required this.entries}) : super(key: key);
 
   @override
@@ -22,9 +22,9 @@ class DiaryList extends StatelessWidget {
     );
   }
 
-  List<Widget> _entryItems(BuildContext context, List<EntryItem> entries) {
+  List<Widget> _entryItems(BuildContext context, List<DiaryEntry> entries) {
     List<Widget> items = [];
-    EntryItem? previousEntry;
+    DiaryEntry? previousEntry;
     bool sameDay(DateTime a, DateTime b) =>
         a.year == b.year && a.month == b.month && a.day == b.day;
     for (var entry in entries) {
@@ -32,9 +32,9 @@ class DiaryList extends StatelessWidget {
           !sameDay(entry.dateTime, previousEntry.dateTime)) {
         items.add(DateItem(dateTime: entry.dateTime));
       }
-      if (entry is MealItem) {
+      if (entry is MealEntry) {
         items.add(MealListItem(meal: entry));
-      } else if (entry is SymptomsItem) {
+      } else if (entry is SymptomEntry) {
         items.add(SymptomListItem(symptoms: entry));
       }
       previousEntry = entry;
@@ -77,7 +77,7 @@ class EntryItem2 extends StatelessWidget {
 
 class MealListItem extends StatelessWidget {
   MealListItem({Key? key, required this.meal}) : super(key: key);
-  final MealItem meal;
+  final MealEntry meal;
 
   final formatter = DateFormat('HH:mm');
   @override
@@ -170,7 +170,7 @@ class MealListItem extends StatelessWidget {
 
 class SymptomListItem extends StatelessWidget {
   SymptomListItem({Key? key, required this.symptoms}) : super(key: key);
-  final SymptomsItem symptoms;
+  final SymptomEntry symptoms;
 
   final formatter = DateFormat('HH:mm');
   @override
@@ -262,7 +262,7 @@ class SymptomListItem extends StatelessWidget {
 }
 
 class EditButtons extends StatelessWidget {
-  final EntryItem entryItem;
+  final DiaryEntry entryItem;
   EditButtons({
     Key? key,
     required this.entryItem,
@@ -284,13 +284,13 @@ class EditButtons extends StatelessWidget {
           style: buttonStyle,
           child: _buttonText(context, "Update"),
           onPressed: () async {
-            if (entryItem is MealItem) {
+            if (entryItem is MealEntry) {
               await Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => MealForm(
                           type: FormType.updateMeal,
-                          meal: entryItem as MealItem,
+                          meal: entryItem as MealEntry,
                         )),
               );
             }
@@ -304,7 +304,8 @@ class EditButtons extends StatelessWidget {
           style: buttonStyle,
           child: _buttonText(context, "Delete"),
           onPressed: () {
-            BlocProvider.of<DiaryBloc>(context).add(DiaryDeleteEntry(entryItem.id!));
+            BlocProvider.of<DiaryBloc>(context)
+                .add(DiaryDeleteEntry(entryItem.id!));
           },
         ),
       ],

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
 import 'package:food_diary/features/diary/domain/value_objects/food.dart';
 import 'package:food_diary/features/diary/presentation/bloc/meal_form_bloc.dart';
-import 'package:food_diary/features/diary/presentation/bloc/misc/meal_item.dart';
 import 'package:food_diary/injection_container.dart';
 import 'package:intl/intl.dart';
 
@@ -13,7 +13,7 @@ enum FormType {
 
 class MealForm extends StatelessWidget {
   final FormType type;
-  final MealItem? meal;
+  final MealEntry? meal;
 
   const MealForm({Key? key, this.type = FormType.addMeal, this.meal})
       : super(key: key);
@@ -148,7 +148,7 @@ class MealForm extends StatelessWidget {
 
 class FoodEntry extends StatefulWidget {
   FoodEntry({Key? key, required this.food, required this.id}) : super(key: key);
-  final FoodItem food;
+  final Food food;
   final int id;
   final TextEditingController controller = TextEditingController();
 

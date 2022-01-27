@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:food_diary/features/diary/application/diary_facade_service.dart';
 import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:food_diary/features/diary/presentation/bloc/misc/meal_item.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../fixtures/entry_fixtures.dart';
@@ -45,7 +44,7 @@ void main() {
         skip: 1,
         act: (bloc) {
           bloc.add(
-              DiaryAddEntry(MealItem.fromEntity(EntryFixture.getMealEntry())));
+              DiaryAddEntry(EntryFixture.getMealEntry()));
           bloc.add(DiaryDeleteEntry(EntryFixture.getMealEntry().id!));
         },
         verify: (_) => verify(() => mockDiaryFacadeService
@@ -75,15 +74,15 @@ void main() {
         skip: 1,
         act: (bloc) {
           bloc.add(
-              DiaryAddEntry(MealItem.fromEntity(EntryFixture.getMealEntry())));
+              DiaryAddEntry(EntryFixture.getMealEntry()));
           bloc.add(DiaryDeleteEntry(EntryFixture.getMealEntry().id!));
         },
         verify: (_) => verify(() => mockDiaryFacadeService
             .deleteDiaryEntry(EntryFixture.getMealEntry().id!)),
         expect: () => <DiaryState>[
-          DiaryDeleteFailure([MealItem.fromEntity(EntryFixture.getMealEntry())],
+          DiaryDeleteFailure([EntryFixture.getMealEntry()],
               "Meal could not be deleted"),
-          DiaryLoadSuccess([MealItem.fromEntity(EntryFixture.getMealEntry())])
+          DiaryLoadSuccess([EntryFixture.getMealEntry()])
         ],
       );
     });

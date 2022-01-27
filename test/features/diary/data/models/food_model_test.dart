@@ -7,7 +7,7 @@ void main() {
     'id': null,
     'name': "Test",
     'amount': 0,
-    'meal_id': 0,
+    'entry_id': 0,
   };
 
   group('FoodModel test', () {
@@ -20,7 +20,8 @@ void main() {
     test('should return a valid map from a MealModel', () {
       var map = foodDto.toMap();
       // assert
-      expect(map, foodMap);
+      var expected = Map.from(foodMap)..remove('id');
+      expect(map, expected);
     });
   });
 }

@@ -1,7 +1,7 @@
 part of 'diary_bloc.dart';
 
 abstract class DiaryState extends Equatable {
-  final List<EntryItem> entries;
+  final List<DiaryEntry> entries;
   const DiaryState(this.entries);
 
   @override
@@ -12,11 +12,11 @@ abstract class DiaryState extends Equatable {
 }
 
 class DiaryLoadInProgress extends DiaryState {
-  const DiaryLoadInProgress(List<EntryItem> meals) : super(meals);
+  const DiaryLoadInProgress(List<DiaryEntry> entries) : super(entries);
 }
 
 class DiaryLoadSuccess extends DiaryState {
-  const DiaryLoadSuccess(List<EntryItem> entries) : super(entries);
+  const DiaryLoadSuccess(List<DiaryEntry> entries) : super(entries);
 }
 
 class DiaryEmpty extends DiaryState {
@@ -31,23 +31,23 @@ class DiaryEmpty extends DiaryState {
 class DiaryFailure extends DiaryState {
   final String reason;
 
-  const DiaryFailure(List<EntryItem> meals, this.reason) : super(meals);
+  const DiaryFailure(List<DiaryEntry> entries, this.reason) : super(entries);
 
   @override
   List<Object> get props => [entries, reason];
 }
 
 class DiaryAddFailure extends DiaryFailure {
-  const DiaryAddFailure(List<EntryItem> meals, String reason)
-      : super(meals, reason);
+  const DiaryAddFailure(List<DiaryEntry> entries, String reason)
+      : super(entries, reason);
 }
 
 class DiaryUpdateFailure extends DiaryFailure {
-  const DiaryUpdateFailure(List<EntryItem> meals, String reason)
-      : super(meals, reason);
+  const DiaryUpdateFailure(List<DiaryEntry> entries, String reason)
+      : super(entries, reason);
 }
 
 class DiaryDeleteFailure extends DiaryFailure {
-  const DiaryDeleteFailure(List<EntryItem> meals, String reason)
-      : super(meals, reason);
+  const DiaryDeleteFailure(List<DiaryEntry> entries, String reason)
+      : super(entries, reason);
 }

@@ -57,7 +57,9 @@ void main() {
           result,
           equals([
             SymptomEntry(
-                dateTime: eventDto.dateTime, symptoms: [symptomDto.toEntity()])
+                id: 1,
+                dateTime: eventDto.dateTime,
+                symptoms: [symptomDto.toEntity()])
           ]));
     });
 
