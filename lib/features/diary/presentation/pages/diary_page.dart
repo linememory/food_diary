@@ -69,7 +69,11 @@ class DiaryPage extends StatelessWidget {
         ),
         IconButton(
           onPressed: () async {
-            await addTestContent(seed: 0, mealsCount: 10, symptomsCount: 10);
+            await addTestContent(
+                seed: 0,
+                mealsCount: 10,
+                symptomsCount: 10,
+                bowelMovementCount: 10);
             BlocProvider.of<DiaryBloc>(context).add(DiaryGetEntries());
           },
           icon: const Icon(Icons.add),
