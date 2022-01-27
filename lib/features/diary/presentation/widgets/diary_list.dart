@@ -3,12 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:food_diary/features/diary/presentation/bloc/misc/entry_item.dart';
 import 'package:food_diary/features/diary/presentation/bloc/misc/meal_item.dart';
-import 'package:food_diary/features/diary/presentation/widgets/meal_form.dart';
+import 'package:food_diary/features/diary/presentation/bloc/misc/symptom_item.dart';
+import 'package:food_diary/features/diary/presentation/widgets/entry_form.dart';
 import 'package:intl/intl.dart';
 
-class MealList extends StatelessWidget {
+class DiaryList extends StatelessWidget {
   final List<EntryItem> entries;
-  const MealList({Key? key, required this.entries}) : super(key: key);
+  const DiaryList({Key? key, required this.entries}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +34,8 @@ class MealList extends StatelessWidget {
       }
       if (entry is MealItem) {
         items.add(MealListItem(meal: entry));
+      } else if (entry is SymptomsItem) {
+        items.add(SymptomListItem(symptoms: entry));
       }
       previousEntry = entry;
     }
@@ -63,6 +66,15 @@ class DateItem extends StatelessWidget {
   }
 }
 
+class EntryItem2 extends StatelessWidget {
+  const EntryItem2({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
 class MealListItem extends StatelessWidget {
   MealListItem({Key? key, required this.meal}) : super(key: key);
   final MealItem meal;
@@ -87,7 +99,7 @@ class MealListItem extends StatelessWidget {
               thickness: 1,
             ),
           ),
-          EditButtons(meal: meal),
+          EditButtons(entryItem: meal),
         ],
       ),
     );
@@ -156,12 +168,105 @@ class MealListItem extends StatelessWidget {
   }
 }
 
+class SymptomListItem extends StatelessWidget {
+  SymptomListItem({Key? key, required this.symptoms}) : super(key: key);
+  final SymptomsItem symptoms;
+
+  final formatter = DateFormat('HH:mm');
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 1),
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Theme.of(context).colorScheme.secondary,
+      ),
+      child: Column(
+        children: [
+          _dateAndFoods(context),
+          const SizedBox(
+            width: 100,
+            child: Divider(
+              height: 10,
+              thickness: 1,
+            ),
+          ),
+          EditButtons(entryItem: symptoms),
+        ],
+      ),
+    );
+  }
+
+  IntrinsicHeight _dateAndFoods(BuildContext context) {
+    return IntrinsicHeight(
+      child: Row(
+        children: [
+          _symptoms(),
+          const VerticalDivider(
+            width: 10,
+            thickness: 2,
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              formatter.format(symptoms.dateTime),
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _symptoms() {
+    return Flexible(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: symptoms.symptoms
+            .map(
+              (symptom) => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            symptom.name,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+
+                        //Flexible(flex: 0, fit: FlexFit.tight, child: Container()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                              "${symptom.intensity.name[0].toUpperCase()}${symptom.intensity.name.substring(1)}"),
+                        ),
+                      ],
+                    ),
+                    const Divider(
+                      height: 2,
+                    ),
+                  ],
+                ),
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+}
+
 class EditButtons extends StatelessWidget {
-  final MealItem meal;
+  final EntryItem entryItem;
   EditButtons({
     Key? key,
-    required this.meal,
-  })  : assert(meal.id != null),
+    required this.entryItem,
+  })  : assert(entryItem.id != null),
         super(key: key);
 
   @override
@@ -179,14 +284,16 @@ class EditButtons extends StatelessWidget {
           style: buttonStyle,
           child: _buttonText(context, "Update"),
           onPressed: () async {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => MealForm(
-                        type: FormType.updateMeal,
-                        meal: meal,
-                      )),
-            );
+            if (entryItem is MealItem) {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MealForm(
+                          type: FormType.updateMeal,
+                          meal: entryItem as MealItem,
+                        )),
+              );
+            }
             BlocProvider.of<DiaryBloc>(context).add(DiaryGetEntries());
           },
         ),
@@ -197,7 +304,7 @@ class EditButtons extends StatelessWidget {
           style: buttonStyle,
           child: _buttonText(context, "Delete"),
           onPressed: () {
-            BlocProvider.of<DiaryBloc>(context).add(DiaryDeleteEntry(meal.id!));
+            BlocProvider.of<DiaryBloc>(context).add(DiaryDeleteEntry(entryItem.id!));
           },
         ),
       ],

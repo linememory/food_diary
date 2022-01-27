@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_diary/dev/add_test_content.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:food_diary/features/diary/presentation/widgets/meal_form.dart';
-import 'package:food_diary/features/diary/presentation/widgets/meal_list.dart';
+import 'package:food_diary/features/diary/presentation/widgets/entry_form.dart';
+import 'package:food_diary/features/diary/presentation/widgets/diary_list.dart';
 import 'package:food_diary/injection_container.dart';
 
 class DiaryPage extends StatelessWidget {
@@ -51,7 +51,7 @@ class DiaryPage extends StatelessWidget {
         ),
       );
     } else {
-      return MealList(entries: state.entries);
+      return DiaryList(entries: state.entries);
     }
   }
 
@@ -69,7 +69,7 @@ class DiaryPage extends StatelessWidget {
         ),
         IconButton(
           onPressed: () async {
-            await addTestContent(seed: 0);
+            await addTestContent(seed: 0, mealsCount: 10, symptomsCount: 10);
             BlocProvider.of<DiaryBloc>(context).add(DiaryGetEntries());
           },
           icon: const Icon(Icons.add),

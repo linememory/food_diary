@@ -63,16 +63,17 @@ class MealForm extends StatelessWidget {
                                   initialTime:
                                       TimeOfDay.fromDateTime(state.dateTime),
                                 );
-                                // if (pickedDate != null) {
-                                //   DateTime dateTime = DateTime(
-                                //       pickedDate.year,
-                                //       pickedDate.month,
-                                //       pickedDate.day,
-                                //       pickedTime?.hour ?? 0,
-                                //       pickedTime?.minute ?? 0);
-                                //   BlocProvider.of<MealFormBloc>(context)
-                                //       .add(MealFormDateTimeChanged(dateTime));
-                                // }
+                                if (pickedDate != null) {
+                                  DateTime dateTime = DateTime(
+                                    pickedDate.year,
+                                    pickedDate.month,
+                                    pickedDate.day,
+                                    pickedTime?.hour ?? 0,
+                                    pickedTime?.minute ?? 0,
+                                  );
+                                  BlocProvider.of<MealFormBloc>(context)
+                                      .add(MealFormDateTimeChanged(dateTime));
+                                }
                               },
                               child: Text(
                                 DateFormat('EEE, dd.MM.yyy')
