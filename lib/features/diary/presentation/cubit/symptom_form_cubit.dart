@@ -17,7 +17,7 @@ class SymptomFormCubit extends Cubit<SymptomFormState> {
     emit(SymptomFormChanged(state.dateTime, state.symptoms));
   }
 
-  void intensityChanged(int id, int intensity) {
+  void intensityChanged(int id, Intensity intensity) {
     emit(SymptomFormChanged(state.dateTime, state.symptoms));
   }
 
