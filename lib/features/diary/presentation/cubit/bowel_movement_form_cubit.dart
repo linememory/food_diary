@@ -13,11 +13,11 @@ class BowelMovementFormCubit extends Cubit<BowelMovementFormState> {
           ),
         );
 
-  void typeChanged(int id, StoolType type) {
+  void typeChanged(StoolType type) {
     emit(BowelMovementFormChanged(state.dateTime, state.bowelMovement));
   }
 
-  void noteChanged(int id, String note) {
+  void noteChanged(String note) {
     emit(BowelMovementFormChanged(state.dateTime, state.bowelMovement));
   }
 
