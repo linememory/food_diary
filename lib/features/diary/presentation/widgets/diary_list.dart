@@ -6,7 +6,7 @@ import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
 import 'package:food_diary/features/diary/domain/entities/symptom_entry.dart';
 import 'package:food_diary/features/diary/domain/value_objects/food.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:food_diary/features/diary/presentation/widgets/entry_form.dart';
+import 'package:food_diary/features/diary/presentation/widgets/entry_form_OLD.dart';
 import 'package:intl/intl.dart';
 
 class DiaryList extends StatelessWidget {
