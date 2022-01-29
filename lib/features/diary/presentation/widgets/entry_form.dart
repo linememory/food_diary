@@ -61,55 +61,74 @@ class InputFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Column(
-        children: [
-          DateTimePicker(
-              dateTime: entry.dateTime, onNewDate: (newDateTime) => null),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Container(
-                margin: const EdgeInsets.all(10),
-                padding: const EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.secondary,
-                    width: 2.0,
-                  ),
-                ),
-                child: _inputFields(),
-              ),
-            ),
-          ),
-        ],
-      ),
+      child: _inputFields(context),
+      //
     );
   }
 
-  BlocProvider _inputFields() {
+  Widget _inputFields(BuildContext context) {
+    Widget formColumn(
+      BuildContext context,
+      DateTimePicker dateTimePicker,
+      Widget fields,
+    ) =>
+        Column(
+          children: [
+            dateTimePicker,
+            Expanded(
+              child: SingleChildScrollView(
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 2.0,
+                    ),
+                  ),
+                  child: fields,
+                ),
+              ),
+            ),
+          ],
+        );
     if (entry is MealEntry) {
       return BlocProvider<MealFormCubit>(
         create: (context) => MealFormCubit(
             entry as MealEntry, BlocProvider.of<EntryFormCubit>(context)),
         child: BlocBuilder<MealFormCubit, MealFormState>(
-          builder: (context, state) {
-            return Column(
-              children: state.mealEntry.foods
-                  .asMap()
-                  .entries
-                  .map((e) => FoodField(id: e.key, food: e.value))
-                  .toList(),
-            );
-          },
-        ),
+            builder: (context, state) {
+          return formColumn(
+              context,
+              DateTimePicker(
+                  dateTime: state.mealEntry.dateTime,
+                  onNewDate: (newDateTime) =>
+                      BlocProvider.of<MealFormCubit>(context)
+                          .dateTimeChanged(newDateTime)),
+              Column(
+                children: state.mealEntry.foods
+                    .asMap()
+                    .entries
+                    .map((e) => FoodField(id: e.key, food: e.value))
+                    .toList(),
+              ));
+        }),
       );
     } else if (entry is SymptomEntry) {
       return BlocProvider<SymptomFormCubit>(
         create: (context) => SymptomFormCubit(
             entry as SymptomEntry, BlocProvider.of<EntryFormCubit>(context)),
         child: BlocBuilder<SymptomFormCubit, SymptomFormState>(
-          builder: (context, state) {
-            return Column(
+            builder: (context, state) {
+          return formColumn(
+            context,
+            DateTimePicker(
+                dateTime: state.symptomEntry.dateTime,
+                onNewDate: (newDateTime) =>
+                    BlocProvider.of<SymptomFormCubit>(context)
+                        .dateTimeChanged(newDateTime)),
+            Column(
               children: state.symptomEntry.symptoms
                   .asMap()
                   .entries
@@ -118,17 +137,28 @@ class InputFields extends StatelessWidget {
                         symptom: e.value,
                       ))
                   .toList(),
-            );
-          },
-        ),
+            ),
+          );
+        }),
       );
     } else if (entry is BowelMovementEntry) {
       return BlocProvider<BowelMovementFormCubit>(
           create: (context) => BowelMovementFormCubit(
               entry as BowelMovementEntry,
               BlocProvider.of<EntryFormCubit>(context)),
-          child: BowelMovementField(
-              bowelMovement: (entry as BowelMovementEntry).bowelMovement));
+          child: BlocBuilder<BowelMovementFormCubit, BowelMovementFormState>(
+              builder: (context, state) {
+            return formColumn(
+                context,
+                DateTimePicker(
+                    dateTime: state.bowelMovementEntry.dateTime,
+                    onNewDate: (newDateTime) =>
+                        BlocProvider.of<BowelMovementFormCubit>(context)
+                            .dateTimeChanged(newDateTime)),
+                BowelMovementField(
+                  bowelMovement: state.bowelMovementEntry.bowelMovement,
+                ));
+          }));
     } else {
       throw (Exception("Not a valid type"));
     }
