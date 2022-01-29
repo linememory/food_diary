@@ -11,7 +11,7 @@ class MealEntry extends DiaryEntry {
   }) : super(id: id, dateTime: dateTime);
 
   MealEntry.from(MealEntry diaryEntry)
-      : foods = diaryEntry.foods,
+      : foods = List.from(diaryEntry.foods),
         super(id: diaryEntry.id, dateTime: diaryEntry.dateTime);
 
   @override
@@ -23,7 +23,7 @@ class MealEntry extends DiaryEntry {
     return MealEntry(
       id: id ?? this.id,
       dateTime: dateTime ?? this.dateTime,
-      foods: foods ?? this.foods,
+      foods: foods ?? List.from(this.foods),
     );
   }
 

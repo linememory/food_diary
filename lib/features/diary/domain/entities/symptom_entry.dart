@@ -11,7 +11,7 @@ class SymptomEntry extends DiaryEntry {
   }) : super(id: id, dateTime: dateTime);
 
   SymptomEntry.from(SymptomEntry diaryEntry)
-      : symptoms = diaryEntry.symptoms,
+      : symptoms = List.from(diaryEntry.symptoms),
         super(id: diaryEntry.id, dateTime: diaryEntry.dateTime);
 
   @override
@@ -23,7 +23,7 @@ class SymptomEntry extends DiaryEntry {
     return SymptomEntry(
       id: id ?? this.id,
       dateTime: dateTime ?? this.dateTime,
-      symptoms: symptoms ?? this.symptoms,
+      symptoms: symptoms ?? List.from(this.symptoms),
     );
   }
 
