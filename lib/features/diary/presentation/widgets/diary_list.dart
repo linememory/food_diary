@@ -6,7 +6,7 @@ import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
 import 'package:food_diary/features/diary/domain/entities/symptom_entry.dart';
 import 'package:food_diary/features/diary/domain/value_objects/food.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:food_diary/features/diary/presentation/widgets/entry_form_OLD.dart';
+import 'package:food_diary/features/diary/presentation/widgets/entry_form.dart';
 import 'package:intl/intl.dart';
 
 class DiaryList extends StatelessWidget {
@@ -174,16 +174,14 @@ class _EditButtons extends StatelessWidget {
           style: buttonStyle,
           child: _buttonText(context, "Update"),
           onPressed: () async {
-            if (entryItem is MealEntry) {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MealForm(
-                          type: FormType.updateMeal,
-                          meal: entryItem as MealEntry,
-                        )),
-              );
-            }
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => EntryForm(
+                        entry: entryItem,
+                      )),
+            );
+
             BlocProvider.of<DiaryBloc>(context).add(DiaryGetEntries());
           },
         ),

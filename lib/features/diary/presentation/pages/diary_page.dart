@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_diary/dev/add_test_content.dart';
+import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:food_diary/features/diary/presentation/widgets/entry_form_OLD.dart';
+import 'package:food_diary/features/diary/presentation/widgets/entry_form.dart';
 import 'package:food_diary/features/diary/presentation/widgets/diary_list.dart';
 import 'package:food_diary/injection_container.dart';
 
@@ -103,7 +104,11 @@ class DiaryPage extends StatelessWidget {
           onPressed: () async {
             await Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const MealForm()),
+              MaterialPageRoute(
+                  builder: (context) => EntryForm(
+                        entry: MealEntry(
+                            dateTime: DateTime.now(), foods: const []),
+                      )),
             );
             BlocProvider.of<DiaryBloc>(context).add(DiaryGetEntries());
           },

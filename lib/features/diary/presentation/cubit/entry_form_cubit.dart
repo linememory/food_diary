@@ -6,15 +6,24 @@ import 'package:food_diary/features/diary/domain/entities/diary_entry.dart';
 part 'entry_form_state.dart';
 
 class EntryFormCubit extends Cubit<EntryFormState> {
-  EntryFormCubit(this.diaryFacadeService) : super(EntryFormInitial());
+  EntryFormCubit(this.diaryFacadeService) : super(EntryFormInvalid());
 
   DiaryFacadeService diaryFacadeService;
 
   void submit(DiaryEntry entry) async {
+    
     bool success = await diaryFacadeService.addDiaryEntry(entry);
     success
         ? emit(EntryFormSubmitted())
         : emit(EntryFormSubmitFailed(
             message: "Failed to add entry:\n " + entry.toString()));
+  }
+
+  void formValid(DiaryEntry entry) {
+    emit(EntryFormValid(entry: entry));
+  }
+
+  void formNotValid() {
+    emit(EntryFormInvalid());
   }
 }

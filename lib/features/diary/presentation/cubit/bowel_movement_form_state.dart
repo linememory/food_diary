@@ -1,29 +1,25 @@
 part of 'bowel_movement_form_cubit.dart';
 
 abstract class BowelMovementFormState extends Equatable {
-  const BowelMovementFormState(this.dateTime, this.bowelMovement);
+  const BowelMovementFormState(this.bowelMovementEntry);
 
-  final DateTime dateTime;
-  final List<BowelMovement> bowelMovement;
+  final BowelMovementEntry bowelMovementEntry;
 
   @override
-  List<Object?> get props => [dateTime, bowelMovement];
+  List<Object?> get props => [bowelMovementEntry];
 }
 
 class BowelMovementFormInitial extends BowelMovementFormState {
-  const BowelMovementFormInitial(
-      DateTime dateTime, List<BowelMovement> bowelMovement)
-      : super(dateTime, bowelMovement);
+  const BowelMovementFormInitial(BowelMovementEntry bowelMovementEntry)
+      : super(bowelMovementEntry);
 }
 
 class BowelMovementFormChanged extends BowelMovementFormState {
-  const BowelMovementFormChanged(
-      DateTime dateTime, List<BowelMovement> bowelMovement)
-      : super(dateTime, bowelMovement);
+  const BowelMovementFormChanged(BowelMovementEntry bowelMovementEntry)
+      : super(bowelMovementEntry);
 }
 
 class BowelMovementFormSubmitted extends BowelMovementFormState {
-  const BowelMovementFormSubmitted(
-      DateTime dateTime, List<BowelMovement> bowelMovement)
-      : super(dateTime, bowelMovement);
+  const BowelMovementFormSubmitted(BowelMovementEntry bowelMovementEntry)
+      : super(bowelMovementEntry);
 }

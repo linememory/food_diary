@@ -1,18 +1,20 @@
 part of 'entry_form_cubit.dart';
 
 abstract class EntryFormState extends Equatable {
-  const EntryFormState({this.entry});
-
-  final DiaryEntry? entry;
+  const EntryFormState();
 
   @override
-  List<Object?> get props => [entry];
+  List<Object?> get props => [];
 }
 
-class EntryFormInitial extends EntryFormState {}
+class EntryFormInvalid extends EntryFormState {}
 
 class EntryFormValid extends EntryFormState {
-  const EntryFormValid({required DiaryEntry entry}) : super(entry: entry);
+  final DiaryEntry entry;
+  const EntryFormValid({required this.entry}) : super();
+
+  @override
+  List<Object?> get props => super.props..add(entry);
 }
 
 class EntryFormSubmitted extends EntryFormState {}

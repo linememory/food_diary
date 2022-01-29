@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:food_diary/features/diary/application/diary_facade_service.dart';
-import 'package:food_diary/features/diary/domain/entities/diary_entry.dart';
 import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
 import 'package:food_diary/features/diary/domain/value_objects/food.dart';
 
@@ -40,11 +39,11 @@ class MealFormBloc extends Bloc<MealFormEvent, MealFormState> {
     });
 
     on<MealFormSubmit>((event, emit) async {
-      if (isValid(state.foods as List<Food>)) {
+      if (isValid(state.foods)) {
         MealEntry meal = MealEntry(
             id: mealItem?.id,
             dateTime: state.dateTime,
-            foods: _foodsToAdd(state.foods as List<Food>));
+            foods: _foodsToAdd(state.foods));
         await diaryFacadeService.addDiaryEntry(meal);
         emit(MealFormSubmitted(
             dateTime: state.dateTime, foods: List.from(state.foods)));
