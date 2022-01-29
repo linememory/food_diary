@@ -89,34 +89,44 @@ class InputFields extends StatelessWidget {
   BlocProvider _inputFields() {
     if (entry is MealEntry) {
       return BlocProvider<MealFormCubit>(
-        create: (context) => MealFormCubit(),
-        child: Column(
-          children: (entry as MealEntry)
-              .foods
-              .asMap()
-              .entries
-              .map((e) => FoodField(id: e.key, food: e.value))
-              .toList(),
+        create: (context) => MealFormCubit(
+            entry as MealEntry, BlocProvider.of<EntryFormCubit>(context)),
+        child: BlocBuilder<MealFormCubit, MealFormState>(
+          builder: (context, state) {
+            return Column(
+              children: state.mealEntry.foods
+                  .asMap()
+                  .entries
+                  .map((e) => FoodField(id: e.key, food: e.value))
+                  .toList(),
+            );
+          },
         ),
       );
     } else if (entry is SymptomEntry) {
-      return BlocProvider<MealFormCubit>(
-        create: (context) => MealFormCubit(),
-        child: Column(
-          children: (entry as SymptomEntry)
-              .symptoms
-              .asMap()
-              .entries
-              .map((e) => SymptomField(
-                    id: e.key,
-                    symptom: e.value,
-                  ))
-              .toList(),
+      return BlocProvider<SymptomFormCubit>(
+        create: (context) => SymptomFormCubit(
+            entry as SymptomEntry, BlocProvider.of<EntryFormCubit>(context)),
+        child: BlocBuilder<SymptomFormCubit, SymptomFormState>(
+          builder: (context, state) {
+            return Column(
+              children: state.symptomEntry.symptoms
+                  .asMap()
+                  .entries
+                  .map((e) => SymptomField(
+                        id: e.key,
+                        symptom: e.value,
+                      ))
+                  .toList(),
+            );
+          },
         ),
       );
     } else if (entry is BowelMovementEntry) {
-      return BlocProvider<MealFormCubit>(
-          create: (context) => MealFormCubit(),
+      return BlocProvider<BowelMovementFormCubit>(
+          create: (context) => BowelMovementFormCubit(
+              entry as BowelMovementEntry,
+              BlocProvider.of<EntryFormCubit>(context)),
           child: BowelMovementField(
               bowelMovement: (entry as BowelMovementEntry).bowelMovement));
     } else {
@@ -154,8 +164,8 @@ class FormButtons extends StatelessWidget {
             return ElevatedButton(
               onPressed: state is EntryFormValid
                   ? () {
-                      BlocProvider.of<EntryFormCubit>(context).submit(
-                          MealEntry(dateTime: DateTime.now(), foods: []));
+                      BlocProvider.of<EntryFormCubit>(context)
+                          .submit(state.entry);
                     }
                   : null,
               child: Text(buttonText),
@@ -323,7 +333,7 @@ class SymptomField extends StatelessWidget {
             },
             items: const [
               DropdownMenuItem<Intensity>(
-                child: Text("Small"),
+                child: Text("Low"),
                 value: Intensity.low,
               ),
               DropdownMenuItem<Intensity>(
@@ -379,39 +389,36 @@ class BowelMovementField extends StatelessWidget {
               ),
               DropdownMenuItem<StoolType>(
                 child: Text("Type 4"),
-                value: StoolType.type3,
+                value: StoolType.type4,
               ),
               DropdownMenuItem<StoolType>(
                 child: Text("Type 5"),
-                value: StoolType.type3,
+                value: StoolType.type5,
               ),
               DropdownMenuItem<StoolType>(
                 child: Text("Type 6"),
-                value: StoolType.type3,
+                value: StoolType.type6,
               ),
               DropdownMenuItem<StoolType>(
                 child: Text("Type 7"),
-                value: StoolType.type3,
+                value: StoolType.type7,
               ),
             ],
           ),
         ),
-        Expanded(
-          child: TextField(
-            onChanged: (text) {
-              BlocProvider.of<BowelMovementFormCubit>(context)
-                  .noteChanged(text);
-            },
-            controller: controller,
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              ),
+        TextField(
+          onChanged: (text) {
+            BlocProvider.of<BowelMovementFormCubit>(context).noteChanged(text);
+          },
+          controller: controller,
+          decoration: const InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
-            maxLines: 1,
-            minLines: 1,
           ),
+          maxLines: 25,
+          minLines: 5,
         ),
       ],
     );
