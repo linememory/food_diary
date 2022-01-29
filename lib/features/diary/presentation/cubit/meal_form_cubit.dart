@@ -18,6 +18,11 @@ class MealFormCubit extends Cubit<MealFormState> {
             ..foods.add(const Food(name: "", amount: Amount.small)),
         ));
 
+  void dateTimeChanged(DateTime newDateTime) {
+    emit(MealFormChanged(state.mealEntry.copyWith(dateTime: newDateTime)));
+    notifyEntryFormCubit(state.mealEntry);
+  }
+
   void nameChanged(int id, String name) {
     List<Food> foods = List.from(state.mealEntry.foods);
     foods[id] = foods[id].copyWith(name: name);

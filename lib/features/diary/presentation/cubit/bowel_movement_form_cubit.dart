@@ -28,6 +28,12 @@ class BowelMovementFormCubit extends Cubit<BowelMovementFormState> {
     notifyEntryFormCubit(state.bowelMovementEntry);
   }
 
+  void dateTimeChanged(DateTime newDateTime) {
+    emit(BowelMovementFormChanged(
+        state.bowelMovementEntry.copyWith(dateTime: newDateTime)));
+    notifyEntryFormCubit(state.bowelMovementEntry);
+  }
+
   void noteChanged(String note) {
     BowelMovement bowelMovement =
         state.bowelMovementEntry.bowelMovement.copyWith(note: note);

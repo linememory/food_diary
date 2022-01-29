@@ -15,6 +15,12 @@ class SymptomFormCubit extends Cubit<SymptomFormState> {
             ..symptoms.add(const Symptom(name: "", intensity: Intensity.low))),
         );
 
+  void dateTimeChanged(DateTime newDateTime) {
+    emit(
+        SymptomFormChanged(state.symptomEntry.copyWith(dateTime: newDateTime)));
+    notifyEntryFormCubit(state.symptomEntry);
+  }
+
   void nameChanged(int id, String name) {
     List<Symptom> symptoms = List.from(state.symptomEntry.symptoms);
     symptoms[id] = symptoms[id].copyWith(name: name);
