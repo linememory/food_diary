@@ -38,7 +38,6 @@ class EntryDatasourceImpl extends EntryDatasource {
         await db.update(tableName, entry.toMap()..remove(idColumn),
             where: '$idColumn = ?', whereArgs: [entry.id]);
 
-            
         return result.first[idColumn] as int;
       } else {
         return await db.insert(tableName, entry.toMap());
@@ -50,8 +49,9 @@ class EntryDatasourceImpl extends EntryDatasource {
       for (var item in result) {
         if (item[dateTimeColumn] == entry.dateTime.microsecondsSinceEpoch &&
             item[typeColumn] == entry.type.index) {
-          await db.update(tableName, entry.toMap(),
-              where: '$dateTimeColumn = ?', whereArgs: [entry.dateTime]);
+          await db.update(tableName, entry.toMap()..remove('id'),
+              where: '$dateTimeColumn = ?',
+              whereArgs: [entry.dateTime.microsecondsSinceEpoch]);
           return item[idColumn] as int;
         }
       }
