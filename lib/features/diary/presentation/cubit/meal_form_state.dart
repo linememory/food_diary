@@ -1,28 +1,19 @@
 part of 'meal_form_cubit.dart';
 
-abstract class MealFormState extends Equatable {
-  const MealFormState(this.mealEntry, this.controllers);
-  final MealEntry mealEntry;
-  final List<TextEditingController> controllers;
+abstract class MealFormState {
+  const MealFormState(this.data);
 
-  @override
-  List<Object?> get props => [mealEntry];
+  final Data data;
 }
 
 class MealFormInitial extends MealFormState {
-  const MealFormInitial(
-      MealEntry mealEntry, List<TextEditingController> controllers)
-      : super(mealEntry, controllers);
+  const MealFormInitial(Data data) : super(data);
 }
 
 class MealFormChanged extends MealFormState {
-  const MealFormChanged(
-      MealEntry mealEntry, List<TextEditingController> controllers)
-      : super(mealEntry, controllers);
+  const MealFormChanged(Data data) : super(data);
 }
 
 class MealFormSubmitted extends MealFormState {
-  const MealFormSubmitted(
-      MealEntry mealEntry, List<TextEditingController> controllers)
-      : super(mealEntry, controllers);
+  const MealFormSubmitted(Data data) : super(data);
 }

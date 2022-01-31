@@ -102,18 +102,18 @@ class InputFields extends StatelessWidget {
           return formColumn(
               context,
               DateTimePicker(
-                  dateTime: state.mealEntry.dateTime,
+                  dateTime: state.data.dateTime,
                   onNewDate: (newDateTime) =>
                       BlocProvider.of<MealFormCubit>(context)
                           .dateTimeChanged(newDateTime)),
               Column(
-                children: state.mealEntry.foods
+                children: state.data.fields
                     .asMap()
                     .entries
                     .map((e) => FoodField(
                           id: e.key,
-                          food: e.value,
-                          controller: state.controllers[e.key],
+                          controller: e.value.controller,
+                          amount: e.value.amount,
                         ))
                     .toList(),
               ));
@@ -270,14 +270,14 @@ class DateTimePicker extends StatelessWidget {
 class FoodField extends StatefulWidget {
   const FoodField(
       {Key? key,
-      required this.food,
       required this.id,
+      required this.amount,
       required this.controller})
       : super(key: key);
 
-  final Food food;
   final int id;
   final TextEditingController controller;
+  final Amount amount;
 
   @override
   State<FoodField> createState() => _FoodFieldState();
@@ -308,7 +308,7 @@ class _FoodFieldState extends State<FoodField> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: DropdownButton<Amount>(
-            value: widget.food.amount,
+            value: widget.amount,
             onChanged: (Amount? amount) {
               BlocProvider.of<MealFormCubit>(context)
                   .amountChanged(widget.id, amount ?? Amount.small);
