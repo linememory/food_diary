@@ -110,7 +110,11 @@ class InputFields extends StatelessWidget {
                 children: state.mealEntry.foods
                     .asMap()
                     .entries
-                    .map((e) => FoodField(id: e.key, food: e.value))
+                    .map((e) => FoodField(
+                          id: e.key,
+                          food: e.value,
+                          controller: state.controllers[e.key],
+                        ))
                     .toList(),
               ));
         }),
@@ -263,26 +267,34 @@ class DateTimePicker extends StatelessWidget {
   }
 }
 
-class FoodField extends StatelessWidget {
-  FoodField({Key? key, required this.food, required this.id}) : super(key: key);
+class FoodField extends StatefulWidget {
+  const FoodField(
+      {Key? key,
+      required this.food,
+      required this.id,
+      required this.controller})
+      : super(key: key);
 
   final Food food;
   final int id;
-  final TextEditingController controller = TextEditingController();
+  final TextEditingController controller;
 
   @override
+  State<FoodField> createState() => _FoodFieldState();
+}
+
+class _FoodFieldState extends State<FoodField> {
+  @override
   Widget build(BuildContext context) {
-    controller.text = food.name;
-    controller.selection = TextSelection(
-        baseOffset: food.name.length, extentOffset: food.name.length);
     return Row(
       children: [
         Expanded(
           child: TextField(
             onChanged: (text) {
-              BlocProvider.of<MealFormCubit>(context).nameChanged(id, text);
+              BlocProvider.of<MealFormCubit>(context)
+                  .nameChanged(widget.id, text);
             },
-            controller: controller,
+            controller: widget.controller,
             decoration: const InputDecoration(
               contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
               border: OutlineInputBorder(
@@ -296,10 +308,10 @@ class FoodField extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: DropdownButton<Amount>(
-            value: food.amount,
+            value: widget.food.amount,
             onChanged: (Amount? amount) {
               BlocProvider.of<MealFormCubit>(context)
-                  .amountChanged(id, amount ?? Amount.small);
+                  .amountChanged(widget.id, amount ?? Amount.small);
             },
             items: const [
               DropdownMenuItem<Amount>(
@@ -319,6 +331,12 @@ class FoodField extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    widget.controller.dispose();
+    super.dispose();
   }
 }
 
