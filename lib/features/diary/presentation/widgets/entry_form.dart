@@ -128,18 +128,18 @@ class InputFields extends StatelessWidget {
           return formColumn(
             context,
             DateTimePicker(
-                dateTime: state.symptomEntry.dateTime,
+                dateTime: state.data.dateTime,
                 onNewDate: (newDateTime) =>
                     BlocProvider.of<SymptomFormCubit>(context)
                         .dateTimeChanged(newDateTime)),
             Column(
-              children: state.symptomEntry.symptoms
+              children: state.data.fields
                   .asMap()
                   .entries
                   .map((e) => SymptomField(
-                        id: e.key,
-                        symptom: e.value,
-                      ))
+                      id: e.key,
+                      controller: e.value.controller,
+                      intensity: e.value.intensity))
                   .toList(),
             ),
           );
@@ -155,13 +155,13 @@ class InputFields extends StatelessWidget {
             return formColumn(
                 context,
                 DateTimePicker(
-                    dateTime: state.bowelMovementEntry.dateTime,
+                    dateTime: state.data.dateTime,
                     onNewDate: (newDateTime) =>
                         BlocProvider.of<BowelMovementFormCubit>(context)
                             .dateTimeChanged(newDateTime)),
                 BowelMovementField(
-                  bowelMovement: state.bowelMovementEntry.bowelMovement,
-                ));
+                    stoolType: state.data.field.stoolType,
+                    controller: state.data.field.controller));
           }));
     } else {
       throw (Exception("Not a valid type"));
@@ -341,18 +341,19 @@ class _FoodFieldState extends State<FoodField> {
 }
 
 class SymptomField extends StatelessWidget {
-  SymptomField({Key? key, required this.symptom, required this.id})
+  const SymptomField(
+      {Key? key,
+      required this.intensity,
+      required this.id,
+      required this.controller})
       : super(key: key);
 
-  final Symptom symptom;
   final int id;
-  final TextEditingController controller = TextEditingController();
+  final Intensity intensity;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
-    controller.text = symptom.name;
-    controller.selection = TextSelection(
-        baseOffset: symptom.name.length, extentOffset: symptom.name.length);
     return Row(
       children: [
         Expanded(
@@ -374,7 +375,7 @@ class SymptomField extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: DropdownButton<Intensity>(
-            value: symptom.intensity,
+            value: intensity,
             onChanged: (Intensity? intensity) {
               BlocProvider.of<SymptomFormCubit>(context)
                   .intensityChanged(id, intensity ?? Intensity.low);
@@ -401,23 +402,21 @@ class SymptomField extends StatelessWidget {
 }
 
 class BowelMovementField extends StatelessWidget {
-  BowelMovementField({Key? key, required this.bowelMovement}) : super(key: key);
+  const BowelMovementField(
+      {Key? key, required this.stoolType, required this.controller})
+      : super(key: key);
 
-  final BowelMovement bowelMovement;
-  final TextEditingController controller = TextEditingController();
+  final StoolType stoolType;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
-    controller.text = bowelMovement.note;
-    controller.selection = TextSelection(
-        baseOffset: bowelMovement.note.length,
-        extentOffset: bowelMovement.note.length);
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: DropdownButton<StoolType>(
-            value: bowelMovement.stoolType,
+            value: stoolType,
             onChanged: (StoolType? type) {
               BlocProvider.of<BowelMovementFormCubit>(context)
                   .typeChanged(type ?? StoolType.type1);

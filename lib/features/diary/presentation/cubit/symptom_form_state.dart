@@ -1,22 +1,19 @@
 part of 'symptom_form_cubit.dart';
 
-abstract class SymptomFormState extends Equatable {
-  const SymptomFormState(this.symptomEntry);
+abstract class SymptomFormState {
+  const SymptomFormState(this.data);
 
-  final SymptomEntry symptomEntry;
-
-  @override
-  List<Object?> get props => [symptomEntry];
+  final Data data;
 }
 
 class SymptomFormInitial extends SymptomFormState {
-  const SymptomFormInitial(SymptomEntry symptomEntry) : super(symptomEntry);
+  const SymptomFormInitial(Data data) : super(data);
 }
 
 class SymptomFormChanged extends SymptomFormState {
-  const SymptomFormChanged(SymptomEntry symptomEntry) : super(symptomEntry);
+  const SymptomFormChanged(Data data) : super(data);
 }
 
 class SymptomFormSubmitted extends SymptomFormState {
-  const SymptomFormSubmitted(SymptomEntry symptomEntry) : super(symptomEntry);
+  const SymptomFormSubmitted(Data data) : super(data);
 }
