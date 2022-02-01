@@ -31,12 +31,9 @@ class MealFormCubit extends Cubit<MealFormState> {
 
   void nameChanged(int id, String name) {
     Data newData = Data.from(state.data);
-    //newData.fields[id].controller.text = name;
-
     if (id == newData.fields.length - 1) {
       newData.addEmpty();
     }
-
     emit(MealFormChanged(newData));
     notifyEntryFormCubit(newData);
   }

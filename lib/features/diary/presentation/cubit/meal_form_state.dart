@@ -1,9 +1,8 @@
 part of 'meal_form_cubit.dart';
 
 abstract class MealFormState {
-  const MealFormState(this.data);
-
   final Data data;
+  const MealFormState(this.data);
 }
 
 class MealFormInitial extends MealFormState {
