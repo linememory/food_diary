@@ -4,6 +4,10 @@
     "diaryPageTitle": "Diary",
 
     "addMealTooltip": "Add meal to diary",
+    "addSymptomTooltip": "Add Symptom to diary",
+    "addBowelMovementTooltip": "Add Bowel Movement to diary",
+
+
     "diaryBottomNavigationBarLabel": "Diary List",
     "calendarBottomNavigationBarLabel": "Calendar",
 
