@@ -16,8 +16,6 @@ class FoodDiary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Food Diary',
-      home: const DiaryPage(),
       themeMode: ThemeMode.system,
       theme: CustomTheme.lightTheme(),
       darkTheme: CustomTheme.darkTheme(),
@@ -27,6 +25,8 @@ class FoodDiary extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: S.delegate.supportedLocales,
+      onGenerateTitle: (context) => S.of(context).appTitle,
+      home: const DiaryPage(),
     );
   }
 }
