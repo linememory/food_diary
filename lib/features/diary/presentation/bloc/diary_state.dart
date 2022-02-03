@@ -1,22 +1,22 @@
 part of 'diary_bloc.dart';
 
 abstract class DiaryState extends Equatable {
-  final List<MealItem> meals;
-  const DiaryState(this.meals);
+  final List<DiaryEntry> entries;
+  const DiaryState(this.entries);
 
   @override
-  List<Object> get props => [meals];
+  List<Object> get props => [entries];
 
   @override
-  String toString() => '$runtimeType (meals: ${meals.length})';
+  String toString() => '$runtimeType (meals: ${entries.length})';
 }
 
 class DiaryLoadInProgress extends DiaryState {
-  const DiaryLoadInProgress(List<MealItem> meals) : super(meals);
+  const DiaryLoadInProgress(List<DiaryEntry> entries) : super(entries);
 }
 
 class DiaryLoadSuccess extends DiaryState {
-  const DiaryLoadSuccess(List<MealItem> meals) : super(meals);
+  const DiaryLoadSuccess(List<DiaryEntry> entries) : super(entries);
 }
 
 class DiaryEmpty extends DiaryState {
@@ -25,29 +25,29 @@ class DiaryEmpty extends DiaryState {
   const DiaryEmpty() : super(const []);
 
   @override
-  List<Object> get props => [meals, message];
+  List<Object> get props => [entries, message];
 }
 
 class DiaryFailure extends DiaryState {
   final String reason;
 
-  const DiaryFailure(List<MealItem> meals, this.reason) : super(meals);
+  const DiaryFailure(List<DiaryEntry> entries, this.reason) : super(entries);
 
   @override
-  List<Object> get props => [meals, reason];
+  List<Object> get props => [entries, reason];
 }
 
 class DiaryAddFailure extends DiaryFailure {
-  const DiaryAddFailure(List<MealItem> meals, String reason)
-      : super(meals, reason);
+  const DiaryAddFailure(List<DiaryEntry> entries, String reason)
+      : super(entries, reason);
 }
 
 class DiaryUpdateFailure extends DiaryFailure {
-  const DiaryUpdateFailure(List<MealItem> meals, String reason)
-      : super(meals, reason);
+  const DiaryUpdateFailure(List<DiaryEntry> entries, String reason)
+      : super(entries, reason);
 }
 
 class DiaryDeleteFailure extends DiaryFailure {
-  const DiaryDeleteFailure(List<MealItem> meals, String reason)
-      : super(meals, reason);
+  const DiaryDeleteFailure(List<DiaryEntry> entries, String reason)
+      : super(entries, reason);
 }

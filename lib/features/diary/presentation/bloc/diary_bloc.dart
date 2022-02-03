@@ -3,8 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:food_diary/features/diary/application/diary_facade_service.dart';
-import 'package:food_diary/features/diary/domain/entities/meal.dart';
-import 'package:food_diary/features/diary/presentation/bloc/misc/meal_item.dart';
+import 'package:food_diary/features/diary/domain/entities/diary_entry.dart';
 
 part 'diary_event.dart';
 part 'diary_state.dart';
@@ -14,11 +13,9 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
 
   DiaryBloc({required this.diaryFacadeService})
       : super(const DiaryLoadInProgress([])) {
-    on<DiaryGetMeals>((event, emit) async {
-      emit(DiaryLoadInProgress(state.meals));
-      List<MealItem> meals = (await diaryFacadeService.getAllMeals())
-          .map((e) => MealItem.fromMealEntity(e))
-          .toList();
+    on<DiaryGetEntries>((event, emit) async {
+      emit(DiaryLoadInProgress(state.entries));
+      List<DiaryEntry> meals = (await diaryFacadeService.getAllDiaryEvents());
       meals.sort((a, b) => a.dateTime.compareTo(b.dateTime));
       if (meals.isNotEmpty) {
         emit(DiaryLoadSuccess(meals));
@@ -27,74 +24,74 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
       }
     });
 
-    on<DiaryAddMeal>((event, emit) async {
-      bool isAdded =
-          await diaryFacadeService.addMeal(event.meal.toMealEntity());
+    on<DiaryAddEntry>((event, emit) async {
+      bool isAdded = await diaryFacadeService.addDiaryEntry(event.entry);
       if (isAdded) {
-        List<MealItem> meals = List.from(state.meals);
-        int index = meals.indexWhere(
-            (element) => element.dateTime.isAfter(event.meal.dateTime));
-        meals.insert(index > -1 ? index : 0, event.meal);
-        emit(DiaryLoadSuccess(meals));
+        List<DiaryEntry> entries = List.from(state.entries);
+        int index = entries.indexWhere(
+            (element) => element.dateTime.isAfter(event.entry.dateTime));
+        entries.insert(index > -1 ? index : 0, event.entry);
+        emit(DiaryLoadSuccess(entries));
       } else {
         var stateType = state.runtimeType;
-        emit(DiaryAddFailure(state.meals, "Meal could not be added"));
+        emit(DiaryAddFailure(state.entries, "Meal could not be added"));
         emit(stateType == DiaryEmpty
             ? const DiaryEmpty()
-            : DiaryLoadSuccess(state.meals));
+            : DiaryLoadSuccess(state.entries));
       }
     });
 
-    on<DiaryUpdateMeal>((event, emit) async {
-      List<MealItem> meals = state.meals.map((e) => MealItem.from(e)).toList();
-      int index = meals.indexWhere((meal) => meal.id == event.meal.id);
+    on<DiaryUpdateEntry>((event, emit) async {
+      List<DiaryEntry> entries = state.entries;
+      int index = entries.indexWhere((meal) => meal.id == event.entry.id);
       if (index >= 0) {
-        bool isUpdated =
-            await diaryFacadeService.updateMeal(event.meal.toMealEntity());
+        bool isUpdated = await diaryFacadeService.updateDiaryEntry(event.entry);
         if (isUpdated) {
-          meals[index] = event.meal;
-          emit(DiaryLoadSuccess(List.from(meals)));
+          entries[index] = event.entry;
+          emit(DiaryLoadSuccess(List.from(entries)));
         } else {
           var stateType = state.runtimeType;
-          emit(DiaryUpdateFailure(state.meals, "Meal could not be updated"));
+          emit(DiaryUpdateFailure(state.entries, "Meal could not be updated"));
           emit(stateType == DiaryEmpty
               ? const DiaryEmpty()
-              : DiaryLoadSuccess(state.meals));
+              : DiaryLoadSuccess(state.entries));
         }
       } else {
         var stateType = state.runtimeType;
-        emit(DiaryUpdateFailure(meals, "No meal to update"));
+        emit(DiaryUpdateFailure(entries, "No meal to update"));
         emit(stateType == DiaryEmpty
             ? const DiaryEmpty()
-            : DiaryLoadSuccess(state.meals));
+            : DiaryLoadSuccess(state.entries));
       }
     });
 
-    on<DiaryDeleteMeal>((event, emit) async {
-      List<MealItem> meals = List.from(state.meals);
-      int index = meals.indexWhere((meal) => meal.id == event.id);
+    on<DiaryDeleteEntry>((event, emit) async {
+      List<DiaryEntry> entries = List.from(state.entries);
+      int index = entries.indexWhere((meal) => meal.id == event.id);
 
       if (index < 0) {
         var stateType = state.runtimeType;
-        emit(DiaryDeleteFailure(state.meals, "No meal to delete"));
-        emit(stateType == DiaryEmpty || state.meals.isEmpty
+        emit(DiaryDeleteFailure(state.entries, "No meal to delete"));
+        emit(stateType == DiaryEmpty || state.entries.isEmpty
             ? const DiaryEmpty()
-            : DiaryLoadSuccess(state.meals));
+            : DiaryLoadSuccess(state.entries));
       } else {
-        bool isDeleted = await diaryFacadeService.deleteMeal(event.id);
+        bool isDeleted = await diaryFacadeService.deleteDiaryEntry(event.id);
         if (isDeleted) {
-          meals.removeAt(index);
-          emit(meals.isNotEmpty ? DiaryLoadSuccess(meals) : const DiaryEmpty());
+          entries.removeAt(index);
+          emit(entries.isNotEmpty
+              ? DiaryLoadSuccess(entries)
+              : const DiaryEmpty());
         } else {
           var stateType = state.runtimeType;
-          emit(DiaryDeleteFailure(state.meals, "Meal could not be deleted"));
-          emit(stateType == DiaryEmpty || state.meals.isEmpty
+          emit(DiaryDeleteFailure(state.entries, "Meal could not be deleted"));
+          emit(stateType == DiaryEmpty || state.entries.isEmpty
               ? const DiaryEmpty()
-              : DiaryLoadSuccess(state.meals));
+              : DiaryLoadSuccess(state.entries));
         }
       }
     });
-    add(DiaryGetMeals());
+    add(DiaryGetEntries());
   }
 
   @override

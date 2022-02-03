@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_diary/dev/add_test_content.dart';
+import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:food_diary/features/diary/presentation/widgets/meal_form.dart';
-import 'package:food_diary/features/diary/presentation/widgets/meal_list.dart';
+import 'package:food_diary/features/diary/presentation/widgets/entry_form.dart';
+import 'package:food_diary/features/diary/presentation/widgets/diary_list.dart';
 import 'package:food_diary/injection_container.dart';
 
 class DiaryPage extends StatelessWidget {
@@ -38,7 +39,7 @@ class DiaryPage extends StatelessWidget {
     );
   }
 
-  Widget _diaryBlocBuilder(context, state) {
+  Widget _diaryBlocBuilder(context, DiaryState state) {
     if (state is DiaryEmpty) {
       return Center(
         child: Text(state.message),
@@ -51,7 +52,7 @@ class DiaryPage extends StatelessWidget {
         ),
       );
     } else {
-      return MealList(meals: state.meals);
+      return DiaryList(entries: state.entries);
     }
   }
 
@@ -69,15 +70,19 @@ class DiaryPage extends StatelessWidget {
         ),
         IconButton(
           onPressed: () async {
-            await addTestContent(seed: 0);
-            BlocProvider.of<DiaryBloc>(context).add(DiaryGetMeals());
+            await addTestContent(
+                seed: 0,
+                mealsCount: 10,
+                symptomsCount: 10,
+                bowelMovementCount: 10);
+            BlocProvider.of<DiaryBloc>(context).add(DiaryGetEntries());
           },
           icon: const Icon(Icons.add),
         ),
         IconButton(
           onPressed: () async {
             await deleteTestContent();
-            BlocProvider.of<DiaryBloc>(context).add(DiaryGetMeals());
+            BlocProvider.of<DiaryBloc>(context).add(DiaryGetEntries());
           },
           icon: const Icon(Icons.delete),
         ),
@@ -99,9 +104,13 @@ class DiaryPage extends StatelessWidget {
           onPressed: () async {
             await Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const MealForm()),
+              MaterialPageRoute(
+                  builder: (context) => EntryForm(
+                        entry: MealEntry(
+                            dateTime: DateTime.now(), foods: const []),
+                      )),
             );
-            BlocProvider.of<DiaryBloc>(context).add(DiaryGetMeals());
+            BlocProvider.of<DiaryBloc>(context).add(DiaryGetEntries());
           },
           child: Row(children: const [
             Icon(Icons.add),

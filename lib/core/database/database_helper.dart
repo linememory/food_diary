@@ -22,7 +22,6 @@ class DatabaseHelper {
   static const String symptomsDateTimeColumn = 'date_time';
   static const String symptomsSymptomColumn = 'symptom';
 
-
   DatabaseHelper._internal();
   static final DatabaseHelper _instance = DatabaseHelper._internal();
   factory DatabaseHelper() {
@@ -34,29 +33,9 @@ class DatabaseHelper {
   Future<Database> _initDatabase() async {
     String path =
         join((await getApplicationSupportDirectory()).path, _databaseName);
-    Database db = await openDatabase(path,
-        version: _databaseVersion, onCreate: _onCreate);
+    Database db = await openDatabase(path, version: _databaseVersion);
     await db.execute('PRAGMA foreign_keys = ON');
     return db;
-  }
-
-  Future _onCreate(Database db, int version) async {
-    await db.execute('''CREATE TABLE $mealTableName (
-          $idColumn INTEGER PRIMARY KEY AUTOINCREMENT, 
-          $mealDateTimeColumn INTEGER NOT NULL
-          )''');
-    await db.execute('''CREATE TABLE $foodTableName (
-          $idColumn INTEGER PRIMARY KEY AUTOINCREMENT, 
-          $foodNameColumn TEXT NOT NULL, 
-          $foodAmountColumn INTEGER NOT NULL,
-          $foodMealIdColumn INTEGER NOT NULL,
-          FOREIGN KEY ($foodMealIdColumn) REFERENCES $mealTableName ($idColumn)                  
-           ON DELETE CASCADE ON UPDATE CASCADE)''');
-
-    await db.execute('''CREATE TABLE $symptomsTableName (
-          $idColumn INTEGER PRIMARY KEY AUTOINCREMENT, 
-          $symptomsDateTimeColumn INTEGER NOT NULL, 
-          $symptomsSymptomColumn TEXT NOT NULL)''');
   }
 
   Future deleteDB() async {
