@@ -1,8 +1,11 @@
 part of 'bowel_movement_form_cubit.dart';
 
-abstract class BowelMovementFormState {
+abstract class BowelMovementFormState extends Equatable {
   final Data data;
   const BowelMovementFormState(this.data);
+
+  @override
+  List<Object?> get props => [data];
 }
 
 class BowelMovementFormInitial extends BowelMovementFormState {

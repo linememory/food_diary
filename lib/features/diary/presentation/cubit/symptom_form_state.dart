@@ -1,9 +1,12 @@
 part of 'symptom_form_cubit.dart';
 
-abstract class SymptomFormState {
+abstract class SymptomFormState extends Equatable {
   const SymptomFormState(this.data);
 
   final Data data;
+
+  @override
+  List<Object?> get props => [data];
 }
 
 class SymptomFormInitial extends SymptomFormState {

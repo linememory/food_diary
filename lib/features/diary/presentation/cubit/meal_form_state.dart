@@ -1,8 +1,11 @@
 part of 'meal_form_cubit.dart';
 
-abstract class MealFormState {
+abstract class MealFormState extends Equatable{
   final Data data;
   const MealFormState(this.data);
+
+  @override
+  List<Object?> get props => [data];
 }
 
 class MealFormInitial extends MealFormState {

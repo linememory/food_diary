@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
@@ -40,7 +42,8 @@ class MealFormCubit extends Cubit<MealFormState> {
 
   void amountChanged(int id, Amount amount) {
     Data newData = Data.from(state.data);
-    newData.fields[id].amount = amount;
+    newData.fields[id] =
+        Field(amount: amount, controller: newData.fields[id].controller);
 
     emit(MealFormChanged(newData));
     notifyEntryFormCubit(newData);
@@ -75,7 +78,7 @@ class Data {
   Data.from(Data data)
       : id = data.id,
         dateTime = data.dateTime,
-        fields = data.fields;
+        fields = data.fields.map((e) => Field.from(e)).toList();
 
   Data.fromEntity(MealEntry meal)
       : id = meal.id,
@@ -94,7 +97,7 @@ class Data {
     return Data(
       id: id ?? this.id,
       dateTime: dateTime ?? this.dateTime,
-      fields: fields ?? this.fields,
+      fields: fields ?? this.fields.map((e) => Field.from(e)).toList(),
     );
   }
 
@@ -118,15 +121,37 @@ class Data {
     fields.removeWhere((element) => element.controller.text.isEmpty);
     addEmpty();
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
+    return other is Data &&
+        other.id == id &&
+        other.dateTime == dateTime &&
+        listEquals(other.fields, fields);
+  }
+
+  @override
+  int get hashCode => id.hashCode ^ dateTime.hashCode ^ fields.hashCode;
+
+  @override
+  String toString() => 'Data(id: $id, dateTime: $dateTime, fields: $fields)';
 }
 
 class Field {
-  TextEditingController controller;
-  Amount amount;
+  final TextEditingController controller;
+  final Amount amount;
   Field({
     required this.controller,
     required this.amount,
   });
+
+  Field.from(Field field)
+      : controller = field.controller,
+        amount = field.amount;
 
   Field copyWith({
     TextEditingController? controller,
@@ -137,4 +162,19 @@ class Field {
       amount: amount ?? this.amount,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  int get hashCode => controller.text.hashCode ^ amount.index.hashCode;
+
+  @override
+  String toString() => 'Field(controller: ${controller.text}, amount: $amount)';
 }

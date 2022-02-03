@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:food_diary/features/diary/domain/entities/symptom_entry.dart';
 import 'package:food_diary/features/diary/domain/value_objects/symptom.dart';
@@ -74,7 +76,7 @@ class Data {
   Data.from(Data data)
       : id = data.id,
         dateTime = data.dateTime,
-        fields = data.fields;
+        fields = data.fields.map((e) => Field.from(e)).toList();
 
   Data.fromEntity(SymptomEntry symptomEntity)
       : id = symptomEntity.id,
@@ -93,7 +95,7 @@ class Data {
     return Data(
       id: id ?? this.id,
       dateTime: dateTime ?? this.dateTime,
-      fields: fields ?? this.fields,
+      fields: fields ?? this.fields.map((e) => Field.from(e)).toList(),
     );
   }
 
@@ -118,6 +120,24 @@ class Data {
     fields.removeWhere((element) => element.controller.text.isEmpty);
     addEmpty();
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
+    return other is Data &&
+        other.id == id &&
+        other.dateTime == dateTime &&
+        listEquals(other.fields, fields);
+  }
+
+  @override
+  int get hashCode => id.hashCode ^ dateTime.hashCode ^ fields.hashCode;
+
+  @override
+  String toString() => 'Data(id: $id, dateTime: $dateTime, fields: $fields)';
 }
 
 class Field {
@@ -128,6 +148,10 @@ class Field {
     required this.intensity,
   });
 
+  Field.from(Field field)
+      : controller = field.controller,
+        intensity = field.intensity;
+
   Field copyWith({
     TextEditingController? controller,
     Intensity? intensity,
@@ -137,4 +161,20 @@ class Field {
       intensity: intensity ?? this.intensity,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  int get hashCode => controller.text.hashCode ^ intensity.index.hashCode;
+
+  @override
+  String toString() =>
+      'Field(controller: ${controller.text}, amount: $intensity)';
 }
