@@ -29,6 +29,24 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Calendar"),
         "diaryBottomNavigationBarLabel":
             MessageLookupByLibrary.simpleMessage("Diary List"),
-        "diaryPageTitle": MessageLookupByLibrary.simpleMessage("Diary")
+        "diaryEntryDelete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "diaryEntryUpdate": MessageLookupByLibrary.simpleMessage("Update"),
+        "diaryFormAdd": MessageLookupByLibrary.simpleMessage("Add"),
+        "diaryFormCancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "diaryFormUpdate": MessageLookupByLibrary.simpleMessage("Update"),
+        "diaryPageTitle": MessageLookupByLibrary.simpleMessage("Diary"),
+        "foodAmountHigh": MessageLookupByLibrary.simpleMessage("High"),
+        "foodAmountMedium": MessageLookupByLibrary.simpleMessage("Medium"),
+        "foodAmountSmall": MessageLookupByLibrary.simpleMessage("Small"),
+        "stoolType1": MessageLookupByLibrary.simpleMessage("Type 1"),
+        "stoolType2": MessageLookupByLibrary.simpleMessage("Type 2"),
+        "stoolType3": MessageLookupByLibrary.simpleMessage("Type 3"),
+        "stoolType4": MessageLookupByLibrary.simpleMessage("Type 4"),
+        "stoolType5": MessageLookupByLibrary.simpleMessage("Type 5"),
+        "stoolType6": MessageLookupByLibrary.simpleMessage("Type 6"),
+        "stoolType7": MessageLookupByLibrary.simpleMessage("Type 7"),
+        "symptomIntensityHigh": MessageLookupByLibrary.simpleMessage("High"),
+        "symptomIntensityLow": MessageLookupByLibrary.simpleMessage("Low"),
+        "symptomIntensityMedium": MessageLookupByLibrary.simpleMessage("Medium")
       };
 }

@@ -99,6 +99,186 @@ class S {
       args: [],
     );
   }
+
+  /// `Update`
+  String get diaryEntryUpdate {
+    return Intl.message(
+      'Update',
+      name: 'diaryEntryUpdate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete`
+  String get diaryEntryDelete {
+    return Intl.message(
+      'Delete',
+      name: 'diaryEntryDelete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add`
+  String get diaryFormAdd {
+    return Intl.message(
+      'Add',
+      name: 'diaryFormAdd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update`
+  String get diaryFormUpdate {
+    return Intl.message(
+      'Update',
+      name: 'diaryFormUpdate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get diaryFormCancel {
+    return Intl.message(
+      'Cancel',
+      name: 'diaryFormCancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Small`
+  String get foodAmountSmall {
+    return Intl.message(
+      'Small',
+      name: 'foodAmountSmall',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Medium`
+  String get foodAmountMedium {
+    return Intl.message(
+      'Medium',
+      name: 'foodAmountMedium',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `High`
+  String get foodAmountHigh {
+    return Intl.message(
+      'High',
+      name: 'foodAmountHigh',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Low`
+  String get symptomIntensityLow {
+    return Intl.message(
+      'Low',
+      name: 'symptomIntensityLow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Medium`
+  String get symptomIntensityMedium {
+    return Intl.message(
+      'Medium',
+      name: 'symptomIntensityMedium',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `High`
+  String get symptomIntensityHigh {
+    return Intl.message(
+      'High',
+      name: 'symptomIntensityHigh',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type 1`
+  String get stoolType1 {
+    return Intl.message(
+      'Type 1',
+      name: 'stoolType1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type 2`
+  String get stoolType2 {
+    return Intl.message(
+      'Type 2',
+      name: 'stoolType2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type 3`
+  String get stoolType3 {
+    return Intl.message(
+      'Type 3',
+      name: 'stoolType3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type 4`
+  String get stoolType4 {
+    return Intl.message(
+      'Type 4',
+      name: 'stoolType4',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type 5`
+  String get stoolType5 {
+    return Intl.message(
+      'Type 5',
+      name: 'stoolType5',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type 6`
+  String get stoolType6 {
+    return Intl.message(
+      'Type 6',
+      name: 'stoolType6',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type 7`
+  String get stoolType7 {
+    return Intl.message(
+      'Type 7',
+      name: 'stoolType7',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
