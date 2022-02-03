@@ -59,6 +59,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Diary`
+  String get diaryPageTitle {
+    return Intl.message(
+      'Diary',
+      name: 'diaryPageTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add meal to diary`
+  String get addMealTooltip {
+    return Intl.message(
+      'Add meal to diary',
+      name: 'addMealTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Diary List`
+  String get diaryBottomNavigationBarLabel {
+    return Intl.message(
+      'Diary List',
+      name: 'diaryBottomNavigationBarLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calendar`
+  String get calendarBottomNavigationBarLabel {
+    return Intl.message(
+      'Calendar',
+      name: 'calendarBottomNavigationBarLabel',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

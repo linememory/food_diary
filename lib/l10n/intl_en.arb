@@ -1,3 +1,9 @@
 {
-    "appTitle": "Food Diary App"
+    "appTitle": "Food Diary App",
+
+    "diaryPageTitle": "Diary",
+
+    "addMealTooltip": "Add meal to diary",
+    "diaryBottomNavigationBarLabel": "Diary List",
+    "calendarBottomNavigationBarLabel": "Calendar"
 }
