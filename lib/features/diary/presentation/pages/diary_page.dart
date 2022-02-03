@@ -125,6 +125,7 @@ class DiaryPage extends StatelessWidget {
         ),
         FloatingActionButton(
           heroTag: "AddSymptom",
+          tooltip: S.of(context).addSymptomTooltip,
           onPressed: () async {
             await Navigator.push(
               context,
@@ -144,6 +145,7 @@ class DiaryPage extends StatelessWidget {
         ),
         FloatingActionButton(
           heroTag: "AddBowelMovement",
+          tooltip: S.of(context).addBowelMovementTooltip,
           onPressed: () async {
             await Navigator.push(
               context,

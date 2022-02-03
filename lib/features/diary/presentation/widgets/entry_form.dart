@@ -389,11 +389,11 @@ class SymptomField extends StatelessWidget {
                 value: Intensity.low,
               ),
               DropdownMenuItem<Intensity>(
-                child: Text(S.of(context).symptomIntensityLow),
+                child: Text(S.of(context).symptomIntensityMedium),
                 value: Intensity.medium,
               ),
               DropdownMenuItem<Intensity>(
-                child: Text(S.of(context).symptomIntensityLow),
+                child: Text(S.of(context).symptomIntensityHigh),
                 value: Intensity.high,
               ),
             ],
