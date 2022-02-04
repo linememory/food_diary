@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CustomTheme {
+  static Map<String, ThemeData> themes = {
+    'light': lightTheme(),
+    'dark': darkTheme()
+  };
   static ThemeData lightTheme() {
     return ThemeData.light().copyWith(
       primaryColor: const Color(0xffff7043),

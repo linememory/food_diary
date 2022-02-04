@@ -12,12 +12,13 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.0
-  flutter_localizations: 
+  flutter_localizations:
     sdk: flutter
     version: ^0.0.0
   get_it: ^7.2.0
   intl: ^0.17.0
   path_provider: ^2.0.8
+  shared_preferences: ^2.0.12
   sqflite: ^2.0.1
 
 dev_dependencies:

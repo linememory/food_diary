@@ -43,6 +43,24 @@
     "diaryDeleteFailureNoMeal": "No entry to delete",
     "diaryDeleteFailureNotDeleted": "Entry could not be deleted",
 
-    "entryFormSubmitFailed": "Failed to add entry:\n "
+    "entryFormSubmitFailed": "Failed to add entry:\n ",
+
+
+    "settings": "Settings",
+
+    "settingsFormSave": "Save",
+    "settingsFormCancel": "Cancel",
+
+    "settingsFormThemesLabel": "Themes",
+    "settingsFormLanguagesLabel": "Languages",
+
+    "themeModeSystem": "System",
+    "themeModeLight": "Light",
+    "themeModeDark": "Dark",
+
+    "languageEnglish": "English",
+    "languageGerman": "German"
+
+
     
 }

@@ -8,6 +8,7 @@ import 'package:food_diary/features/diary/domain/value_objects/bowel_movement.da
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:food_diary/features/diary/presentation/widgets/entry_form.dart';
 import 'package:food_diary/features/diary/presentation/widgets/diary_list.dart';
+import 'package:food_diary/features/settings/settings_page.dart';
 import 'package:food_diary/generated/l10n.dart';
 import 'package:food_diary/injection_container.dart';
 
@@ -70,7 +71,12 @@ class DiaryPage extends StatelessWidget {
       elevation: 5,
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsPage()),
+            );
+          },
           icon: const Icon(Icons.settings),
         ),
         IconButton(
@@ -178,7 +184,8 @@ class DiaryPage extends StatelessWidget {
             label: AppLocalization.of(context).diaryBottomNavigationBarLabel),
         BottomNavigationBarItem(
             icon: const Icon(Icons.calendar_today),
-            label: AppLocalization.of(context).calendarBottomNavigationBarLabel),
+            label:
+                AppLocalization.of(context).calendarBottomNavigationBarLabel),
       ],
       onTap: (index) {},
       backgroundColor: Theme.of(context).primaryColor,
