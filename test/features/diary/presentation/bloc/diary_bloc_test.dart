@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:food_diary/features/diary/application/diary_facade_service.dart';
 import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
+import 'package:food_diary/generated/l10n.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../fixtures/entry_fixtures.dart';
@@ -26,12 +27,14 @@ void main() {
         .thenAnswer((_) async => true);
     when(() => mockDiaryFacadeService.deleteDiaryEntry(any()))
         .thenAnswer((_) async => true);
-    bloc = DiaryBloc(diaryFacadeService: mockDiaryFacadeService);
+    bloc = DiaryBloc(
+        diaryFacadeService: mockDiaryFacadeService, localisation: S());
   });
   group(('diary bloc'), () {
     blocTest<DiaryBloc, DiaryState>(
       'emits [Loading(), Empty())] at start.',
-      build: () => DiaryBloc(diaryFacadeService: mockDiaryFacadeService),
+      build: () => DiaryBloc(
+          diaryFacadeService: mockDiaryFacadeService, localisation: S()),
       verify: (_) => verify(() => mockDiaryFacadeService.getAllDiaryEvents()),
       expect: () =>
           <DiaryState>[const DiaryLoadInProgress([]), const DiaryEmpty()],
@@ -43,8 +46,7 @@ void main() {
         build: () => bloc,
         skip: 1,
         act: (bloc) {
-          bloc.add(
-              DiaryAddEntry(EntryFixture.getMealEntry()));
+          bloc.add(DiaryAddEntry(EntryFixture.getMealEntry()));
           bloc.add(DiaryDeleteEntry(EntryFixture.getMealEntry().id!));
         },
         verify: (_) => verify(() => mockDiaryFacadeService
@@ -73,15 +75,14 @@ void main() {
             .thenAnswer((invocation) async => false),
         skip: 1,
         act: (bloc) {
-          bloc.add(
-              DiaryAddEntry(EntryFixture.getMealEntry()));
+          bloc.add(DiaryAddEntry(EntryFixture.getMealEntry()));
           bloc.add(DiaryDeleteEntry(EntryFixture.getMealEntry().id!));
         },
         verify: (_) => verify(() => mockDiaryFacadeService
             .deleteDiaryEntry(EntryFixture.getMealEntry().id!)),
         expect: () => <DiaryState>[
-          DiaryDeleteFailure([EntryFixture.getMealEntry()],
-              "Meal could not be deleted"),
+          DiaryDeleteFailure(
+              [EntryFixture.getMealEntry()], "Meal could not be deleted"),
           DiaryLoadSuccess([EntryFixture.getMealEntry()])
         ],
       );

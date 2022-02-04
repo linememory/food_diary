@@ -17,7 +17,7 @@ class DiaryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<DiaryBloc>(),
+      create: (context) => DiaryBloc(diaryFacadeService: sl()),
       child: Builder(builder: (context) {
         return Scaffold(
           appBar: _appBar(context),
@@ -34,8 +34,9 @@ class DiaryPage extends StatelessWidget {
       padding: const EdgeInsets.only(top: 0, right: 8, left: 8),
       child: Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Theme.of(context).colorScheme.background),
+          borderRadius: BorderRadius.circular(20),
+          color: Theme.of(context).colorScheme.background,
+        ),
         child: BlocBuilder<DiaryBloc, DiaryState>(
           builder: _diaryBlocBuilder,
         ),

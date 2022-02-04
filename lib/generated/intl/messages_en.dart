@@ -22,19 +22,29 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "addBowelMovementTooltip":
+            MessageLookupByLibrary.simpleMessage("Add Bowel Movement to diary"),
         "addMealTooltip":
             MessageLookupByLibrary.simpleMessage("Add meal to diary"),
+        "addSymptomTooltip":
+            MessageLookupByLibrary.simpleMessage("Add Symptom to diary"),
         "appTitle": MessageLookupByLibrary.simpleMessage("Food Diary App"),
         "calendarBottomNavigationBarLabel":
             MessageLookupByLibrary.simpleMessage("Calendar"),
         "diaryBottomNavigationBarLabel":
             MessageLookupByLibrary.simpleMessage("Diary List"),
+        "diaryDeleteFailureNoMeal":
+            MessageLookupByLibrary.simpleMessage("No meal to delete"),
+        "diaryDeleteFailureNotDeleted":
+            MessageLookupByLibrary.simpleMessage("Meal could not be deleted"),
         "diaryEntryDelete": MessageLookupByLibrary.simpleMessage("Delete"),
         "diaryEntryUpdate": MessageLookupByLibrary.simpleMessage("Update"),
         "diaryFormAdd": MessageLookupByLibrary.simpleMessage("Add"),
         "diaryFormCancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "diaryFormUpdate": MessageLookupByLibrary.simpleMessage("Update"),
         "diaryPageTitle": MessageLookupByLibrary.simpleMessage("Diary"),
+        "entryFormSubmitFailed":
+            MessageLookupByLibrary.simpleMessage("Failed to add entry:\n "),
         "foodAmountHigh": MessageLookupByLibrary.simpleMessage("High"),
         "foodAmountMedium": MessageLookupByLibrary.simpleMessage("Medium"),
         "foodAmountSmall": MessageLookupByLibrary.simpleMessage("Small"),

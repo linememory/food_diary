@@ -34,6 +34,15 @@
     "stoolType4": "Type 4",
     "stoolType5": "Type 5",
     "stoolType6": "Type 6",
-    "stoolType7": "Type 7"
+    "stoolType7": "Type 7",
+
+
+
+
+
+    "diaryDeleteFailureNoMeal": "No meal to delete",
+    "diaryDeleteFailureNotDeleted": "Meal could not be deleted",
+
+    "entryFormSubmitFailed": "Failed to add entry:\n "
     
 }

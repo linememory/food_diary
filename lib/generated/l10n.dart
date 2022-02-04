@@ -80,6 +80,26 @@ class S {
     );
   }
 
+  /// `Add Symptom to diary`
+  String get addSymptomTooltip {
+    return Intl.message(
+      'Add Symptom to diary',
+      name: 'addSymptomTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Bowel Movement to diary`
+  String get addBowelMovementTooltip {
+    return Intl.message(
+      'Add Bowel Movement to diary',
+      name: 'addBowelMovementTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Diary List`
   String get diaryBottomNavigationBarLabel {
     return Intl.message(
@@ -275,6 +295,36 @@ class S {
     return Intl.message(
       'Type 7',
       name: 'stoolType7',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No meal to delete`
+  String get diaryDeleteFailureNoMeal {
+    return Intl.message(
+      'No meal to delete',
+      name: 'diaryDeleteFailureNoMeal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Meal could not be deleted`
+  String get diaryDeleteFailureNotDeleted {
+    return Intl.message(
+      'Meal could not be deleted',
+      name: 'diaryDeleteFailureNotDeleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to add entry:\n `
+  String get entryFormSubmitFailed {
+    return Intl.message(
+      'Failed to add entry:\n ',
+      name: 'entryFormSubmitFailed',
       desc: '',
       args: [],
     );
