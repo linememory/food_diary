@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:food_diary/features/diary/application/diary_facade_service.dart';
 import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:food_diary/generated/l10n.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../fixtures/entry_fixtures.dart';
@@ -27,14 +26,12 @@ void main() {
         .thenAnswer((_) async => true);
     when(() => mockDiaryFacadeService.deleteDiaryEntry(any()))
         .thenAnswer((_) async => true);
-    bloc = DiaryBloc(
-        diaryFacadeService: mockDiaryFacadeService, localisation: S());
+    bloc = DiaryBloc(diaryFacadeService: mockDiaryFacadeService);
   });
   group(('diary bloc'), () {
     blocTest<DiaryBloc, DiaryState>(
       'emits [Loading(), Empty())] at start.',
-      build: () => DiaryBloc(
-          diaryFacadeService: mockDiaryFacadeService, localisation: S()),
+      build: () => DiaryBloc(diaryFacadeService: mockDiaryFacadeService),
       verify: (_) => verify(() => mockDiaryFacadeService.getAllDiaryEvents()),
       expect: () =>
           <DiaryState>[const DiaryLoadInProgress([]), const DiaryEmpty()],
