@@ -40,8 +40,8 @@
 
 
 
-    "diaryDeleteFailureNoMeal": "No meal to delete",
-    "diaryDeleteFailureNotDeleted": "Meal could not be deleted",
+    "diaryDeleteFailureNoMeal": "No entry to delete",
+    "diaryDeleteFailureNotDeleted": "Entry could not be deleted",
 
     "entryFormSubmitFailed": "Failed to add entry:\n "
     

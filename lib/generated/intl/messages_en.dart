@@ -34,9 +34,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "diaryBottomNavigationBarLabel":
             MessageLookupByLibrary.simpleMessage("Diary List"),
         "diaryDeleteFailureNoMeal":
-            MessageLookupByLibrary.simpleMessage("No meal to delete"),
+            MessageLookupByLibrary.simpleMessage("No entry to delete"),
         "diaryDeleteFailureNotDeleted":
-            MessageLookupByLibrary.simpleMessage("Meal could not be deleted"),
+            MessageLookupByLibrary.simpleMessage("Entry could not be deleted"),
         "diaryEntryDelete": MessageLookupByLibrary.simpleMessage("Delete"),
         "diaryEntryUpdate": MessageLookupByLibrary.simpleMessage("Update"),
         "diaryFormAdd": MessageLookupByLibrary.simpleMessage("Add"),

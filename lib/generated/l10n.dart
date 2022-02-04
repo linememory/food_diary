@@ -300,20 +300,20 @@ class S {
     );
   }
 
-  /// `No meal to delete`
+  /// `No entry to delete`
   String get diaryDeleteFailureNoMeal {
     return Intl.message(
-      'No meal to delete',
+      'No entry to delete',
       name: 'diaryDeleteFailureNoMeal',
       desc: '',
       args: [],
     );
   }
 
-  /// `Meal could not be deleted`
+  /// `Entry could not be deleted`
   String get diaryDeleteFailureNotDeleted {
     return Intl.message(
-      'Meal could not be deleted',
+      'Entry could not be deleted',
       name: 'diaryDeleteFailureNotDeleted',
       desc: '',
       args: [],

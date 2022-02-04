@@ -21,5 +21,42 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'de_DE';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{};
+  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "addBowelMovementTooltip":
+            MessageLookupByLibrary.simpleMessage("Neuer Stuhlgang"),
+        "addMealTooltip": MessageLookupByLibrary.simpleMessage("Neue Mahlzeit"),
+        "addSymptomTooltip":
+            MessageLookupByLibrary.simpleMessage("Neue Symptome"),
+        "appTitle":
+            MessageLookupByLibrary.simpleMessage("Ernährungstagebuch App"),
+        "calendarBottomNavigationBarLabel":
+            MessageLookupByLibrary.simpleMessage("Kalender"),
+        "diaryBottomNavigationBarLabel":
+            MessageLookupByLibrary.simpleMessage("Tagebuchliste"),
+        "diaryDeleteFailureNoMeal":
+            MessageLookupByLibrary.simpleMessage("Kein Eintrag zum löschen"),
+        "diaryDeleteFailureNotDeleted": MessageLookupByLibrary.simpleMessage(
+            "Eintrag konnte nicht gelöscht werden"),
+        "diaryEntryDelete": MessageLookupByLibrary.simpleMessage("Löschen"),
+        "diaryEntryUpdate": MessageLookupByLibrary.simpleMessage("Bearbeiten"),
+        "diaryFormAdd": MessageLookupByLibrary.simpleMessage("Hinzufügen"),
+        "diaryFormCancel": MessageLookupByLibrary.simpleMessage("Abbrechen"),
+        "diaryFormUpdate": MessageLookupByLibrary.simpleMessage("Bearbeiten"),
+        "diaryPageTitle": MessageLookupByLibrary.simpleMessage("Tagebuch"),
+        "entryFormSubmitFailed": MessageLookupByLibrary.simpleMessage(
+            "Eintrag hinzufügen fehlgeschlagen:\n "),
+        "foodAmountHigh": MessageLookupByLibrary.simpleMessage("Viel"),
+        "foodAmountMedium": MessageLookupByLibrary.simpleMessage("Medium"),
+        "foodAmountSmall": MessageLookupByLibrary.simpleMessage("Wenig"),
+        "stoolType1": MessageLookupByLibrary.simpleMessage("Typ 1"),
+        "stoolType2": MessageLookupByLibrary.simpleMessage("Typ 2"),
+        "stoolType3": MessageLookupByLibrary.simpleMessage("Typ 3"),
+        "stoolType4": MessageLookupByLibrary.simpleMessage("Typ 4"),
+        "stoolType5": MessageLookupByLibrary.simpleMessage("Typ 5"),
+        "stoolType6": MessageLookupByLibrary.simpleMessage("Typ 6"),
+        "stoolType7": MessageLookupByLibrary.simpleMessage("Typ 7"),
+        "symptomIntensityHigh": MessageLookupByLibrary.simpleMessage("Hoch"),
+        "symptomIntensityLow": MessageLookupByLibrary.simpleMessage("Niedrig"),
+        "symptomIntensityMedium": MessageLookupByLibrary.simpleMessage("Medium")
+      };
 }
