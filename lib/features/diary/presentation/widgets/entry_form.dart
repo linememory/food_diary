@@ -261,7 +261,9 @@ class DateTimePicker extends StatelessWidget {
             }
           },
           child: Text(
-            DateFormat('EEE, dd.MM.yyy  hh:mm').format(dateTime),
+            DateFormat.yMMMMEEEEd(Localizations.localeOf(context).toString())
+                .add_Hm()
+                .format(dateTime),
             style: Theme.of(context).textTheme.subtitle1,
           ),
         ),

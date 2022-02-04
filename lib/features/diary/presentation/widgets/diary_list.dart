@@ -102,7 +102,6 @@ class _DateItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = DateFormat('EEE, dd.MM.yyy');
     return Container(
       alignment: Alignment.center,
       margin: const EdgeInsets.symmetric(vertical: 1),
@@ -112,7 +111,8 @@ class _DateItem extends StatelessWidget {
         color: Theme.of(context).colorScheme.primary,
       ),
       child: Text(
-        formatter.format(dateTime),
+        DateFormat.yMMMMEEEEd(Localizations.localeOf(context).toString())
+            .format(dateTime),
         style: Theme.of(context).textTheme.subtitle1,
       ),
     );
@@ -173,8 +173,7 @@ class _EditButtons extends StatelessWidget {
       children: [
         ElevatedButton(
           style: buttonStyle,
-          child: _buttonText(
-              context, S.of(context).diaryEntryUpdate),
+          child: _buttonText(context, S.of(context).diaryEntryUpdate),
           onPressed: () async {
             await Navigator.push(
               context,
@@ -192,8 +191,7 @@ class _EditButtons extends StatelessWidget {
         ),
         ElevatedButton(
           style: buttonStyle,
-          child: _buttonText(
-              context, S.of(context).diaryEntryDelete),
+          child: _buttonText(context, S.of(context).diaryEntryDelete),
           onPressed: () {
             BlocProvider.of<DiaryBloc>(context)
                 .add(DiaryDeleteEntry(entryItem.id!));
