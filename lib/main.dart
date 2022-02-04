@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_diary/core/settings/cubit/settings_cubit.dart';
 import 'package:food_diary/core/themes/custom_theme.dart';
 import 'package:food_diary/features/diary/presentation/pages/diary_page.dart';
 import 'package:food_diary/generated/l10n.dart';
@@ -15,18 +17,26 @@ class FoodDiary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      themeMode: ThemeMode.system,
-      theme: CustomTheme.lightTheme(),
-      darkTheme: CustomTheme.darkTheme(),
-      localizationsDelegates: const [
-        AppLocalization.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: AppLocalization.delegate.supportedLocales,
-      onGenerateTitle: (context) => AppLocalization.of(context).appTitle,
-      home: const DiaryPage(),
+    return BlocProvider(
+      create: (context) => SettingsCubit(),
+      child: BlocBuilder<SettingsCubit, SettingsState>(
+        builder: (context, state) {
+          return MaterialApp(
+            themeMode: state.settingsData.themeMode,
+            theme: CustomTheme.lightTheme(),
+            darkTheme: CustomTheme.darkTheme(),
+            locale: Locale(state.settingsData.locale),
+            localizationsDelegates: const [
+              AppLocalization.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+            ],
+            supportedLocales: AppLocalization.delegate.supportedLocales,
+            onGenerateTitle: (context) => AppLocalization.of(context).appTitle,
+            home: const DiaryPage(),
+          );
+        },
+      ),
     );
   }
 }
