@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsData {
-  final String locale;
+  final String language;
   final ThemeMode themeMode;
 
   SettingsData({
-    this.locale = 'en',
+    this.language = 'en',
     this.themeMode = ThemeMode.system,
   });
 
   SettingsData copyWith({
-    String? locale,
+    String? language,
     ThemeMode? themeMode,
   }) {
     return SettingsData(
-      locale: locale ?? this.locale,
+      language: language ?? this.language,
       themeMode: themeMode ?? this.themeMode,
     );
   }
@@ -28,7 +28,7 @@ class SettingsData {
             ? ThemeMode.dark
             : ThemeMode.system;
     return SettingsData(
-        locale: prefs.getString('locale') ?? 'en',
+        language: prefs.getString('language') ?? 'en',
         themeMode: themeModeFromString(prefs.getString('theme_mode') ?? ''));
   }
 
@@ -41,21 +41,21 @@ class SettingsData {
                 ? 'dark'
                 : 'system';
     prefs.setString('theme_mode', themeModeToString(themeMode));
-    prefs.setString('locale', locale);
+    prefs.setString('language', language);
   }
 
   @override
-  String toString() => 'SettingsData(locale: $locale, themeMode: $themeMode)';
+  String toString() => 'SettingsData(locale: $language, themeMode: $themeMode)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
     return other is SettingsData &&
-        other.locale == locale &&
+        other.language == language &&
         other.themeMode == themeMode;
   }
 
   @override
-  int get hashCode => locale.hashCode ^ themeMode.hashCode;
+  int get hashCode => language.hashCode ^ themeMode.hashCode;
 }

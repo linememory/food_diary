@@ -8,7 +8,7 @@ part 'settings_state.dart';
 class SettingsCubit extends Cubit<SettingsState> {
   SettingsCubit()
       : super(SettingsInitial(
-            SettingsData(locale: "en", themeMode: ThemeMode.system))) {
+            SettingsData(language: "en", themeMode: ThemeMode.system))) {
     loadSettings();
   }
 

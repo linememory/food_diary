@@ -25,7 +25,7 @@ class FoodDiary extends StatelessWidget {
             themeMode: state.settingsData.themeMode,
             theme: CustomTheme.lightTheme(),
             darkTheme: CustomTheme.darkTheme(),
-            locale: Locale(state.settingsData.locale),
+            locale: Locale(state.settingsData.language.split('_').first),
             localizationsDelegates: const [
               AppLocalization.delegate,
               GlobalMaterialLocalizations.delegate,
