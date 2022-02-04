@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_diary/dev/add_test_content.dart';
+import 'package:food_diary/features/diary/domain/entities/bowel_movement_entry.dart';
 import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
+import 'package:food_diary/features/diary/domain/entities/symptom_entry.dart';
+import 'package:food_diary/features/diary/domain/value_objects/bowel_movement.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:food_diary/features/diary/presentation/widgets/entry_form.dart';
 import 'package:food_diary/features/diary/presentation/widgets/diary_list.dart';
+import 'package:food_diary/generated/l10n.dart';
 import 'package:food_diary/injection_container.dart';
 
 class DiaryPage extends StatelessWidget {
@@ -13,7 +17,7 @@ class DiaryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<DiaryBloc>(),
+      create: (context) => DiaryBloc(diaryFacadeService: sl()),
       child: Builder(builder: (context) {
         return Scaffold(
           appBar: _appBar(context),
@@ -30,8 +34,9 @@ class DiaryPage extends StatelessWidget {
       padding: const EdgeInsets.only(top: 0, right: 8, left: 8),
       child: Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Theme.of(context).colorScheme.background),
+          borderRadius: BorderRadius.circular(20),
+          color: Theme.of(context).colorScheme.background,
+        ),
         child: BlocBuilder<DiaryBloc, DiaryState>(
           builder: _diaryBlocBuilder,
         ),
@@ -59,7 +64,7 @@ class DiaryPage extends StatelessWidget {
   AppBar _appBar(BuildContext context) {
     return AppBar(
       backgroundColor: Theme.of(context).primaryColor,
-      title: const Text("Food Diary"),
+      title: Text(AppLocalization.of(context).diaryPageTitle),
       toolbarHeight: MediaQuery.of(context).size.height / 12,
       leading: const Icon(Icons.fastfood),
       elevation: 5,
@@ -100,7 +105,8 @@ class DiaryPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         FloatingActionButton(
-          heroTag: "MealAdd",
+          heroTag: "AddMeal",
+          tooltip: AppLocalization.of(context).addMealTooltip,
           onPressed: () async {
             await Navigator.push(
               context,
@@ -116,28 +122,63 @@ class DiaryPage extends StatelessWidget {
             Icon(Icons.add),
             Icon(Icons.fastfood),
           ]),
-          backgroundColor: Theme.of(context).colorScheme.secondary,
+          backgroundColor: Theme.of(context).colorScheme.primary,
         ),
-        // FloatingActionButton(
-        //   heroTag: "SymptomAdd",
-        //   onPressed: () {},
-        //   child: Row(children: const [
-        //     Icon(Icons.add),
-        //     Icon(Icons.sick),
-        //   ]),
-        //   backgroundColor: Theme.of(context).colorScheme.secondary,
-        // ),
+        FloatingActionButton(
+          heroTag: "AddSymptom",
+          tooltip: AppLocalization.of(context).addSymptomTooltip,
+          onPressed: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => EntryForm(
+                        entry: SymptomEntry(
+                            dateTime: DateTime.now(), symptoms: const []),
+                      )),
+            );
+            BlocProvider.of<DiaryBloc>(context).add(DiaryGetEntries());
+          },
+          child: Row(children: const [
+            Icon(Icons.add),
+            Icon(Icons.sick),
+          ]),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+        ),
+        FloatingActionButton(
+          heroTag: "AddBowelMovement",
+          tooltip: AppLocalization.of(context).addBowelMovementTooltip,
+          onPressed: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => EntryForm(
+                        entry: BowelMovementEntry(
+                            dateTime: DateTime.now(),
+                            bowelMovement: const BowelMovement(
+                                stoolType: StoolType.type1, note: "")),
+                      )),
+            );
+            BlocProvider.of<DiaryBloc>(context).add(DiaryGetEntries());
+          },
+          child: Row(children: const [
+            Icon(Icons.add),
+            Icon(Icons.wc),
+          ]),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+        ),
       ],
     );
   }
 
   BottomNavigationBar _navigationBar(BuildContext context) {
     return BottomNavigationBar(
-      items: const [
+      items: [
         BottomNavigationBarItem(
-            icon: Icon(Icons.fastfood_outlined), label: "Food Diary"),
+            icon: const Icon(Icons.fastfood_outlined),
+            label: AppLocalization.of(context).diaryBottomNavigationBarLabel),
         BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_sharp), label: "Evaluation"),
+            icon: const Icon(Icons.calendar_today),
+            label: AppLocalization.of(context).calendarBottomNavigationBarLabel),
       ],
       onTap: (index) {},
       backgroundColor: Theme.of(context).primaryColor,

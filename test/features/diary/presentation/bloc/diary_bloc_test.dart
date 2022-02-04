@@ -43,8 +43,7 @@ void main() {
         build: () => bloc,
         skip: 1,
         act: (bloc) {
-          bloc.add(
-              DiaryAddEntry(EntryFixture.getMealEntry()));
+          bloc.add(DiaryAddEntry(EntryFixture.getMealEntry()));
           bloc.add(DiaryDeleteEntry(EntryFixture.getMealEntry().id!));
         },
         verify: (_) => verify(() => mockDiaryFacadeService
@@ -73,15 +72,14 @@ void main() {
             .thenAnswer((invocation) async => false),
         skip: 1,
         act: (bloc) {
-          bloc.add(
-              DiaryAddEntry(EntryFixture.getMealEntry()));
+          bloc.add(DiaryAddEntry(EntryFixture.getMealEntry()));
           bloc.add(DiaryDeleteEntry(EntryFixture.getMealEntry().id!));
         },
         verify: (_) => verify(() => mockDiaryFacadeService
             .deleteDiaryEntry(EntryFixture.getMealEntry().id!)),
         expect: () => <DiaryState>[
-          DiaryDeleteFailure([EntryFixture.getMealEntry()],
-              "Meal could not be deleted"),
+          DiaryDeleteFailure(
+              [EntryFixture.getMealEntry()], "Meal could not be deleted"),
           DiaryLoadSuccess([EntryFixture.getMealEntry()])
         ],
       );

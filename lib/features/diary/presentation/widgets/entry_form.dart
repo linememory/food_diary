@@ -11,6 +11,7 @@ import 'package:food_diary/features/diary/presentation/cubit/bowel_movement_form
 import 'package:food_diary/features/diary/presentation/cubit/entry_form_cubit.dart';
 import 'package:food_diary/features/diary/presentation/cubit/meal_form_cubit.dart';
 import 'package:food_diary/features/diary/presentation/cubit/symptom_form_cubit.dart';
+import 'package:food_diary/generated/l10n.dart';
 import 'package:food_diary/injection_container.dart';
 import 'package:intl/intl.dart';
 
@@ -21,7 +22,9 @@ class EntryForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String buttonText = entry.id == null ? "Add" : "Update";
+    String buttonText = entry.id == null
+        ? AppLocalization.of(context).diaryFormAdd
+        : AppLocalization.of(context).diaryFormUpdate;
     return BlocProvider<EntryFormCubit>(
       create: (context) => EntryFormCubit(sl()),
       child: BlocListener<EntryFormCubit, EntryFormState>(
@@ -186,7 +189,7 @@ class FormButtons extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const Text("Cancel"),
+          child: Text(AppLocalization.of(context).diaryFormCancel),
         ),
         BlocConsumer<EntryFormCubit, EntryFormState>(
           listener: (context, state) {
@@ -258,7 +261,9 @@ class DateTimePicker extends StatelessWidget {
             }
           },
           child: Text(
-            DateFormat('EEE, dd.MM.yyy  hh:mm').format(dateTime),
+            DateFormat.yMMMMEEEEd(Localizations.localeOf(context).toString())
+                .add_Hm()
+                .format(dateTime),
             style: Theme.of(context).textTheme.subtitle1,
           ),
         ),
@@ -313,17 +318,17 @@ class _FoodFieldState extends State<FoodField> {
               BlocProvider.of<MealFormCubit>(context)
                   .amountChanged(widget.id, amount ?? Amount.small);
             },
-            items: const [
+            items: [
               DropdownMenuItem<Amount>(
-                child: Text("Small"),
+                child: Text(AppLocalization.of(context).foodAmountSmall),
                 value: Amount.small,
               ),
               DropdownMenuItem<Amount>(
-                child: Text("Medium"),
+                child: Text(AppLocalization.of(context).foodAmountMedium),
                 value: Amount.medium,
               ),
               DropdownMenuItem<Amount>(
-                child: Text("High"),
+                child: Text(AppLocalization.of(context).foodAmountHigh),
                 value: Amount.high,
               ),
             ],
@@ -380,17 +385,17 @@ class SymptomField extends StatelessWidget {
               BlocProvider.of<SymptomFormCubit>(context)
                   .intensityChanged(id, intensity ?? Intensity.low);
             },
-            items: const [
+            items: [
               DropdownMenuItem<Intensity>(
-                child: Text("Low"),
+                child: Text(AppLocalization.of(context).symptomIntensityLow),
                 value: Intensity.low,
               ),
               DropdownMenuItem<Intensity>(
-                child: Text("Medium"),
+                child: Text(AppLocalization.of(context).symptomIntensityMedium),
                 value: Intensity.medium,
               ),
               DropdownMenuItem<Intensity>(
-                child: Text("High"),
+                child: Text(AppLocalization.of(context).symptomIntensityHigh),
                 value: Intensity.high,
               ),
             ],
@@ -421,33 +426,33 @@ class BowelMovementField extends StatelessWidget {
               BlocProvider.of<BowelMovementFormCubit>(context)
                   .typeChanged(type ?? StoolType.type1);
             },
-            items: const [
+            items: [
               DropdownMenuItem<StoolType>(
-                child: Text("Type 1"),
+                child: Text(AppLocalization.of(context).stoolType1),
                 value: StoolType.type1,
               ),
               DropdownMenuItem<StoolType>(
-                child: Text("Type 2"),
+                child: Text(AppLocalization.of(context).stoolType2),
                 value: StoolType.type2,
               ),
               DropdownMenuItem<StoolType>(
-                child: Text("Type 3"),
+                child: Text(AppLocalization.of(context).stoolType3),
                 value: StoolType.type3,
               ),
               DropdownMenuItem<StoolType>(
-                child: Text("Type 4"),
+                child: Text(AppLocalization.of(context).stoolType4),
                 value: StoolType.type4,
               ),
               DropdownMenuItem<StoolType>(
-                child: Text("Type 5"),
+                child: Text(AppLocalization.of(context).stoolType5),
                 value: StoolType.type5,
               ),
               DropdownMenuItem<StoolType>(
-                child: Text("Type 6"),
+                child: Text(AppLocalization.of(context).stoolType6),
                 value: StoolType.type6,
               ),
               DropdownMenuItem<StoolType>(
-                child: Text("Type 7"),
+                child: Text(AppLocalization.of(context).stoolType7),
                 value: StoolType.type7,
               ),
             ],

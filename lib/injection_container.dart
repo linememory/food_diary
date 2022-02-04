@@ -8,14 +8,11 @@ import 'package:food_diary/features/diary/data/repositories/diary_entry_reposito
 import 'package:food_diary/features/diary/domain/repositories/diary_entry_reposity.dart';
 import 'package:get_it/get_it.dart';
 
-import 'features/diary/presentation/bloc/diary_bloc.dart';
-
 final sl = GetIt.instance;
 
 void init() {
   //* Features - Diary
   sl.registerLazySingleton(() => DiaryFacadeService(sl()));
-  sl.registerFactory(() => DiaryBloc(diaryFacadeService: sl()));
 
   sl.registerLazySingleton<DiaryEntryRepository>(() => DiaryEntryRepositoryImpl(
       entryDatasource: sl(),

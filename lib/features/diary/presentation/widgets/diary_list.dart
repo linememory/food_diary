@@ -7,6 +7,7 @@ import 'package:food_diary/features/diary/domain/entities/symptom_entry.dart';
 import 'package:food_diary/features/diary/domain/value_objects/food.dart';
 import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:food_diary/features/diary/presentation/widgets/entry_form.dart';
+import 'package:food_diary/generated/l10n.dart';
 import 'package:intl/intl.dart';
 
 class DiaryList extends StatelessWidget {
@@ -101,7 +102,6 @@ class _DateItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = DateFormat('EEE, dd.MM.yyy');
     return Container(
       alignment: Alignment.center,
       margin: const EdgeInsets.symmetric(vertical: 1),
@@ -111,7 +111,8 @@ class _DateItem extends StatelessWidget {
         color: Theme.of(context).colorScheme.primary,
       ),
       child: Text(
-        formatter.format(dateTime),
+        DateFormat.yMMMMEEEEd(Localizations.localeOf(context).toString())
+            .format(dateTime),
         style: Theme.of(context).textTheme.subtitle1,
       ),
     );
@@ -172,7 +173,7 @@ class _EditButtons extends StatelessWidget {
       children: [
         ElevatedButton(
           style: buttonStyle,
-          child: _buttonText(context, "Update"),
+          child: _buttonText(context, AppLocalization.of(context).diaryEntryUpdate),
           onPressed: () async {
             await Navigator.push(
               context,
@@ -190,7 +191,7 @@ class _EditButtons extends StatelessWidget {
         ),
         ElevatedButton(
           style: buttonStyle,
-          child: _buttonText(context, "Delete"),
+          child: _buttonText(context, AppLocalization.of(context).diaryEntryDelete),
           onPressed: () {
             BlocProvider.of<DiaryBloc>(context)
                 .add(DiaryDeleteEntry(entryItem.id!));
