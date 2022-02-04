@@ -48,6 +48,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "foodAmountHigh": MessageLookupByLibrary.simpleMessage("High"),
         "foodAmountMedium": MessageLookupByLibrary.simpleMessage("Medium"),
         "foodAmountSmall": MessageLookupByLibrary.simpleMessage("Small"),
+        "languageEnglish": MessageLookupByLibrary.simpleMessage("English"),
+        "languageGerman": MessageLookupByLibrary.simpleMessage("German"),
+        "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+        "settingsFormCancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "settingsFormLanguagesLabel":
+            MessageLookupByLibrary.simpleMessage("Languages"),
+        "settingsFormSave": MessageLookupByLibrary.simpleMessage("Save"),
+        "settingsFormThemesLabel":
+            MessageLookupByLibrary.simpleMessage("Themes"),
         "stoolType1": MessageLookupByLibrary.simpleMessage("Type 1"),
         "stoolType2": MessageLookupByLibrary.simpleMessage("Type 2"),
         "stoolType3": MessageLookupByLibrary.simpleMessage("Type 3"),
@@ -57,6 +66,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "stoolType7": MessageLookupByLibrary.simpleMessage("Type 7"),
         "symptomIntensityHigh": MessageLookupByLibrary.simpleMessage("High"),
         "symptomIntensityLow": MessageLookupByLibrary.simpleMessage("Low"),
-        "symptomIntensityMedium": MessageLookupByLibrary.simpleMessage("Medium")
+        "symptomIntensityMedium":
+            MessageLookupByLibrary.simpleMessage("Medium"),
+        "themeModeDark": MessageLookupByLibrary.simpleMessage("Dark"),
+        "themeModeLight": MessageLookupByLibrary.simpleMessage("Light"),
+        "themeModeSystem": MessageLookupByLibrary.simpleMessage("System")
       };
 }

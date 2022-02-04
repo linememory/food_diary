@@ -329,6 +329,106 @@ class AppLocalization {
       args: [],
     );
   }
+
+  /// `Settings`
+  String get settings {
+    return Intl.message(
+      'Settings',
+      name: 'settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save`
+  String get settingsFormSave {
+    return Intl.message(
+      'Save',
+      name: 'settingsFormSave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get settingsFormCancel {
+    return Intl.message(
+      'Cancel',
+      name: 'settingsFormCancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Themes`
+  String get settingsFormThemesLabel {
+    return Intl.message(
+      'Themes',
+      name: 'settingsFormThemesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Languages`
+  String get settingsFormLanguagesLabel {
+    return Intl.message(
+      'Languages',
+      name: 'settingsFormLanguagesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `System`
+  String get themeModeSystem {
+    return Intl.message(
+      'System',
+      name: 'themeModeSystem',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Light`
+  String get themeModeLight {
+    return Intl.message(
+      'Light',
+      name: 'themeModeLight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dark`
+  String get themeModeDark {
+    return Intl.message(
+      'Dark',
+      name: 'themeModeDark',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `English`
+  String get languageEnglish {
+    return Intl.message(
+      'English',
+      name: 'languageEnglish',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `German`
+  String get languageGerman {
+    return Intl.message(
+      'German',
+      name: 'languageGerman',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalization> {

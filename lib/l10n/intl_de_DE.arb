@@ -43,6 +43,24 @@
     "diaryDeleteFailureNoMeal": "Kein Eintrag zum löschen",
     "diaryDeleteFailureNotDeleted": "Eintrag konnte nicht gelöscht werden",
 
-    "entryFormSubmitFailed": "Eintrag hinzufügen fehlgeschlagen:\n "
+    "entryFormSubmitFailed": "Eintrag hinzufügen fehlgeschlagen:\n ",
+
+
+
+    "settings": "Einstellungen",
+
+    "settingsFormSave": "Speichern",
+    "settingsFormCancel": "Abbrechen",
+
+    
+    "settingsFormThemesLabel": "Themes",
+    "settingsFormLanguagesLabel": "Sprachen",
+
+    "themeModeSystem": "System",
+    "themeModeLight": "Hell",
+    "themeModeDark": "Dunkel",
+
+    "languageEnglish": "Englisch",
+    "languageGerman": "Deutsch"
     
 }
