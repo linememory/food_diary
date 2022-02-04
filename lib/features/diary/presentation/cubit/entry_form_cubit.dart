@@ -11,14 +11,14 @@ class EntryFormCubit extends Cubit<EntryFormState> {
   EntryFormCubit(this.diaryFacadeService) : super(EntryFormInvalid());
 
   DiaryFacadeService diaryFacadeService;
-  S? localization;
+  AppLocalization? localization;
 
   void submit(DiaryEntry entry) async {
     bool success = await diaryFacadeService.addDiaryEntry(entry);
     success
         ? emit(EntryFormSubmitted())
         : emit(EntryFormSubmitFailed(
-            message: S.current.entryFormSubmitFailed +
+            message: AppLocalization.current.entryFormSubmitFailed +
                 entry.toString()));
   }
 

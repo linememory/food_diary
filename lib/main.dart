@@ -20,12 +20,12 @@ class FoodDiary extends StatelessWidget {
       theme: CustomTheme.lightTheme(),
       darkTheme: CustomTheme.darkTheme(),
       localizationsDelegates: const [
-        S.delegate,
+        AppLocalization.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      supportedLocales: S.delegate.supportedLocales,
-      onGenerateTitle: (context) => S.of(context).appTitle,
+      supportedLocales: AppLocalization.delegate.supportedLocales,
+      onGenerateTitle: (context) => AppLocalization.of(context).appTitle,
       home: const DiaryPage(),
     );
   }

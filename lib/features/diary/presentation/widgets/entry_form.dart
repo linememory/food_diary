@@ -23,8 +23,8 @@ class EntryForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String buttonText = entry.id == null
-        ? S.of(context).diaryFormAdd
-        : S.of(context).diaryFormUpdate;
+        ? AppLocalization.of(context).diaryFormAdd
+        : AppLocalization.of(context).diaryFormUpdate;
     return BlocProvider<EntryFormCubit>(
       create: (context) => EntryFormCubit(sl()),
       child: BlocListener<EntryFormCubit, EntryFormState>(
@@ -189,7 +189,7 @@ class FormButtons extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text(S.of(context).diaryFormCancel),
+          child: Text(AppLocalization.of(context).diaryFormCancel),
         ),
         BlocConsumer<EntryFormCubit, EntryFormState>(
           listener: (context, state) {
@@ -320,15 +320,15 @@ class _FoodFieldState extends State<FoodField> {
             },
             items: [
               DropdownMenuItem<Amount>(
-                child: Text(S.of(context).foodAmountSmall),
+                child: Text(AppLocalization.of(context).foodAmountSmall),
                 value: Amount.small,
               ),
               DropdownMenuItem<Amount>(
-                child: Text(S.of(context).foodAmountMedium),
+                child: Text(AppLocalization.of(context).foodAmountMedium),
                 value: Amount.medium,
               ),
               DropdownMenuItem<Amount>(
-                child: Text(S.of(context).foodAmountHigh),
+                child: Text(AppLocalization.of(context).foodAmountHigh),
                 value: Amount.high,
               ),
             ],
@@ -387,15 +387,15 @@ class SymptomField extends StatelessWidget {
             },
             items: [
               DropdownMenuItem<Intensity>(
-                child: Text(S.of(context).symptomIntensityLow),
+                child: Text(AppLocalization.of(context).symptomIntensityLow),
                 value: Intensity.low,
               ),
               DropdownMenuItem<Intensity>(
-                child: Text(S.of(context).symptomIntensityMedium),
+                child: Text(AppLocalization.of(context).symptomIntensityMedium),
                 value: Intensity.medium,
               ),
               DropdownMenuItem<Intensity>(
-                child: Text(S.of(context).symptomIntensityHigh),
+                child: Text(AppLocalization.of(context).symptomIntensityHigh),
                 value: Intensity.high,
               ),
             ],
@@ -428,31 +428,31 @@ class BowelMovementField extends StatelessWidget {
             },
             items: [
               DropdownMenuItem<StoolType>(
-                child: Text(S.of(context).stoolType1),
+                child: Text(AppLocalization.of(context).stoolType1),
                 value: StoolType.type1,
               ),
               DropdownMenuItem<StoolType>(
-                child: Text(S.of(context).stoolType2),
+                child: Text(AppLocalization.of(context).stoolType2),
                 value: StoolType.type2,
               ),
               DropdownMenuItem<StoolType>(
-                child: Text(S.of(context).stoolType3),
+                child: Text(AppLocalization.of(context).stoolType3),
                 value: StoolType.type3,
               ),
               DropdownMenuItem<StoolType>(
-                child: Text(S.of(context).stoolType4),
+                child: Text(AppLocalization.of(context).stoolType4),
                 value: StoolType.type4,
               ),
               DropdownMenuItem<StoolType>(
-                child: Text(S.of(context).stoolType5),
+                child: Text(AppLocalization.of(context).stoolType5),
                 value: StoolType.type5,
               ),
               DropdownMenuItem<StoolType>(
-                child: Text(S.of(context).stoolType6),
+                child: Text(AppLocalization.of(context).stoolType6),
                 value: StoolType.type6,
               ),
               DropdownMenuItem<StoolType>(
-                child: Text(S.of(context).stoolType7),
+                child: Text(AppLocalization.of(context).stoolType7),
                 value: StoolType.type7,
               ),
             ],

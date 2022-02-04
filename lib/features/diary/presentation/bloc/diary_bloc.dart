@@ -33,7 +33,7 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
       if (index < 0) {
         var stateType = state.runtimeType;
         emit(DiaryDeleteFailure(
-            state.entries, S.current.diaryDeleteFailureNoMeal));
+            state.entries, AppLocalization.current.diaryDeleteFailureNoMeal));
         emit(stateType == DiaryEmpty || state.entries.isEmpty
             ? const DiaryEmpty()
             : DiaryLoadSuccess(state.entries));
@@ -46,7 +46,7 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
               : const DiaryEmpty());
         } else {
           emit(DiaryDeleteFailure(
-              state.entries, S.current.diaryDeleteFailureNotDeleted));
+              state.entries, AppLocalization.current.diaryDeleteFailureNotDeleted));
           emit(state is DiaryEmpty || state.entries.isEmpty
               ? const DiaryEmpty()
               : DiaryLoadSuccess(state.entries));

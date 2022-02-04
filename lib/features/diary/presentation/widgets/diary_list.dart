@@ -173,7 +173,7 @@ class _EditButtons extends StatelessWidget {
       children: [
         ElevatedButton(
           style: buttonStyle,
-          child: _buttonText(context, S.of(context).diaryEntryUpdate),
+          child: _buttonText(context, AppLocalization.of(context).diaryEntryUpdate),
           onPressed: () async {
             await Navigator.push(
               context,
@@ -191,7 +191,7 @@ class _EditButtons extends StatelessWidget {
         ),
         ElevatedButton(
           style: buttonStyle,
-          child: _buttonText(context, S.of(context).diaryEntryDelete),
+          child: _buttonText(context, AppLocalization.of(context).diaryEntryDelete),
           onPressed: () {
             BlocProvider.of<DiaryBloc>(context)
                 .add(DiaryDeleteEntry(entryItem.id!));

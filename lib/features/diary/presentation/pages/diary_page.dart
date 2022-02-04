@@ -64,7 +64,7 @@ class DiaryPage extends StatelessWidget {
   AppBar _appBar(BuildContext context) {
     return AppBar(
       backgroundColor: Theme.of(context).primaryColor,
-      title: Text(S.of(context).diaryPageTitle),
+      title: Text(AppLocalization.of(context).diaryPageTitle),
       toolbarHeight: MediaQuery.of(context).size.height / 12,
       leading: const Icon(Icons.fastfood),
       elevation: 5,
@@ -106,7 +106,7 @@ class DiaryPage extends StatelessWidget {
       children: [
         FloatingActionButton(
           heroTag: "AddMeal",
-          tooltip: S.of(context).addMealTooltip,
+          tooltip: AppLocalization.of(context).addMealTooltip,
           onPressed: () async {
             await Navigator.push(
               context,
@@ -126,7 +126,7 @@ class DiaryPage extends StatelessWidget {
         ),
         FloatingActionButton(
           heroTag: "AddSymptom",
-          tooltip: S.of(context).addSymptomTooltip,
+          tooltip: AppLocalization.of(context).addSymptomTooltip,
           onPressed: () async {
             await Navigator.push(
               context,
@@ -146,7 +146,7 @@ class DiaryPage extends StatelessWidget {
         ),
         FloatingActionButton(
           heroTag: "AddBowelMovement",
-          tooltip: S.of(context).addBowelMovementTooltip,
+          tooltip: AppLocalization.of(context).addBowelMovementTooltip,
           onPressed: () async {
             await Navigator.push(
               context,
@@ -175,10 +175,10 @@ class DiaryPage extends StatelessWidget {
       items: [
         BottomNavigationBarItem(
             icon: const Icon(Icons.fastfood_outlined),
-            label: S.of(context).diaryBottomNavigationBarLabel),
+            label: AppLocalization.of(context).diaryBottomNavigationBarLabel),
         BottomNavigationBarItem(
             icon: const Icon(Icons.calendar_today),
-            label: S.of(context).calendarBottomNavigationBarLabel),
+            label: AppLocalization.of(context).calendarBottomNavigationBarLabel),
       ],
       onTap: (index) {},
       backgroundColor: Theme.of(context).primaryColor,
