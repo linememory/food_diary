@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_diary/core/app_scaffold/cubit/app_scaffold_cubit.dart';
 import 'package:food_diary/dev/add_test_content.dart';
 import 'package:food_diary/features/diary/domain/entities/bowel_movement_entry.dart';
 import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
 import 'package:food_diary/features/diary/domain/entities/symptom_entry.dart';
 import 'package:food_diary/features/diary/domain/value_objects/bowel_movement.dart';
+import 'package:food_diary/features/diary/presentation/pages/diary_page.dart';
 import 'package:food_diary/features/diary/presentation/widgets/entry_form.dart';
 import 'package:food_diary/features/settings/settings_page.dart';
 import 'package:food_diary/generated/l10n.dart';
@@ -12,24 +15,33 @@ import 'package:food_diary/generated/l10n.dart';
 class AppScaffold extends StatelessWidget {
   const AppScaffold({
     Key? key,
-    required this.body,
-    required this.onEntriesChange,
-    required this.currentPage,
   }) : super(key: key);
-
-  final Widget body;
-  final void Function() onEntriesChange;
-  final int currentPage;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _appBar(context),
-      body: body,
-      bottomNavigationBar: _navigationBar(context),
-      floatingActionButton: _addButtons(context),
+    return BlocProvider(
+      create: (context) => AppScaffoldCubit(),
+      child: Builder(builder: (context) {
+        return Scaffold(
+          appBar: _appBar(context),
+          body: _body(context),
+          bottomNavigationBar: _navigationBar(context),
+          floatingActionButton: _addButtons(context),
+        );
+      }),
     );
   }
+
+  Widget _body(context) => BlocBuilder<AppScaffoldCubit, AppScaffoldState>(
+        builder: (context, state) {
+          if (state.page == 0) {
+            return const DiaryPage();
+          } else if (state.page == 1) {
+            return const Center(child: Text("Calendar"));
+          }
+          return Container();
+        },
+      );
 
   AppBar _appBar(BuildContext context) {
     List<Widget> actions = [
@@ -146,20 +158,30 @@ class AppScaffold extends StatelessWidget {
     );
   }
 
-  BottomNavigationBar _navigationBar(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: 0,
-      items: [
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.fastfood_outlined),
-            label: AppLocalization.of(context).diaryBottomNavigationBarLabel),
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.calendar_today),
-            label:
-                AppLocalization.of(context).calendarBottomNavigationBarLabel),
-      ],
-      onTap: (index) {},
-      backgroundColor: Theme.of(context).primaryColor,
+  Widget _navigationBar(BuildContext context) {
+    return BlocBuilder<AppScaffoldCubit, AppScaffoldState>(
+      builder: (context, state) {
+        return BottomNavigationBar(
+          currentIndex: state.page,
+          items: [
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.fastfood_outlined),
+              label: AppLocalization.of(context).diaryBottomNavigationBarLabel,
+              backgroundColor: Theme.of(context).colorScheme.secondaryVariant,
+            ),
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.calendar_today),
+                label: AppLocalization.of(context)
+                    .calendarBottomNavigationBarLabel,
+                backgroundColor:
+                    Theme.of(context).colorScheme.secondaryVariant),
+          ],
+          onTap: (index) {
+            BlocProvider.of<AppScaffoldCubit>(context).changePage(index);
+          },
+          backgroundColor: Theme.of(context).primaryColor,
+        );
+      },
     );
   }
 }
