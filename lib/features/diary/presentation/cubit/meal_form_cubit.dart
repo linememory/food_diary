@@ -60,7 +60,7 @@ class MealFormCubit extends Cubit<MealFormState> {
 
   @override
   void onChange(Change<MealFormState> change) {
-    log(change.toString());
+    log(change.toString(), name: runtimeType.toString());
     super.onChange(change);
   }
 }
