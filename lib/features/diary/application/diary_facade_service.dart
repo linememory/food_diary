@@ -20,4 +20,8 @@ class DiaryFacadeService {
   Future<bool> deleteDiaryEntry(int entryId) async {
     return await diaryEventRepository.delete(entryId);
   }
+
+  void addOnChnaged(Function() onChange) {
+    diaryEventRepository.addOnChange(onChange);
+  }
 }
