@@ -20,17 +20,14 @@ class DiaryEntryRepositoryImpl extends DiaryEntryRepository {
   SymptomDatasource symptomDatasource;
   BowelMovementDatasource bowelMovementDatasource;
 
+  List<Function()> listeners = [];
+
   DiaryEntryRepositoryImpl({
     required this.entryDatasource,
     required this.foodDatasource,
     required this.symptomDatasource,
     required this.bowelMovementDatasource,
   });
-
-  @override
-  Future<bool> delete(int id) async {
-    return (await entryDatasource.delete(id)) == 0 ? false : true;
-  }
 
   @override
   Future<List<DiaryEntry>> getAll() async {
@@ -95,6 +92,26 @@ class DiaryEntryRepositoryImpl extends DiaryEntryRepository {
       await bowelMovementDatasource.insert(BowelMovementDTO.fromEntity(
           entryId: id, bowelMovement: entry.bowelMovement));
     }
-    return id == 0 ? false : true;
+    bool result = id == 0 ? false : true;
+    if (result) notifyListeners();
+    return result;
+  }
+
+  @override
+  Future<bool> delete(int id) async {
+    bool result = (await entryDatasource.delete(id)) == 0 ? false : true;
+    if (result) notifyListeners();
+    return result;
+  }
+
+  void notifyListeners() {
+    for (var listener in listeners) {
+      listener();
+    }
+  }
+
+  @override
+  void addOnChange(Function() onChange) {
+    listeners.add(onChange);
   }
 }

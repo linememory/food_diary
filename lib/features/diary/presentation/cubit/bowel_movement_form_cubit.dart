@@ -56,7 +56,7 @@ class BowelMovementFormCubit extends Cubit<BowelMovementFormState> {
 
   @override
   void onChange(Change<BowelMovementFormState> change) {
-    log(change.toString());
+    log(change.toString(), name: runtimeType.toString());
     super.onChange(change);
   }
 }

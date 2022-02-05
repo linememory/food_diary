@@ -58,7 +58,7 @@ class SymptomFormCubit extends Cubit<SymptomFormState> {
 
   @override
   void onChange(Change<SymptomFormState> change) {
-    log(change.toString());
+    log(change.toString(), name: runtimeType.toString());
     super.onChange(change);
   }
 }
