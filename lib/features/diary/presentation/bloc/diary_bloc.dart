@@ -15,6 +15,8 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
   DiaryBloc({
     required this.diaryFacadeService,
   }) : super(const DiaryLoadInProgress([])) {
+    diaryFacadeService.addOnChnaged(() => add(DiaryGetEntries()));
+
     on<DiaryGetEntries>((event, emit) async {
       emit(DiaryLoadInProgress(state.entries));
       List<DiaryEntry> meals = (await diaryFacadeService.getAllDiaryEvents());
@@ -45,8 +47,8 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
               ? DiaryLoadSuccess(entries)
               : const DiaryEmpty());
         } else {
-          emit(DiaryDeleteFailure(
-              state.entries, AppLocalization.current.diaryDeleteFailureNotDeleted));
+          emit(DiaryDeleteFailure(state.entries,
+              AppLocalization.current.diaryDeleteFailureNotDeleted));
           emit(state is DiaryEmpty || state.entries.isEmpty
               ? const DiaryEmpty()
               : DiaryLoadSuccess(state.entries));
@@ -58,7 +60,7 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
 
   @override
   void onChange(Change<DiaryState> change) {
-    log(change.toString());
+    log(change.toString(), name: runtimeType.toString());
     super.onChange(change);
   }
 }
