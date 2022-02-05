@@ -102,10 +102,10 @@ class AppScaffold extends StatelessWidget {
             await Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => EntryForm(
-                        entry: MealEntry(
-                            dateTime: DateTime.now(), foods: const []),
-                      )),
+                builder: (context) => EntryForm(
+                  entry: MealEntry(dateTime: DateTime.now(), foods: const []),
+                ),
+              ),
             );
           },
           child: Row(children: const [
