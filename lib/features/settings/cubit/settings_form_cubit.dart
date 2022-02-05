@@ -3,11 +3,13 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:food_diary/core/settings/cubit/settings_cubit.dart';
 import 'package:food_diary/core/settings/settings_data.dart';
+import 'package:food_diary/core/settings/settings_repository.dart';
 
 part 'settings_form_state.dart';
 
 class SettingsFormCubit extends Cubit<SettingsFormState> {
-  SettingsFormCubit(this.settingsCubit)
+  final SettingsRepository settingsRepository;
+  SettingsFormCubit(this.settingsCubit, this.settingsRepository)
       : super(SettingsFormInitial(SettingsData())) {
     loadSettings();
   }
@@ -15,7 +17,7 @@ class SettingsFormCubit extends Cubit<SettingsFormState> {
   final SettingsCubit settingsCubit;
 
   void loadSettings() async {
-    emit(SettingsFormChanged(await SettingsData.load()));
+    emit(SettingsFormChanged(settingsRepository.load()));
   }
 
   void languageChanged(String? locale) {
@@ -28,7 +30,7 @@ class SettingsFormCubit extends Cubit<SettingsFormState> {
   }
 
   Future<void> saveSettings() async {
-    await state.settingsData.save();
+    settingsRepository.save(state.settingsData);
     settingsCubit.settingsChanged(state.settingsData);
     emit(SettingsFormSaved(state.settingsData));
   }

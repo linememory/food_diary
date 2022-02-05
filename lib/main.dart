@@ -8,7 +8,8 @@ import 'package:food_diary/injection_container.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
-  init();
+  WidgetsFlutterBinding.ensureInitialized();
+  await init();
   runApp(const FoodDiary());
 }
 
@@ -18,7 +19,7 @@ class FoodDiary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SettingsCubit(),
+      create: (context) => SettingsCubit(sl()),
       child: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, state) {
           return MaterialApp(

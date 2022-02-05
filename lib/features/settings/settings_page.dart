@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_diary/core/settings/cubit/settings_cubit.dart';
 import 'package:food_diary/features/settings/cubit/settings_form_cubit.dart';
 import 'package:food_diary/generated/l10n.dart';
+import 'package:food_diary/injection_container.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -11,7 +12,7 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          SettingsFormCubit(BlocProvider.of<SettingsCubit>(context)),
+          SettingsFormCubit(BlocProvider.of<SettingsCubit>(context), sl()),
       child: Builder(builder: (context) {
         return BlocListener<SettingsFormCubit, SettingsFormState>(
           listener: (context, state) {
