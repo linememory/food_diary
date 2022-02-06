@@ -23,6 +23,7 @@ class CustomTheme {
         button: const TextStyle().copyWith(color: Colors.black87),
         subtitle1: const TextStyle()
             .copyWith(color: Colors.black54, fontWeight: FontWeight.bold),
+        headline3: const TextStyle().copyWith(color: Colors.black54),
       ),
     );
   }
@@ -45,6 +46,7 @@ class CustomTheme {
         button: const TextStyle().copyWith(color: Colors.white60),
         subtitle1: const TextStyle()
             .copyWith(color: Colors.white70, fontWeight: FontWeight.bold),
+        headline3: const TextStyle().copyWith(color: Colors.white54),
       ),
     );
   }
