@@ -1,0 +1,66 @@
+{
+    "appTitle": "Food Diary App",
+
+    "diaryPageTitle": "Diary",
+
+    "addMealTooltip": "Add meal to diary",
+    "addSymptomTooltip": "Add Symptom to diary",
+    "addBowelMovementTooltip": "Add Bowel Movement to diary",
+
+
+    "diaryBottomNavigationBarLabel": "Diary List",
+    "calendarBottomNavigationBarLabel": "Calendar",
+
+    "diaryEntryUpdate": "Update",
+    "diaryEntryDelete": "Delete",
+
+    "diaryFormAdd": "Add",
+    "diaryFormUpdate": "Update",
+    "diaryFormCancel": "Cancel",
+
+
+    "foodAmountSmall": "Small",
+    "foodAmountMedium": "Medium",
+    "foodAmountHigh": "High",
+
+    "symptomIntensityLow": "Low",
+    "symptomIntensityMedium": "Medium",
+    "symptomIntensityHigh": "High",
+
+
+    "stoolType1": "Type 1",
+    "stoolType2": "Type 2",
+    "stoolType3": "Type 3",
+    "stoolType4": "Type 4",
+    "stoolType5": "Type 5",
+    "stoolType6": "Type 6",
+    "stoolType7": "Type 7",
+
+
+
+
+
+    "diaryDeleteFailureNoMeal": "No entry to delete",
+    "diaryDeleteFailureNotDeleted": "Entry could not be deleted",
+
+    "entryFormSubmitFailed": "Failed to add entry:\n ",
+
+
+    "settings": "Settings",
+
+    "settingsFormSave": "Save",
+    "settingsFormCancel": "Cancel",
+
+    "settingsFormThemesLabel": "Themes",
+    "settingsFormLanguagesLabel": "Languages",
+
+    "themeModeSystem": "System",
+    "themeModeLight": "Light",
+    "themeModeDark": "Dark",
+
+    "languageEnglish": "English",
+    "languageGerman": "German"
+
+
+    
+}
