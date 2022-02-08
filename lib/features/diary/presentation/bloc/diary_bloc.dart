@@ -11,6 +11,7 @@ part 'diary_state.dart';
 
 class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
   final DiaryFacadeService diaryFacadeService;
+  final EntryFilter? entryFilter;
 
   void onChangeCallback() {
     add(DiaryGetEntries());
@@ -18,15 +19,35 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
 
   DiaryBloc({
     required this.diaryFacadeService,
+    this.entryFilter,
   }) : super(const DiaryLoadInProgress([])) {
     diaryFacadeService.addOnChangeListener(onChangeCallback);
 
     on<DiaryGetEntries>((event, emit) async {
       emit(DiaryLoadInProgress(state.entries));
-      List<DiaryEntry> meals = (await diaryFacadeService.getAllDiaryEvents());
-      meals.sort((a, b) => a.dateTime.compareTo(b.dateTime));
-      if (meals.isNotEmpty) {
-        emit(DiaryLoadSuccess(meals));
+      List<DiaryEntry> entries = [];
+      if (entryFilter != null) {
+        entries = (await diaryFacadeService
+            .getAllDiaryEventsForMonth(entryFilter!.date));
+        if (entryFilter!.timespan == Timespan.month) {
+          entries.removeWhere(
+              (element) => element.dateTime.month != entryFilter!.date.month);
+        } else if (entryFilter!.timespan == Timespan.day) {
+          entries.removeWhere(
+              (element) => element.dateTime.day != entryFilter!.date.day);
+        } else if (entryFilter!.timespan == Timespan.week) {
+          int offset = entryFilter!.date.weekday - 1;
+          entries.removeWhere((element) =>
+              element.dateTime.day < entryFilter!.date.day - offset ||
+              element.dateTime.day >= entryFilter!.date.day - offset + 7);
+        }
+      } else {
+        entries = (await diaryFacadeService.getAllDiaryEvents());
+      }
+
+      entries.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+      if (entries.isNotEmpty) {
+        emit(DiaryLoadSuccess(entries));
       } else {
         emit(const DiaryEmpty());
       }
@@ -73,4 +94,17 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
     diaryFacadeService.removeOnChangeListener(onChangeCallback);
     return super.close();
   }
+}
+
+class EntryFilter {
+  final DateTime date;
+  final Timespan timespan;
+
+  EntryFilter(this.date, this.timespan);
+}
+
+enum Timespan {
+  month,
+  week,
+  day,
 }

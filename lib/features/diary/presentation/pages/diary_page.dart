@@ -5,12 +5,15 @@ import 'package:food_diary/features/diary/presentation/widgets/diary_list.dart';
 import 'package:food_diary/injection_container.dart';
 
 class DiaryPage extends StatelessWidget {
-  const DiaryPage({Key? key}) : super(key: key);
+  const DiaryPage({Key? key, this.entryFilter}) : super(key: key);
+
+  final EntryFilter? entryFilter;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => DiaryBloc(diaryFacadeService: sl()),
+      create: (context) =>
+          DiaryBloc(diaryFacadeService: sl(), entryFilter: entryFilter),
       child: Builder(builder: (context) {
         return _body(context);
       }),

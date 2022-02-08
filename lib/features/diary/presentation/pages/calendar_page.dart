@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_diary/features/diary/domain/entities/diary_entry.dart';
+import 'package:food_diary/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:food_diary/features/diary/presentation/cubit/calendar/calendar_cubit.dart';
-import 'package:food_diary/features/diary/presentation/widgets/diary_list.dart';
+import 'package:food_diary/features/diary/presentation/pages/diary_page.dart';
 import 'package:food_diary/injection_container.dart';
 import 'package:intl/intl.dart';
 
@@ -177,7 +178,7 @@ class DayView extends StatelessWidget {
         appBar: AppBar(
           title: Text(DateFormat.yMMMMEEEEd().format(dateTime)),
         ),
-        body: DiaryList(entries: entries));
+        body: DiaryPage(entryFilter: EntryFilter(dateTime, Timespan.week)));
   }
 }
 
