@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_diary/features/diary/application/diary_facade_service.dart';
 import 'package:food_diary/features/diary/domain/entities/diary_entry.dart';
 import 'package:food_diary/features/diary/presentation/cubit/calendar/calendar_cubit.dart';
+import 'package:food_diary/features/diary/presentation/widgets/diary_list.dart';
 import 'package:food_diary/injection_container.dart';
 import 'package:intl/intl.dart';
 
@@ -105,11 +105,13 @@ class Calendar extends StatelessWidget {
                   ),
                 ),
                 Expanded(
+                  flex: 1,
                   child: GridView.count(
-                      //childAspectRatio: 0.75,
+                      childAspectRatio: 1,
                       crossAxisCount: 7,
                       crossAxisSpacing: 1,
                       mainAxisSpacing: 1,
+                      shrinkWrap: true,
                       children: List.generate(start, (i) {
                         return Container();
                       })
@@ -129,7 +131,21 @@ class Calendar extends StatelessWidget {
                                 return DayItem(
                                   day: i + 1,
                                   isDisabled: false,
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DayView(
+                                          dateTime: DateTime(
+                                              state.year, state.month, i + 1),
+                                          entries: state.entries
+                                              .where((element) =>
+                                                  element.dateTime.day == i + 1)
+                                              .toList(),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 );
                               }
                             },
@@ -142,6 +158,26 @@ class Calendar extends StatelessWidget {
         );
       }),
     );
+  }
+}
+
+class DayView extends StatelessWidget {
+  const DayView({
+    Key? key,
+    required this.dateTime,
+    required this.entries,
+  }) : super(key: key);
+
+  final DateTime dateTime;
+  final List<DiaryEntry> entries;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(DateFormat.yMMMMEEEEd().format(dateTime)),
+        ),
+        body: DiaryList(entries: entries));
   }
 }
 
@@ -159,15 +195,18 @@ class DayItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.blue.shade500, width: 3),
-        borderRadius: BorderRadius.circular(100),
-        color: isDisabled
-            ? Theme.of(context).disabledColor
-            : Theme.of(context).colorScheme.primary,
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.blue.shade500, width: 3),
+          borderRadius: BorderRadius.circular(100),
+          color: isDisabled
+              ? Theme.of(context).disabledColor
+              : Theme.of(context).colorScheme.primary,
+        ),
+        child: Center(child: Text(day.toString())),
       ),
-      child: Center(child: Text(day.toString())),
     );
   }
 }
