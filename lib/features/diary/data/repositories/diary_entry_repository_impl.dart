@@ -34,7 +34,7 @@ class DiaryEntryRepositoryImpl extends DiaryEntryRepository {
     List<DiaryEntry> entries = [];
     final allEntries = await entryDatasource.getAll();
     for (var entry in allEntries) {
-      DiaryEntry? diaryEntry = await constructEntry(entry);
+      DiaryEntry? diaryEntry = await _constructEntry(entry);
       if (diaryEntry != null) entries.add(diaryEntry);
     }
     return entries;
@@ -45,7 +45,7 @@ class DiaryEntryRepositoryImpl extends DiaryEntryRepository {
     List<DiaryEntry> entries = [];
     final allEntries = await entryDatasource.getAllForMonth(month);
     for (var entry in allEntries) {
-      DiaryEntry? diaryEntry = await constructEntry(entry);
+      DiaryEntry? diaryEntry = await _constructEntry(entry);
       if (diaryEntry != null) entries.add(diaryEntry);
     }
     return entries;
@@ -91,11 +91,16 @@ class DiaryEntryRepositoryImpl extends DiaryEntryRepository {
   }
 
   @override
-  void addOnChange(Function() onChange) {
+  void addOnChangeListener(VoidCallback onChange) {
     listeners.add(onChange);
   }
 
-  Future<DiaryEntry?> constructEntry(EntryDTO entryDTO) async {
+  @override
+  void removeOnChangeListener(VoidCallback onChange) {
+    listeners.remove(onChange);
+  }
+
+  Future<DiaryEntry?> _constructEntry(EntryDTO entryDTO) async {
     int id = entryDTO.id!;
     switch (entryDTO.type) {
       case EntryType.meal:

@@ -25,7 +25,11 @@ class DiaryFacadeService {
     return await diaryEventRepository.delete(entryId);
   }
 
-  void addOnChnaged(Function() onChange) {
-    diaryEventRepository.addOnChange(onChange);
+  void addOnChangeListener(VoidCallback onChange) {
+    diaryEventRepository.addOnChangeListener(onChange);
+  }
+
+  void removeOnChangeListener(VoidCallback onChange) {
+    diaryEventRepository.removeOnChangeListener(onChange);
   }
 }

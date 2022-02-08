@@ -12,10 +12,14 @@ part 'diary_state.dart';
 class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
   final DiaryFacadeService diaryFacadeService;
 
+  void onChangeCallback() {
+    add(DiaryGetEntries());
+  }
+
   DiaryBloc({
     required this.diaryFacadeService,
   }) : super(const DiaryLoadInProgress([])) {
-    diaryFacadeService.addOnChnaged(() => add(DiaryGetEntries()));
+    diaryFacadeService.addOnChangeListener(onChangeCallback);
 
     on<DiaryGetEntries>((event, emit) async {
       emit(DiaryLoadInProgress(state.entries));
@@ -62,5 +66,11 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
   void onChange(Change<DiaryState> change) {
     log(change.toString(), name: runtimeType.toString());
     super.onChange(change);
+  }
+
+  @override
+  Future<void> close() {
+    diaryFacadeService.removeOnChangeListener(onChangeCallback);
+    return super.close();
   }
 }
