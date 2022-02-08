@@ -4,8 +4,9 @@ import 'package:equatable/equatable.dart';
 part 'calendar_state.dart';
 
 class CalendarCubit extends Cubit<CalendarState> {
-  CalendarCubit()
-      : super(CalendarInitial(DateTime.now().year, DateTime.now().month));
+  CalendarCubit(int? year, int? month)
+      : super(CalendarInitial(
+            year ?? DateTime.now().year, month ?? DateTime.now().month));
 
   void nextMonth() {
     int nextMonth = ((state.month) % 11) + 1;

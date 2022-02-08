@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_diary/features/diary/presentation/cubit/calendar/calendar_cubit.dart';
 import 'package:intl/intl.dart';
 
 class CalendarPage extends StatelessWidget {
@@ -19,89 +21,111 @@ class CalendarPage extends StatelessWidget {
 class Calendar extends StatelessWidget {
   const Calendar({
     Key? key,
-    required this.year,
-    required this.month,
+    this.year,
+    this.month,
   }) : super(key: key);
 
-  final int year;
-  final int month;
+  final int? year;
+  final int? month;
 
   @override
   Widget build(BuildContext context) {
-    DateTime firstDayDateTime = DateTime(year, month);
-    int start = firstDayDateTime.weekday - 1;
-    int daysInMonth = DateTimeRange(
-            start: DateTime(year, month), end: DateTime(year, month + 1))
-        .duration
-        .inDays;
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.arrow_back_ios),
-            ),
-            Text(
-              DateFormat.MMMM().format(firstDayDateTime),
-              style: Theme.of(context).textTheme.headline3,
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.arrow_forward_ios),
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              WeekdayHeader(
-                weekday: Weekday.monday(),
-              ),
-              WeekdayHeader(
-                weekday: Weekday.tuesday(),
-              ),
-              WeekdayHeader(
-                weekday: Weekday.wednesday(),
-              ),
-              WeekdayHeader(
-                weekday: Weekday.thursday(),
-              ),
-              WeekdayHeader(
-                weekday: Weekday.friday(),
-              ),
-              WeekdayHeader(
-                weekday: Weekday.saturday(),
-              ),
-              WeekdayHeader(
-                weekday: Weekday.sunday(),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: GridView.count(
-              //childAspectRatio: 0.75,
-              crossAxisCount: 7,
-              crossAxisSpacing: 1,
-              mainAxisSpacing: 1,
-              children: List.generate(start, (i) {
-                return Container();
-              })
-                ..addAll(
-                  List.generate(
-                    daysInMonth,
-                    (i) => DayItem(
-                      day: i + 1,
-                      onPressed: () {},
+    return BlocProvider(
+      create: (context) => CalendarCubit(year, month),
+      child: Builder(builder: (context) {
+        return BlocBuilder<CalendarCubit, CalendarState>(
+          builder: (context, state) {
+            DateTime firstDayDateTime = DateTime(state.year, state.month);
+            int start = firstDayDateTime.weekday - 1;
+            int daysInMonth = DateTimeRange(
+                    start: DateTime(state.year, state.month),
+                    end: DateTime(state.year, state.month + 1))
+                .duration
+                .inDays;
+            return Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () => BlocProvider.of<CalendarCubit>(context)
+                          .previousMonth(),
+                      icon: const Icon(Icons.arrow_back_ios),
                     ),
-                  ).toList(),
-                )),
-        ),
-      ],
+                    Column(
+                      children: [
+                        Text(
+                          firstDayDateTime.year.toString(),
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
+                        Text(
+                          DateFormat.MMMM().format(firstDayDateTime),
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      onPressed: () =>
+                          BlocProvider.of<CalendarCubit>(context).nextMonth(),
+                      icon: const Icon(Icons.arrow_forward_ios),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      WeekdayHeader(
+                        weekday: Weekday.monday(),
+                      ),
+                      WeekdayHeader(
+                        weekday: Weekday.tuesday(),
+                      ),
+                      WeekdayHeader(
+                        weekday: Weekday.wednesday(),
+                      ),
+                      WeekdayHeader(
+                        weekday: Weekday.thursday(),
+                      ),
+                      WeekdayHeader(
+                        weekday: Weekday.friday(),
+                      ),
+                      WeekdayHeader(
+                        weekday: Weekday.saturday(),
+                      ),
+                      WeekdayHeader(
+                        weekday: Weekday.sunday(),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: GridView.count(
+                      //childAspectRatio: 0.75,
+                      crossAxisCount: 7,
+                      crossAxisSpacing: 1,
+                      mainAxisSpacing: 1,
+                      children: List.generate(start, (i) {
+                        return Container();
+                      })
+                        ..addAll(
+                          List.generate(
+                            daysInMonth,
+                            (i) {
+                              return DayItem(
+                                day: i + 1,
+                                onPressed: () {},
+                              );
+                            },
+                          ).toList(),
+                        )),
+                ),
+              ],
+            );
+          },
+        );
+      }),
     );
   }
 }
