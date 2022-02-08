@@ -163,19 +163,20 @@ class AppScaffold extends StatelessWidget {
     return BlocBuilder<AppScaffoldCubit, AppScaffoldState>(
       builder: (context, state) {
         return BottomNavigationBar(
+          selectedItemColor: Theme.of(context).colorScheme.secondary,
           currentIndex: state.page,
+          type: BottomNavigationBarType.fixed,
           items: [
             BottomNavigationBarItem(
               icon: const Icon(Icons.fastfood_outlined),
               label: AppLocalization.of(context).diaryBottomNavigationBarLabel,
-              backgroundColor: Theme.of(context).colorScheme.secondaryVariant,
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
             BottomNavigationBarItem(
                 icon: const Icon(Icons.calendar_today),
                 label: AppLocalization.of(context)
                     .calendarBottomNavigationBarLabel,
-                backgroundColor:
-                    Theme.of(context).colorScheme.secondaryVariant),
+                backgroundColor: Theme.of(context).colorScheme.secondary),
           ],
           onTap: (index) {
             BlocProvider.of<AppScaffoldCubit>(context).changePage(index);
