@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_diary/features/diary/application/diary_facade_service.dart';
+import 'package:food_diary/features/diary/domain/entities/diary_entry.dart';
 import 'package:food_diary/features/diary/presentation/cubit/calendar/calendar_cubit.dart';
+import 'package:food_diary/injection_container.dart';
 import 'package:intl/intl.dart';
 
 class CalendarPage extends StatelessWidget {
@@ -31,7 +34,7 @@ class Calendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CalendarCubit(year, month),
+      create: (context) => CalendarCubit(sl(), year, month),
       child: Builder(builder: (context) {
         return BlocBuilder<CalendarCubit, CalendarState>(
           builder: (context, state) {
@@ -42,6 +45,7 @@ class Calendar extends StatelessWidget {
                     end: DateTime(state.year, state.month + 1))
                 .duration
                 .inDays;
+
             return Column(
               children: [
                 Row(
@@ -113,10 +117,21 @@ class Calendar extends StatelessWidget {
                           List.generate(
                             daysInMonth,
                             (i) {
-                              return DayItem(
-                                day: i + 1,
-                                onPressed: () {},
-                              );
+                              if (state.entries.indexWhere((element) =>
+                                      element.dateTime.day == i + 1) ==
+                                  -1) {
+                                return DayItem(
+                                  day: i + 1,
+                                  isDisabled: true,
+                                  onPressed: () {},
+                                );
+                              } else {
+                                return DayItem(
+                                  day: i + 1,
+                                  isDisabled: false,
+                                  onPressed: () {},
+                                );
+                              }
                             },
                           ).toList(),
                         )),
