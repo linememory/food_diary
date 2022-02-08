@@ -12,8 +12,9 @@ class DiaryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          DiaryBloc(diaryFacadeService: sl(), entryFilter: entryFilter),
+      create: (context) => DiaryBloc(
+          diaryFacadeService: sl(),
+          entryFilter: entryFilter ?? const EntryFilter()),
       child: Builder(builder: (context) {
         return _body(context);
       }),

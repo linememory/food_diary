@@ -3,7 +3,10 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:food_diary/features/diary/application/diary_facade_service.dart';
+import 'package:food_diary/features/diary/domain/entities/bowel_movement_entry.dart';
 import 'package:food_diary/features/diary/domain/entities/diary_entry.dart';
+import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
+import 'package:food_diary/features/diary/domain/entities/symptom_entry.dart';
 import 'package:food_diary/generated/l10n.dart';
 
 part 'diary_event.dart';
@@ -11,7 +14,7 @@ part 'diary_state.dart';
 
 class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
   final DiaryFacadeService diaryFacadeService;
-  final EntryFilter? entryFilter;
+  final EntryFilter entryFilter;
 
   void onChangeCallback() {
     add(DiaryGetEntries());
@@ -19,32 +22,41 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
 
   DiaryBloc({
     required this.diaryFacadeService,
-    this.entryFilter,
+    required this.entryFilter,
   }) : super(const DiaryLoadInProgress([])) {
     diaryFacadeService.addOnChangeListener(onChangeCallback);
 
     on<DiaryGetEntries>((event, emit) async {
       emit(DiaryLoadInProgress(state.entries));
       List<DiaryEntry> entries = [];
-      if (entryFilter != null) {
+      if (entryFilter.date != null && entryFilter.timespan != Timespan.all) {
         entries = (await diaryFacadeService
-            .getAllDiaryEventsForMonth(entryFilter!.date));
-        if (entryFilter!.timespan == Timespan.month) {
+            .getAllDiaryEventsForMonth(entryFilter.date!));
+        if (entryFilter.timespan == Timespan.month) {
           entries.removeWhere(
-              (element) => element.dateTime.month != entryFilter!.date.month);
-        } else if (entryFilter!.timespan == Timespan.day) {
+              (element) => element.dateTime.month != entryFilter.date!.month);
+        } else if (entryFilter.timespan == Timespan.day) {
           entries.removeWhere(
-              (element) => element.dateTime.day != entryFilter!.date.day);
-        } else if (entryFilter!.timespan == Timespan.week) {
-          int offset = entryFilter!.date.weekday - 1;
+              (element) => element.dateTime.day != entryFilter.date!.day);
+        } else if (entryFilter.timespan == Timespan.week) {
+          int offset = entryFilter.date!.weekday - 1;
           entries.removeWhere((element) =>
-              element.dateTime.day < entryFilter!.date.day - offset ||
-              element.dateTime.day >= entryFilter!.date.day - offset + 7);
+              element.dateTime.day < entryFilter.date!.day - offset ||
+              element.dateTime.day >= entryFilter.date!.day - offset + 7);
         }
       } else {
         entries = (await diaryFacadeService.getAllDiaryEvents());
       }
 
+      if (!entryFilter.meals) {
+        entries.removeWhere((element) => element is MealEntry);
+      }
+      if (!entryFilter.symptoms) {
+        entries.removeWhere((element) => element is SymptomEntry);
+      }
+      if (!entryFilter.bowelMovements) {
+        entries.removeWhere((element) => element is BowelMovementEntry);
+      }
       entries.sort((a, b) => a.dateTime.compareTo(b.dateTime));
       if (entries.isNotEmpty) {
         emit(DiaryLoadSuccess(entries));
@@ -97,14 +109,38 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
 }
 
 class EntryFilter {
-  final DateTime date;
+  final DateTime? date;
   final Timespan timespan;
+  final bool meals;
+  final bool symptoms;
+  final bool bowelMovements;
 
-  EntryFilter(this.date, this.timespan);
+  const EntryFilter({
+    this.date,
+    this.timespan = Timespan.all,
+    this.meals = true,
+    this.symptoms = true,
+    this.bowelMovements = true,
+  });
+
+  factory EntryFilter.all() {
+    return const EntryFilter(
+        timespan: Timespan.all,
+        meals: true,
+        symptoms: true,
+        bowelMovements: true);
+  }
 }
 
 enum Timespan {
+  all,
   month,
   week,
   day,
+}
+
+enum EntryType {
+  meal,
+  symptoms,
+  bowelMovement,
 }

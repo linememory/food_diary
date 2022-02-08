@@ -137,7 +137,7 @@ class Calendar extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => DayView(
-                                          dateTime: DateTime(
+                                          date: DateTime(
                                               state.year, state.month, i + 1),
                                           entries: state.entries
                                               .where((element) =>
@@ -165,20 +165,21 @@ class Calendar extends StatelessWidget {
 class DayView extends StatelessWidget {
   const DayView({
     Key? key,
-    required this.dateTime,
+    required this.date,
     required this.entries,
   }) : super(key: key);
 
-  final DateTime dateTime;
+  final DateTime date;
   final List<DiaryEntry> entries;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(DateFormat.yMMMMEEEEd().format(dateTime)),
+          title: Text(DateFormat.yMMMMEEEEd().format(date)),
         ),
-        body: DiaryPage(entryFilter: EntryFilter(dateTime, Timespan.week)));
+        body: DiaryPage(
+            entryFilter: EntryFilter(date: date, timespan: Timespan.day)));
   }
 }
 
