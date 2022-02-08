@@ -9,6 +9,10 @@ class DiaryFacadeService {
     return await diaryEventRepository.getAll();
   }
 
+  Future<List<DiaryEntry>> getAllDiaryEventsForMonth(DateTime month) async {
+    return await diaryEventRepository.getAllForMonth(month);
+  }
+
   Future<bool> addDiaryEntry(DiaryEntry entry) async {
     return await diaryEventRepository.upsert(entry);
   }

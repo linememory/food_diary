@@ -4,6 +4,7 @@ import 'package:sqflite/sqflite.dart';
 
 abstract class EntryDatasource {
   Future<List<EntryDTO>> getAll();
+  Future<List<EntryDTO>> getAllForMonth(DateTime month);
   Future<int> upsert(EntryDTO entry);
   Future<int> delete(int id);
 }
@@ -25,6 +26,20 @@ class EntryDatasourceImpl extends EntryDatasource {
     _init();
     Database db = await _databaseHelper.database;
     return (await db.query(tableName)).map((e) => EntryDTO.fromMap(e)).toList();
+  }
+
+  @override
+  Future<List<EntryDTO>> getAllForMonth(DateTime month) async {
+    _init();
+    Database db = await _databaseHelper.database;
+
+    int first = DateTime(month.year, month.month).microsecondsSinceEpoch;
+    int last = DateTime(month.year, month.month + 1).microsecondsSinceEpoch;
+
+    List<Map<String, dynamic>> result = await db.query(tableName,
+        where: '$dateTimeColumn >= ? AND $dateTimeColumn < ?',
+        whereArgs: [first, last]);
+    return result.map((e) => EntryDTO.fromMap(e)).toList();
   }
 
   @override
@@ -78,4 +93,7 @@ class EntryDatasourceImpl extends EntryDatasource {
       isInit = true;
     }
   }
+
+
+  
 }
