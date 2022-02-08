@@ -7,7 +7,7 @@ import 'package:food_diary/features/diary/domain/entities/bowel_movement_entry.d
 import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
 import 'package:food_diary/features/diary/domain/entities/symptom_entry.dart';
 import 'package:food_diary/features/diary/domain/value_objects/bowel_movement.dart';
-import 'package:food_diary/features/diary/presentation/pages/calendar.dart';
+import 'package:food_diary/features/diary/presentation/pages/calendar_page.dart';
 import 'package:food_diary/features/diary/presentation/pages/diary_page.dart';
 import 'package:food_diary/features/diary/presentation/widgets/entry_form.dart';
 import 'package:food_diary/features/settings/settings_page.dart';
