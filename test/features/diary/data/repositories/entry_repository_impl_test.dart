@@ -73,4 +73,45 @@ void main() {
       expect(result.isEmpty, true);
     });
   });
+
+  group('get all events for month', () {
+    DateTime dateTime = DateTime.now();
+    test('should return a list of all events of the given month', () async {
+      // arrange
+
+      EntryDTO eventDto =
+          EntryDTO(id: 1, dateTime: dateTime, type: EntryType.symptom);
+      SymptomDTO symptomDto = const SymptomDTO(
+          id: 1, description: "Test", intensity: 0, entryId: 1);
+      when(() => eventDatasource.getAllForMonth(dateTime))
+          .thenAnswer((_) async => [eventDto]);
+      when(() => symptomDatasource.getAllForEntry(1))
+          .thenAnswer((_) async => [symptomDto]);
+      // act
+      final List<DiaryEntry> result =
+          await eventRepository.getAllForMonth(dateTime);
+      // assert
+      verify(() => eventDatasource.getAllForMonth(dateTime));
+      expect(
+          result,
+          equals([
+            SymptomEntry(
+                id: 1,
+                dateTime: eventDto.dateTime,
+                symptoms: [symptomDto.toEntity()])
+          ]));
+    });
+
+    test('should return an empty list', () async {
+      // arrange
+      when(() => eventDatasource.getAllForMonth(dateTime))
+          .thenAnswer((_) async => []);
+      // act
+      final List<DiaryEntry> result =
+          await eventRepository.getAllForMonth(dateTime);
+      // assert
+      verify(() => eventDatasource.getAllForMonth(dateTime));
+      expect(result.isEmpty, true);
+    });
+  });
 }

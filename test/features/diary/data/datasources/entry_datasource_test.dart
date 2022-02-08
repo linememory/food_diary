@@ -45,15 +45,13 @@ void main() {
       expect(query.length, 1);
 
       verify(() => mockDatabasehelper.database);
-      expect(
-          EntryDTO.fromMap(query.first),
-          equals(
-              EntryDTO(id: 1, dateTime: dateTime, type: EntryType.symptom)));
+      expect(EntryDTO.fromMap(query.first),
+          equals(EntryDTO(id: 1, dateTime: dateTime, type: EntryType.symptom)));
       expect(result, 1);
     });
   });
 
-  group('get entrys from database', () {
+  group('get all entrys from database', () {
     test('should return all entrys', () async {
       // arrange
       when(() => mockDatabasehelper.database)
@@ -68,10 +66,31 @@ void main() {
       expect(result.length, 1);
 
       verify(() => mockDatabasehelper.database);
-      expect(
-          result.first,
-          equals(
-              EntryDTO(id: 1, dateTime: dateTime, type: EntryType.symptom)));
+      expect(result.first,
+          equals(EntryDTO(id: 1, dateTime: dateTime, type: EntryType.symptom)));
+    });
+  });
+
+  group('get all entrys for given month from database', () {
+    test('should return all entrys for given month', () async {
+      // arrange
+      when(() => mockDatabasehelper.database)
+          .thenAnswer((invocation) async => db!);
+      DateTime dateTime = DateTime.now();
+      await datasource
+          .upsert(EntryDTO(dateTime: dateTime, type: EntryType.symptom));
+      await datasource.upsert(EntryDTO(
+          dateTime: DateTime.fromMicrosecondsSinceEpoch(0),
+          type: EntryType.symptom));
+      // act
+      List<EntryDTO> result = await datasource.getAllForMonth(dateTime);
+      // assert
+
+      expect(result.length, 1);
+
+      verify(() => mockDatabasehelper.database);
+      expect(result.first,
+          equals(EntryDTO(id: 1, dateTime: dateTime, type: EntryType.symptom)));
     });
   });
 

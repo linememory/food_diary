@@ -9,6 +9,10 @@ class DiaryFacadeService {
     return await diaryEventRepository.getAll();
   }
 
+  Future<List<DiaryEntry>> getAllDiaryEventsForMonth(DateTime month) async {
+    return await diaryEventRepository.getAllForMonth(month);
+  }
+
   Future<bool> addDiaryEntry(DiaryEntry entry) async {
     return await diaryEventRepository.upsert(entry);
   }
@@ -21,7 +25,11 @@ class DiaryFacadeService {
     return await diaryEventRepository.delete(entryId);
   }
 
-  void addOnChnaged(Function() onChange) {
-    diaryEventRepository.addOnChange(onChange);
+  void addOnChangeListener(VoidCallback onChange) {
+    diaryEventRepository.addOnChangeListener(onChange);
+  }
+
+  void removeOnChangeListener(VoidCallback onChange) {
+    diaryEventRepository.removeOnChangeListener(onChange);
   }
 }

@@ -7,6 +7,7 @@ import 'package:food_diary/features/diary/domain/entities/bowel_movement_entry.d
 import 'package:food_diary/features/diary/domain/entities/meal_entry.dart';
 import 'package:food_diary/features/diary/domain/entities/symptom_entry.dart';
 import 'package:food_diary/features/diary/domain/value_objects/bowel_movement.dart';
+import 'package:food_diary/features/diary/presentation/pages/calendar_page.dart';
 import 'package:food_diary/features/diary/presentation/pages/diary_page.dart';
 import 'package:food_diary/features/diary/presentation/widgets/entry_form.dart';
 import 'package:food_diary/features/settings/settings_page.dart';
@@ -37,7 +38,7 @@ class AppScaffold extends StatelessWidget {
           if (state.page == 0) {
             return const DiaryPage();
           } else if (state.page == 1) {
-            return const Center(child: Text("Calendar"));
+            return const CalendarPage();
           }
           return Container();
         },
@@ -162,19 +163,20 @@ class AppScaffold extends StatelessWidget {
     return BlocBuilder<AppScaffoldCubit, AppScaffoldState>(
       builder: (context, state) {
         return BottomNavigationBar(
+          selectedItemColor: Theme.of(context).colorScheme.secondary,
           currentIndex: state.page,
+          type: BottomNavigationBarType.fixed,
           items: [
             BottomNavigationBarItem(
               icon: const Icon(Icons.fastfood_outlined),
               label: AppLocalization.of(context).diaryBottomNavigationBarLabel,
-              backgroundColor: Theme.of(context).colorScheme.secondaryVariant,
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
             BottomNavigationBarItem(
                 icon: const Icon(Icons.calendar_today),
                 label: AppLocalization.of(context)
                     .calendarBottomNavigationBarLabel,
-                backgroundColor:
-                    Theme.of(context).colorScheme.secondaryVariant),
+                backgroundColor: Theme.of(context).colorScheme.secondary),
           ],
           onTap: (index) {
             BlocProvider.of<AppScaffoldCubit>(context).changePage(index);

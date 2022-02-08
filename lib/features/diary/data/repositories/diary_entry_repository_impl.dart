@@ -34,39 +34,19 @@ class DiaryEntryRepositoryImpl extends DiaryEntryRepository {
     List<DiaryEntry> entries = [];
     final allEntries = await entryDatasource.getAll();
     for (var entry in allEntries) {
-      int id = entry.id!;
-      switch (entry.type) {
-        case EntryType.meal:
-          List<Food> foods = (await foodDatasource.getForEntry(id))
-              .map((e) => e.toEntity())
-              .toList();
+      DiaryEntry? diaryEntry = await _constructEntry(entry);
+      if (diaryEntry != null) entries.add(diaryEntry);
+    }
+    return entries;
+  }
 
-          entries.add(
-              MealEntry(id: entry.id, dateTime: entry.dateTime, foods: foods));
-          break;
-        case EntryType.symptom:
-          List<Symptom> symptoms = (await symptomDatasource.getAllForEntry(id))
-              .map((e) => e.toEntity())
-              .toList();
-
-          entries.add(SymptomEntry(
-              id: entry.id, dateTime: entry.dateTime, symptoms: symptoms));
-          break;
-
-        case EntryType.bowelMovement:
-          BowelMovementDTO? bowelMovementDto =
-              (await bowelMovementDatasource.getForEntry(id));
-          if (bowelMovementDto != null) {
-            entries.add(BowelMovementEntry(
-                id: entry.id,
-                dateTime: entry.dateTime,
-                bowelMovement: bowelMovementDto.toEntity()));
-          } else {
-            entryDatasource.delete(id);
-          }
-          break;
-        default:
-      }
+  @override
+  Future<List<DiaryEntry>> getAllForMonth(DateTime month) async {
+    List<DiaryEntry> entries = [];
+    final allEntries = await entryDatasource.getAllForMonth(month);
+    for (var entry in allEntries) {
+      DiaryEntry? diaryEntry = await _constructEntry(entry);
+      if (diaryEntry != null) entries.add(diaryEntry);
     }
     return entries;
   }
@@ -111,7 +91,47 @@ class DiaryEntryRepositoryImpl extends DiaryEntryRepository {
   }
 
   @override
-  void addOnChange(Function() onChange) {
+  void addOnChangeListener(VoidCallback onChange) {
     listeners.add(onChange);
+  }
+
+  @override
+  void removeOnChangeListener(VoidCallback onChange) {
+    listeners.remove(onChange);
+  }
+
+  Future<DiaryEntry?> _constructEntry(EntryDTO entryDTO) async {
+    int id = entryDTO.id!;
+    switch (entryDTO.type) {
+      case EntryType.meal:
+        List<Food> foods = (await foodDatasource.getForEntry(id))
+            .map((e) => e.toEntity())
+            .toList();
+
+        return MealEntry(
+            id: entryDTO.id, dateTime: entryDTO.dateTime, foods: foods);
+
+      case EntryType.symptom:
+        List<Symptom> symptoms = (await symptomDatasource.getAllForEntry(id))
+            .map((e) => e.toEntity())
+            .toList();
+
+        return SymptomEntry(
+            id: entryDTO.id, dateTime: entryDTO.dateTime, symptoms: symptoms);
+
+      case EntryType.bowelMovement:
+        BowelMovementDTO? bowelMovementDto =
+            (await bowelMovementDatasource.getForEntry(id));
+        if (bowelMovementDto != null) {
+          return BowelMovementEntry(
+              id: entryDTO.id,
+              dateTime: entryDTO.dateTime,
+              bowelMovement: bowelMovementDto.toEntity());
+        } else {
+          entryDatasource.delete(id);
+        }
+        break;
+      default:
+    }
   }
 }

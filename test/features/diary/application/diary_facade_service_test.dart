@@ -43,6 +43,37 @@ void main() {
     });
   });
 
+  group('get all entries for month', () {
+    DateTime dateTime = DateTime.now();
+    test("should return a list with all entries of the given month", () async {
+      List<DiaryEntry> entries = EntryFixture.getEntries(3);
+
+      // arrange
+      when(() => diaryEntryRepository.getAllForMonth(dateTime))
+          .thenAnswer((_) async => entries);
+      // act
+      final result =
+          await diaryFacadeService.getAllDiaryEventsForMonth(dateTime);
+      // assert
+      expect(result, entries);
+      verify(() => diaryEntryRepository.getAllForMonth(dateTime));
+      verifyNoMoreInteractions(diaryEntryRepository);
+    });
+
+    test("should return an empty list", () async {
+      // arrange
+      when(() => diaryEntryRepository.getAllForMonth(dateTime))
+          .thenAnswer((_) async => []);
+      // act
+      final result =
+          await diaryFacadeService.getAllDiaryEventsForMonth(dateTime);
+      // assert
+      expect(result, []);
+      verify(() => diaryEntryRepository.getAllForMonth(dateTime));
+      verifyNoMoreInteractions(diaryEntryRepository);
+    });
+  });
+
   group('add entry', () {
     test("should add the given entry and return true", () async {
       DiaryEntry meal = EntryFixture.getMealEntries(1).first;
