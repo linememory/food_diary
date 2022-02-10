@@ -1,0 +1,66 @@
+{
+    "appTitle": "Ernährungstagebuch App",
+
+    "diaryPageTitle": "Tagebuch",
+
+    "addMealTooltip": "Neue Mahlzeit",
+    "addSymptomTooltip": "Neue Symptome",
+    "addBowelMovementTooltip": "Neuer Stuhlgang",
+
+
+    "diaryBottomNavigationBarLabel": "Tagebuchliste",
+    "calendarBottomNavigationBarLabel": "Kalender",
+
+    "diaryEntryUpdate": "Bearbeiten",
+    "diaryEntryDelete": "Löschen",
+
+    "diaryFormAdd": "Hinzufügen",
+    "diaryFormUpdate": "Bearbeiten",
+    "diaryFormCancel": "Abbrechen",
+
+
+    "foodAmountSmall": "Wenig",
+    "foodAmountMedium": "Medium",
+    "foodAmountHigh": "Viel",
+
+    "symptomIntensityLow": "Niedrig",
+    "symptomIntensityMedium": "Medium",
+    "symptomIntensityHigh": "Hoch",
+
+
+    "stoolType1": "Typ 1",
+    "stoolType2": "Typ 2",
+    "stoolType3": "Typ 3",
+    "stoolType4": "Typ 4",
+    "stoolType5": "Typ 5",
+    "stoolType6": "Typ 6",
+    "stoolType7": "Typ 7",
+
+
+
+
+
+    "diaryDeleteFailureNoMeal": "Kein Eintrag zum löschen",
+    "diaryDeleteFailureNotDeleted": "Eintrag konnte nicht gelöscht werden",
+
+    "entryFormSubmitFailed": "Eintrag hinzufügen fehlgeschlagen:\n ",
+
+
+
+    "settings": "Einstellungen",
+
+    "settingsFormSave": "Speichern",
+    "settingsFormCancel": "Abbrechen",
+
+    
+    "settingsFormThemesLabel": "Themes",
+    "settingsFormLanguagesLabel": "Sprachen",
+
+    "themeModeSystem": "System",
+    "themeModeLight": "Hell",
+    "themeModeDark": "Dunkel",
+
+    "languageEnglish": "Englisch",
+    "languageGerman": "Deutsch"
+    
+}
