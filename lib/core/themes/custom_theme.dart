@@ -7,26 +7,22 @@ class CustomTheme {
   };
   static ThemeData lightTheme() {
     return ThemeData.light().copyWith(
-      primaryColor: const Color(0xffff7043),
-      primaryColorLight: const Color(0xffffa270),
-      primaryColorDark: const Color(0xffc63f17),
+      primaryColor: Color.fromARGB(255, 245, 93, 82),
       colorScheme: ThemeData.light().colorScheme.copyWith(
-            primary: const Color(0xffff7043),
-            primaryVariant: const Color(0xff892c10),
-            secondary: const Color(0xff64b5f6),
-            secondaryVariant: const Color(0xff2696f2),
-            background: const Color(0xffEEE9DE),
+            primary: Color.fromARGB(255, 245, 93, 82),
+            secondary: Color.fromARGB(255, 236, 236, 236),
+            background: Color.fromARGB(255, 255, 255, 255),
           ),
-      backgroundColor: const Color(0xffEEEEEE),
-      scaffoldBackgroundColor: const Color(0xffEEEEEE),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      scaffoldBackgroundColor: Color.fromARGB(255, 255, 255, 255),
       textTheme: const TextTheme().copyWith(
-        bodyText1: const TextStyle().copyWith(color: Colors.black87),
-        bodyText2: const TextStyle().copyWith(color: Colors.black87),
-        button: const TextStyle().copyWith(color: Colors.black87),
+        bodyText1: const TextStyle().copyWith(color: Colors.black),
+        bodyText2: const TextStyle().copyWith(color: Colors.black),
+        button: const TextStyle().copyWith(color: Colors.black),
         subtitle1: const TextStyle()
-            .copyWith(color: Colors.black54, fontWeight: FontWeight.bold),
+            .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
         subtitle2: const TextStyle()
-            .copyWith(color: Colors.black54, fontWeight: FontWeight.bold),
+            .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
         headline1: const TextStyle().copyWith(color: Colors.black54),
         headline2: const TextStyle().copyWith(color: Colors.black54),
         headline3: const TextStyle().copyWith(color: Colors.black54),
@@ -39,18 +35,14 @@ class CustomTheme {
 
   static ThemeData darkTheme() {
     return ThemeData.dark().copyWith(
-      primaryColor: const Color(0xff79250d),
-      primaryColorLight: const Color(0xff922c0f),
-      primaryColorDark: const Color(0xff5e1c09),
+      primaryColor: Color.fromARGB(255, 121, 38, 38),
       colorScheme: ThemeData.dark().colorScheme.copyWith(
-            primary: const Color(0xff79250d),
-            primaryVariant: const Color(0xffa03113),
-            secondary: const Color(0xff305776),
-            secondaryVariant: const Color(0xff305776),
-            background: const Color(0xff4378a3),
+            primary: Color.fromARGB(255, 121, 38, 38),
+            secondary: Color.fromARGB(255, 43, 43, 43),
+            background: Color.fromARGB(255, 26, 26, 26),
           ),
-      backgroundColor: const Color(0xff222222),
-      scaffoldBackgroundColor: const Color(0xff222222),
+      backgroundColor: const Color.fromARGB(255, 26, 26, 26),
+      scaffoldBackgroundColor: Color.fromARGB(255, 26, 26, 26),
       textTheme: const TextTheme().copyWith(
         bodyText1: const TextStyle().copyWith(color: Colors.white60),
         bodyText2: const TextStyle().copyWith(color: Colors.white60),

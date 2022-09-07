@@ -198,7 +198,8 @@ class DayItem extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.blue.shade500, width: 3),
+          border: Border.all(
+              color: Theme.of(context).colorScheme.secondary, width: 3),
           borderRadius: BorderRadius.circular(100),
           color: isDisabled
               ? Theme.of(context).disabledColor
