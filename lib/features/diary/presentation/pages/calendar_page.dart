@@ -14,10 +14,7 @@ class CalendarPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(10),
-      child: const Calendar(
-        year: 2022,
-        month: 2,
-      ),
+      child: const Calendar(),
     );
   }
 }
