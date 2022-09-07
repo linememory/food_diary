@@ -14,10 +14,7 @@ class CalendarPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(10),
-      child: const Calendar(
-        year: 2022,
-        month: 2,
-      ),
+      child: const Calendar(),
     );
   }
 }
@@ -201,7 +198,8 @@ class DayItem extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.blue.shade500, width: 3),
+          border: Border.all(
+              color: Theme.of(context).colorScheme.secondary, width: 3),
           borderRadius: BorderRadius.circular(100),
           color: isDisabled
               ? Theme.of(context).disabledColor
